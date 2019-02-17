@@ -9,7 +9,7 @@
     android:paddingRight="8dp">
 
     <TextView
-        android:id="@+id/news_item_three_title"
+        android:id="@+id/tv_news_item_three_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -28,7 +28,7 @@
         android:orientation="horizontal">
 
         <com.jm.news.customview.MImageViewBase
-            android:id="@+id/news_item_three_img_left"
+            android:id="@+id/miv_news_item_three_img_left"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_weight="1"
@@ -39,7 +39,7 @@
             radius:left_top_radius="5dp" />
 
         <com.jm.news.customview.MImageViewBase
-            android:id="@+id/news_item_three_img_middle"
+            android:id="@+id/miv_news_item_three_img_middle"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_weight="1"
@@ -49,7 +49,7 @@
             android:src="@drawable/ic_launcher_background" />
 
         <com.jm.news.customview.MImageViewBase
-            android:id="@+id/news_item_three_img_rignt"
+            android:id="@+id/miv_news_item_three_img_rignt"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_weight="1"
@@ -67,7 +67,7 @@
         android:layout_marginTop="5dp">
 
         <TextView
-            android:id="@+id/news_item_three_source"
+            android:id="@+id/tv_news_item_three_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -76,7 +76,7 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/news_item_three_data"
+            android:id="@+id/tv_news_item_three_data"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

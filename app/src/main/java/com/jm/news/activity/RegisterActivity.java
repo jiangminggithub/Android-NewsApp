@@ -23,13 +23,13 @@ import android.widget.TextView;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
-import com.jm.news.define.BaseActivity;
+import com.jm.news.customview.MActivityBase;
 import com.jm.news.util.CommonUtils;
 import com.jm.news.viewmodel.RegisterActivityViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class RegisterActivity extends BaseActivity implements View.OnClickListener {
+public class RegisterActivity extends MActivityBase implements View.OnClickListener {
 
     private static final String TAG = "RegisterActivity";
     private static final boolean BUTTON_NORMAL = true;

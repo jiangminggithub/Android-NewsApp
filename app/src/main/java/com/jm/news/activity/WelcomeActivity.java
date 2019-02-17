@@ -3,9 +3,9 @@ package com.jm.news.activity;
 import android.os.Bundle;
 
 import com.jm.news.R;
-import com.jm.news.define.BaseActivity;
+import com.jm.news.customview.MActivityBase;
 
-public class WelcomeActivity extends BaseActivity {
+public class WelcomeActivity extends MActivityBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

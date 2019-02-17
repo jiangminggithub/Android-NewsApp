@@ -9,44 +9,44 @@ import com.jm.news.R;
 import com.jm.news.customview.MImageViewBase;
 
 public class ViewHolderThreeImage extends RecyclerView.ViewHolder {
-    private TextView mTitle;
-    private TextView mSource;
-    private TextView mPubData;
-    private MImageViewBase mImageLeft;
-    private MImageViewBase mImageMiddle;
-    private MImageViewBase mImageRight;
+    private TextView mTvTitle;
+    private TextView mTvSource;
+    private TextView mTvPubData;
+    private MImageViewBase mIvImageLeft;
+    private MImageViewBase mIvImageMiddle;
+    private MImageViewBase mIvImageRight;
 
     public ViewHolderThreeImage(@NonNull View itemView) {
         super(itemView);
-        mTitle = itemView.findViewById(R.id.news_item_three_title);
-        mSource = itemView.findViewById(R.id.news_item_three_source);
-        mPubData = itemView.findViewById(R.id.news_item_three_data);
-        mImageLeft = itemView.findViewById(R.id.news_item_three_img_left);
-        mImageMiddle = itemView.findViewById(R.id.news_item_three_img_middle);
-        mImageRight = itemView.findViewById(R.id.news_item_three_img_rignt);
+        mTvTitle = itemView.findViewById(R.id.tv_news_item_three_title);
+        mTvSource = itemView.findViewById(R.id.tv_news_item_three_source);
+        mTvPubData = itemView.findViewById(R.id.tv_news_item_three_data);
+        mIvImageLeft = itemView.findViewById(R.id.miv_news_item_three_img_left);
+        mIvImageMiddle = itemView.findViewById(R.id.miv_news_item_three_img_middle);
+        mIvImageRight = itemView.findViewById(R.id.miv_news_item_three_img_rignt);
     }
 
-    public TextView getmTitle() {
-        return mTitle;
+    public TextView getTvTitle() {
+        return mTvTitle;
     }
 
-    public TextView getmSource() {
-        return mSource;
+    public TextView getTvSource() {
+        return mTvSource;
     }
 
-    public TextView getmPubData() {
-        return mPubData;
+    public TextView getTvPubData() {
+        return mTvPubData;
     }
 
-    public MImageViewBase getmImageLeft() {
-        return mImageLeft;
+    public MImageViewBase getIvImageLeft() {
+        return mIvImageLeft;
     }
 
-    public MImageViewBase getmImageMiddle() {
-        return mImageMiddle;
+    public MImageViewBase getIvImageMiddle() {
+        return mIvImageMiddle;
     }
 
-    public MImageViewBase getmImageRight() {
-        return mImageRight;
+    public MImageViewBase getIvImageRight() {
+        return mIvImageRight;
     }
 }

@@ -21,7 +21,7 @@
             android:paddingBottom="5dp">
 
             <TextView
-                android:id="@+id/news_item_one_title"
+                android:id="@+id/tv_news_item_one_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -33,7 +33,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/news_item_one_source"
+                android:id="@+id/tv_news_item_one_source"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -43,7 +43,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/news_item_one_date"
+                android:id="@+id/tv_news_item_one_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -54,7 +54,7 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/news_item_one_img_ll"
+            android:id="@+id/ll_news_item_one_img"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3.6"
@@ -63,7 +63,7 @@
             android:paddingBottom="8dp">
 
             <com.jm.news.customview.MImageViewBase
-                android:id="@+id/news_item_one_img"
+                android:id="@+id/miv_news_item_one_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"

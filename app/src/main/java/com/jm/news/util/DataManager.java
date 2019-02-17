@@ -77,7 +77,7 @@ public class DataManager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String result = new ShowApiRequest(type, decode(DataDef.ApiInfo.API_ID), decode(DataDef.ApiInfo.API_secret))
+                String result = new ShowApiRequest(type, decode(DataDef.ApiInfo.API_ID), decode(DataDef.ApiInfo.API_SECRET))
                         .addTextPara("channelId", channelId)
                         .addTextPara("page", page)
                         .addTextPara("maxResult", maxCount)

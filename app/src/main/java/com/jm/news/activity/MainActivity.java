@@ -20,9 +20,9 @@ import android.widget.LinearLayout;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
+import com.jm.news.customview.MActivityBase;
 import com.jm.news.customview.MSlidingPaneLayout;
 import com.jm.news.customview.MViewPagerIndicator;
-import com.jm.news.define.BaseActivity;
 import com.jm.news.util.CommonUtils;
 import com.jm.news.util.NewsFragmentsContainer;
 import com.jm.news.view.FragmentAppMenu;
@@ -33,7 +33,7 @@ import com.jm.news.viewmodel.MainActivityViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends MActivityBase implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
     private MSlidingPaneLayout mSplSlidingPane;

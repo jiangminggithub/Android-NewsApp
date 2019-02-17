@@ -3,8 +3,8 @@
 
     <item android:state_pressed="false">
         <shape>
-            <corners android:radius="26dp"/>
-            <solid android:color="@color/account_register_submit_lock"/>
+            <corners android:radius="26dp" />
+            <solid android:color="@color/account_register_submit_lock" />
         </shape>
     </item>
 </selector>

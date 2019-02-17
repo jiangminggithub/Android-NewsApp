@@ -6,10 +6,10 @@ import android.widget.TextView;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
-import com.jm.news.define.BaseActivity;
+import com.jm.news.customview.MActivityBase;
 import com.jm.news.view.FragmentSetting;
 
-public class SettingActivity extends BaseActivity implements View.OnClickListener {
+public class SettingActivity extends MActivityBase implements View.OnClickListener {
     private TextView mTvBack;
     private TextView mTvTitle;
 

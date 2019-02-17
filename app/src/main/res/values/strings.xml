@@ -169,7 +169,7 @@
     <string name="srl_header_secondary">释放进入二楼</string>
     <string name="srl_header_update">上次更新 M-d HH:mm</string>
 
-<!--******************************* string array **************************************-->
+    <!--******************************* string array **************************************-->
     <string-array name="news_channel_names">
         <item>头条</item>
         <item>国际</item>

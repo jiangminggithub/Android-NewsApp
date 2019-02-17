@@ -58,6 +58,6 @@
         <Preference
             android:key="@string/pre_key_setting_version"
             android:title="@string/version"
-            tools:summary="1.0.0"/>
+            tools:summary="1.0.0" />
     </PreferenceCategory>
 </PreferenceScreen>

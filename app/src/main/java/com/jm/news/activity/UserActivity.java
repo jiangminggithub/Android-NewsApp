@@ -27,13 +27,13 @@ import android.widget.TextView;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
-import com.jm.news.define.BaseActivity;
+import com.jm.news.customview.MActivityBase;
 import com.jm.news.util.CommonUtils;
 import com.jm.news.viewmodel.UserActivityViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class UserActivity extends BaseActivity implements View.OnClickListener {
+public class UserActivity extends MActivityBase implements View.OnClickListener {
 
     private static final String TAG = "UserActivity";
     private static final int CONFIRM_TYPE_CHANGE_ACCOUNT = 0;

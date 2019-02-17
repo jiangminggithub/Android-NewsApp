@@ -30,8 +30,8 @@
             android:screenOrientation="portrait" />
 
         <!--<meta-data-->
-            <!--android:name="com.google.android.actions"-->
-            <!--android:resource="@xml/preference_fragment_setting1" />-->
+        <!--android:name="com.google.android.actions"-->
+        <!--android:resource="@xml/preference_fragment_setting1" />-->
 
         <activity
             android:name=".activity.UserActivity"

@@ -11,7 +11,7 @@
     android:id="@+id/ll_user_layout"
     tools:ignore="MissingDefaultResource">
 
-    <include layout="@layout/layout_head"></include>
+    <include layout="@layout/layout_head"/>
 
     <ScrollView
         android:layout_width="match_parent"

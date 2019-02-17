@@ -7,7 +7,7 @@ public class DataDef {
 
     public static final class ApiInfo {
         public static final String API_ID = "q}~{q";
-        public static final String API_secret = "+**}*||\u007F~z(~}{,|+/x|x+q-*~}p{+({";
+        public static final String API_SECRET = "+**}*||\u007F~z(~}{,|+/x|x+q-*~}p{+({";
     }
 
     public static final class RequestStatusType {

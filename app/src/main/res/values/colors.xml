@@ -16,7 +16,7 @@
     <color name="border_clo_l">#ECECEC</color>
     <color name="text_clo">#333</color>
     <color name="pressed">#FDD6D6</color>
-    <color name="toor_bar" >#F23030</color>
+    <color name="toor_bar">#F23030</color>
     <color name="dialog_background">#FFFFFF</color>
     <color name="dialog_text">#232326</color>
     <color name="dialog_btn">#1E90FF</color>
@@ -26,10 +26,6 @@
     <color name="dialog_confirm_pressed">#6BD505</color>
     <color name="dialog_cancel_normal">#FFF</color>
     <color name="dialog_cancel_pressed">#FDD6D6</color>
-
-
-
-
 
 
     <!-- 常用颜色值 -->
@@ -60,7 +56,6 @@
 
     <color name="bg_press">#ebebeb</color>
     <color name="bg_press_material">#d4d4d4</color>
-
 
 
     <color name="account_login_submit">#F23030</color>

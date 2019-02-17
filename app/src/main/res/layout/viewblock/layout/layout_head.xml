@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tool="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,8 +34,7 @@
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:visibility="visible"
-            tool:text="Title"/>
-
+            tool:text="Title" />
 
         <ImageButton
             android:id="@+id/ib_head_more"

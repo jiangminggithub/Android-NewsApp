@@ -182,27 +182,27 @@ public class FragmentNewsItem extends MFragmentBase {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
             if (viewHolder instanceof ViewHolderOneImage) {
                 ViewHolderOneImage holder = (ViewHolderOneImage) viewHolder;
-                holder.getmTitle().setText(mViewModel.getNewsTitle(i));
-                holder.getmSource().setText(mViewModel.getNewsSource(i));
-                holder.getmPubData().setText(mViewModel.getPubDate(i));
+                holder.getTvTitle().setText(mViewModel.getNewsTitle(i));
+                holder.getTvSource().setText(mViewModel.getNewsSource(i));
+                holder.getTvPubData().setText(mViewModel.getPubDate(i));
                 if (mViewModel.getItemImgCount(i) > 0) {
-                    holder.getmImageLatout().setVisibility(View.VISIBLE);
-                    Glide.with(holder.getmImage())
-                            .load(mViewModel.getImgUrls(i, 0)).apply(mGlideOptions).into(holder.getmImage());
+                    holder.getLlImageLatout().setVisibility(View.VISIBLE);
+                    Glide.with(holder.getIvImage())
+                            .load(mViewModel.getImgUrls(i, 0)).apply(mGlideOptions).into(holder.getIvImage());
                 } else {
-                    holder.getmImageLatout().setVisibility(View.GONE);
+                    holder.getLlImageLatout().setVisibility(View.GONE);
                 }
             } else if (viewHolder instanceof ViewHolderThreeImage) {
                 ViewHolderThreeImage holder = (ViewHolderThreeImage) viewHolder;
-                holder.getmTitle().setText(mViewModel.getNewsTitle(i));
-                holder.getmSource().setText(mViewModel.getNewsSource(i));
-                holder.getmPubData().setText(mViewModel.getPubDate(i));
-                Glide.with(holder.getmImageLeft())
-                        .load(mViewModel.getImgUrls(i, 0)).apply(mGlideOptions).into(holder.getmImageLeft());
-                Glide.with(holder.getmImageMiddle())
-                        .load(mViewModel.getImgUrls(i, 1)).apply(mGlideOptions).into(holder.getmImageMiddle());
-                Glide.with(holder.getmImageRight())
-                        .load(mViewModel.getImgUrls(i, 2)).apply(mGlideOptions).into(holder.getmImageRight());
+                holder.getTvTitle().setText(mViewModel.getNewsTitle(i));
+                holder.getTvSource().setText(mViewModel.getNewsSource(i));
+                holder.getTvPubData().setText(mViewModel.getPubDate(i));
+                Glide.with(holder.getIvImageLeft())
+                        .load(mViewModel.getImgUrls(i, 0)).apply(mGlideOptions).into(holder.getIvImageLeft());
+                Glide.with(holder.getIvImageMiddle())
+                        .load(mViewModel.getImgUrls(i, 1)).apply(mGlideOptions).into(holder.getIvImageMiddle());
+                Glide.with(holder.getIvImageRight())
+                        .load(mViewModel.getImgUrls(i, 2)).apply(mGlideOptions).into(holder.getIvImageRight());
             } else {
 
             }

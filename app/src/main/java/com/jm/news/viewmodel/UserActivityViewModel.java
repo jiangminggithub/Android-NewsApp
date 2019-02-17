@@ -2,7 +2,6 @@ package com.jm.news.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -14,32 +13,25 @@ import com.jm.news.common.Common;
 public class UserActivityViewModel extends AndroidViewModel {
 
     private static final String TAG = "UserActivityViewModel";
+    private static final String DEFAULT_SHOW_TEXT = Common.getInstance().getResourcesString(R.string.user_empty_content);
     private SharedPreferences mPreferences;
-    private SharedPreferences.Editor edit;
-    private Context mContext;
+    private SharedPreferences.Editor mEdit;
 
-    // Radio box mGlideOptions
     private String[] mSexItems;
-    // Initial mGlideOptions for radio boxes
     private int mSexCheckedItemIndex = 0;
-    // Checkbox mGlideOptions
     private String[] mHobbyItems;
-    // Check box initial selection
     private boolean[] mHobbyCheckedItemsFlag = {false, false, false, false, false, false};
-    // Default show text
-    private String defaultShowText;
 
 
     public UserActivityViewModel(@NonNull Application application) {
         super(application);
         String preName = Common.getInstance().getResourcesString(R.string.app_user_detail_prefences);
-        defaultShowText = Common.getInstance().getResourcesString(R.string.user_empty_content);
         mSexItems = Common.getInstance().getResourcesStringArray(R.array.user_sex_items);
         mHobbyItems = Common.getInstance().getResourcesStringArray(R.array.user_hobby_items);
 
         if (!TextUtils.isEmpty(preName)) {
             mPreferences = Common.getInstance().getPreference(preName);
-            edit = mPreferences.edit();
+            mEdit = mPreferences.edit();
         }
     }
 
@@ -47,10 +39,10 @@ public class UserActivityViewModel extends AndroidViewModel {
     public String getPreferenceString(int key) {
         if (null != mPreferences && Common.getInstance().hasUser()) {
             String userID = Common.getInstance().getUser();
-            String string = mPreferences.getString(userID + key, defaultShowText);
-            return TextUtils.isEmpty(string) ? defaultShowText : string;
+            String string = mPreferences.getString(userID + key, DEFAULT_SHOW_TEXT);
+            return TextUtils.isEmpty(string) ? DEFAULT_SHOW_TEXT : string;
         }
-        return defaultShowText;
+        return DEFAULT_SHOW_TEXT;
     }
 
     public String getAccountName() {
@@ -63,14 +55,14 @@ public class UserActivityViewModel extends AndroidViewModel {
                 return accountName;
             }
         }
-        return defaultShowText;
+        return DEFAULT_SHOW_TEXT;
     }
 
     public String getSexPreferenceString(int key) {
         if (null != mPreferences && Common.getInstance().hasUser()) {
             String userID = Common.getInstance().getUser();
-            String string = mPreferences.getString(userID + key, defaultShowText);
-            if (!defaultShowText.equals(string) && !"".equals(string)) {
+            String string = mPreferences.getString(userID + key, DEFAULT_SHOW_TEXT);
+            if (!DEFAULT_SHOW_TEXT.equals(string) && !"".equals(string)) {
                 Integer index = Integer.valueOf(string);
                 mSexCheckedItemIndex = index;
                 if (index >= 0) {
@@ -79,14 +71,14 @@ public class UserActivityViewModel extends AndroidViewModel {
 
             }
         }
-        return defaultShowText;
+        return DEFAULT_SHOW_TEXT;
     }
 
     public String getHobbyPreferenceString(int key) {
         if (null != mPreferences && Common.getInstance().hasUser()) {
             String userID = Common.getInstance().getUser();
-            String string = mPreferences.getString(userID + key, defaultShowText);
-            if (!TextUtils.isEmpty(string) && !defaultShowText.equals(string)) {
+            String string = mPreferences.getString(userID + key, DEFAULT_SHOW_TEXT);
+            if (!TextUtils.isEmpty(string) && !DEFAULT_SHOW_TEXT.equals(string)) {
                 String[] split = string.split("\\|");
                 for (int i = 0; i < split.length; i++) {
                     mHobbyCheckedItemsFlag[i] = Boolean.valueOf(split[i]);
@@ -104,7 +96,7 @@ public class UserActivityViewModel extends AndroidViewModel {
                 }
             }
         }
-        return defaultShowText;
+        return DEFAULT_SHOW_TEXT;
     }
 
     public String[] getSexitems() {
@@ -138,17 +130,17 @@ public class UserActivityViewModel extends AndroidViewModel {
 
     public void putPreferenceString(int key, String value) {
         String userID = Common.getInstance().getUser();
-        if (null != edit && null != value) {
-            edit.putString(userID + key, value);
-            edit.apply();
+        if (null != mEdit && null != value) {
+            mEdit.putString(userID + key, value);
+            mEdit.apply();
         }
     }
 
     public void putPreferenceString(int key) {
         String userID = Common.getInstance().getUser();
-        if (null != edit) {
+        if (null != mEdit) {
             if (key == UserInfo.USER_SEX) {
-                edit.putString(String.valueOf(userID + key), String.valueOf(mSexCheckedItemIndex));
+                mEdit.putString(String.valueOf(userID + key), String.valueOf(mSexCheckedItemIndex));
             } else if (key == UserInfo.USER_HOBBY) {
                 String result = "";
                 for (int i = 0; i < mHobbyCheckedItemsFlag.length; i++) {
@@ -157,11 +149,11 @@ public class UserActivityViewModel extends AndroidViewModel {
                 if (!TextUtils.isEmpty(result)) {
                     result = result.substring(0, result.length() - 1);
                 }
-                edit.putString(userID + key, result);
+                mEdit.putString(userID + key, result);
             } else {
                 // nothing to do
             }
-            edit.apply();
+            mEdit.apply();
         }
     }
 

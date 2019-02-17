@@ -23,13 +23,13 @@ import android.widget.TextView;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
-import com.jm.news.define.BaseActivity;
+import com.jm.news.customview.MActivityBase;
 import com.jm.news.define.DataDef;
 import com.jm.news.util.CommonUtils;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class WebViewActivity extends BaseActivity implements View.OnClickListener {
+public class WebViewActivity extends MActivityBase implements View.OnClickListener {
 
     private static final String TAG = "WebViewActivity";
     private static final int INIT_PROGRESS_STATUS = 85;

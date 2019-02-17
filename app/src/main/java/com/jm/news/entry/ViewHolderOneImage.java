@@ -10,38 +10,38 @@ import com.jm.news.R;
 import com.jm.news.customview.MImageViewBase;
 
 public class ViewHolderOneImage extends RecyclerView.ViewHolder {
-    private TextView mTitle;
-    private TextView mSource;
-    private TextView mPubData;
-    private MImageViewBase mImage;
-    private LinearLayout mImageLatout;
+    private TextView mTvTitle;
+    private TextView mTvSource;
+    private TextView mTvPubData;
+    private MImageViewBase mIvImage;
+    private LinearLayout mLlImageLatout;
 
     public ViewHolderOneImage(@NonNull View itemView) {
         super(itemView);
-        mTitle = itemView.findViewById(R.id.news_item_one_title);
-        mSource = itemView.findViewById(R.id.news_item_one_source);
-        mImage = itemView.findViewById(R.id.news_item_one_img);
-        mPubData = itemView.findViewById(R.id.news_item_one_date);
-        mImageLatout = itemView.findViewById(R.id.news_item_one_img_ll);
+        mTvTitle = itemView.findViewById(R.id.tv_news_item_one_title);
+        mTvSource = itemView.findViewById(R.id.tv_news_item_one_source);
+        mIvImage = itemView.findViewById(R.id.miv_news_item_one_img);
+        mTvPubData = itemView.findViewById(R.id.tv_news_item_one_date);
+        mLlImageLatout = itemView.findViewById(R.id.ll_news_item_one_img);
     }
 
-    public TextView getmTitle() {
-        return mTitle;
+    public TextView getTvTitle() {
+        return mTvTitle;
     }
 
-    public TextView getmSource() {
-        return mSource;
+    public TextView getTvSource() {
+        return mTvSource;
     }
 
-    public TextView getmPubData() {
-        return mPubData;
+    public TextView getTvPubData() {
+        return mTvPubData;
     }
 
-    public MImageViewBase getmImage() {
-        return mImage;
+    public MImageViewBase getIvImage() {
+        return mIvImage;
     }
 
-    public LinearLayout getmImageLatout() {
-        return mImageLatout;
+    public LinearLayout getLlImageLatout() {
+        return mLlImageLatout;
     }
 }

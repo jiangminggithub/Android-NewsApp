@@ -1,4 +1,4 @@
-package com.jm.news.define;
+package com.jm.news.customview;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -6,8 +6,8 @@ import android.util.Log;
 
 import com.jm.news.common.Common;
 
-public class BaseActivity extends AppCompatActivity {
-    private static final String TAG = "BaseActivity";
+public class MActivityBase extends AppCompatActivity {
+    private static final String TAG = "MActivityBase";
 
     @Override
     protected void attachBaseContext(Context newBase) {

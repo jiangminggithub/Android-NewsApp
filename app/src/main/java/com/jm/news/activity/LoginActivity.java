@@ -24,13 +24,13 @@ import android.widget.TextView;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
-import com.jm.news.define.BaseActivity;
+import com.jm.news.customview.MActivityBase;
 import com.jm.news.util.CommonUtils;
 import com.jm.news.viewmodel.LoginActivityViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginActivity extends MActivityBase implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
     private static final boolean BUTTON_NORMAL = true;
     private static final boolean BUTTON_LOCKED = false;

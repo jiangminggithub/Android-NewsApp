@@ -8,5 +8,5 @@
         android:title="@string/menu_news_item_open_other" />
     <item
         android:id="@+id/menu_news_item_delete"
-        android:title="@string/menu_news_item_delete"  />
+        android:title="@string/menu_news_item_delete" />
 </menu>

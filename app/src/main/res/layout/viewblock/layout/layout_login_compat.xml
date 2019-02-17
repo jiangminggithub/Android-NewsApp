@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/lay_login_container"
+    android:id="@+id/ll_login_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/biz_pc_main_bg"
@@ -40,7 +40,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
 
                 <View
                     android:layout_width="48dp"
@@ -185,7 +185,7 @@
                 android:background="@color/account_login_submit"
                 android:text="@string/account_login"
                 android:textColor="@color/white"
-                android:textSize="18dp"/>
+                android:textSize="18dp" />
 
             <Button
                 android:id="@+id/bt_login_register"
