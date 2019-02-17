@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:radius="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="95dp"
+            android:layout_weight="7"
+            android:paddingTop="8dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/news_item_one_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:ellipsize="end"
+                android:lineSpacingExtra="3dp"
+                android:maxLines="2"
+                android:text="毛克疾：印度优秀工程师那么多，为什么是中国抓住了全球化机会"
+                android:textColor="@color/news_title"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/news_item_one_source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:text="头条"
+                android:textColor="@color/news_source"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/news_item_one_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:text="2017-05-27 15:01:10"
+                android:textColor="@color/news_source"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/news_item_one_img_ll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.6"
+            android:paddingTop="8dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="8dp">
+
+            <com.jm.news.customview.MImageViewBase
+                android:id="@+id/news_item_one_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                radius:left_bottom_radius="5dp"
+                radius:left_top_radius="5dp"
+                radius:right_bottom_radius="5dp"
+                radius:right_top_radius="5dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View style="@style/bg_line" />
+</LinearLayout>

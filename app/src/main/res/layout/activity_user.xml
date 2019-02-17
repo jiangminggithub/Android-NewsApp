@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:radius="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F3F6"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:id="@+id/ll_user_layout"
+    tools:ignore="MissingDefaultResource">
+
+    <include layout="@layout/layout_head"></include>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/wrap_layout">
+
+                <LinearLayout
+                    android:id="@+id/ll_user_header"
+                    style="@style/single_layout">
+
+                    <com.jm.news.customview.MCircleImageViewBase
+                        android:id="@+id/miv_user_icon"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@mipmap/icon_user" />
+
+                    <TextView
+                        android:id="@+id/tv_user_name"
+                        style="@style/user_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="日新月异" />
+
+                    <com.jm.news.customview.MImageViewBase
+                        android:id="@+id/miv_user_qrcode"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/icon_qrcode"
+                        radius:left_bottom_radius="5dp"
+                        radius:left_top_radius="5dp"
+                        radius:right_bottom_radius="5dp"
+                        radius:right_top_radius="5dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout style="@style/wrap_layout">
+
+                <!-- 上圆角 -->
+
+                <LinearLayout
+                    android:id="@+id/ll_user_autograph"
+                    style="@style/top_layout">
+
+                    <TextView
+                        style="@style/user_text"
+                        android:text="@string/user_autograph" />
+
+                    <TextView
+                        android:id="@+id/tv_user_autograph"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="不必仰望别人，自己亦是风景！"
+                        android:textColor="#B7B7B7" />
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+
+                <!-- 分割线 -->
+
+                <View style="@style/bg_line" />
+                <!-- 无圆角 -->
+
+                <LinearLayout
+                    android:id="@+id/ll_user_nickname"
+                    style="@style/mid_layout">
+
+                    <TextView
+                        style="@style/user_text"
+                        android:text="@string/user_nickname" />
+
+                    <TextView
+                        android:id="@+id/tv_user_nickname"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="奋斗的小熊"
+                        android:textColor="#B7B7B7" />
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+
+
+                <!-- 分割线 -->
+
+                <View style="@style/bg_line" />
+                <!-- 无圆角 -->
+
+                <LinearLayout
+                    android:id="@+id/ll_user_sex"
+                    style="@style/mid_layout">
+
+                    <TextView
+                        style="@style/user_text"
+                        android:text="@string/user_sex" />
+
+                    <TextView
+                        android:id="@+id/tv_user_sex"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="男"
+                        android:textColor="#B7B7B7" />
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+
+                <View style="@style/bg_line" />
+                <!-- 无圆角 -->
+
+                <LinearLayout
+                    android:id="@+id/ll_user_address"
+                    style="@style/mid_layout">
+
+                    <TextView
+                        style="@style/user_text"
+                        android:text="@string/user_address" />
+
+                    <TextView
+                        android:id="@+id/tv_user_address"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="上海"
+                        android:textColor="#B7B7B7" />
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+
+                <View style="@style/bg_line" />
+                <!-- 无圆角 -->
+
+                <LinearLayout
+                    android:id="@+id/ll_user_phone"
+                    style="@style/mid_layout">
+
+                    <TextView
+                        style="@style/user_text"
+                        android:text="@string/user_phone" />
+
+                    <TextView
+                        android:id="@+id/tv_user_Phone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="18895361267"
+                        android:textColor="#B7B7B7" />
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+
+                <View style="@style/bg_line" />
+                <!-- 无圆角 -->
+
+                <LinearLayout
+                    android:id="@+id/ll_user_hobby"
+                    style="@style/mid_layout">
+
+                    <TextView
+                        style="@style/user_text"
+                        android:text="@string/user_hobby" />
+
+                    <TextView
+                        android:id="@+id/tv_user_hoppy"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="听歌，打球，跳舞……"
+                        android:textColor="#B7B7B7" />
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+
+                <View style="@style/bg_line" />
+                <!-- 下圆角 -->
+
+                <LinearLayout
+                    android:id="@+id/ll_user_profile"
+                    style="@style/mid_layout">
+
+                    <TextView
+                        style="@style/user_text"
+                        android:text="@string/user_profile" />
+
+                    <TextView
+                        android:id="@+id/tv_user_profile"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="介绍一下自己吧"
+                        android:textColor="#B7B7B7" />
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+
+                <View style="@style/bg_line" />
+                <!-- 下圆角 -->
+
+                <LinearLayout
+                    android:id="@+id/ll_user_more"
+                    style="@style/bottom_layout">
+
+                    <TextView
+                        style="@style/user_text"
+                        android:layout_weight="1"
+                        android:text="@string/user_more" />
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 全圆角 -->
+
+            <LinearLayout
+                style="@style/wrap_layout"
+                android:layout_marginBottom="30dp">
+
+                <LinearLayout
+                    android:id="@+id/ll_user_account"
+                    style="@style/single_layout">
+
+                    <TextView
+                        style="@style/user_text"
+                        android:layout_weight="1"
+                        android:text="@string/user_account" />
+
+                    <!--<TextView-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="18dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="Ming—News™"-->
+                    <!--android:textColor="#0000FF" />-->
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

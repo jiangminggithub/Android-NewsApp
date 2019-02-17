@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:radius="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="8dp"
+    android:paddingTop="8dp"
+    android:paddingRight="8dp">
+
+    <TextView
+        android:id="@+id/news_item_three_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:ellipsize="end"
+        android:lineSpacingExtra="3dp"
+        android:maxLines="1"
+        android:text="蔡英文元旦谈话拿猪瘟＂开刀＂:哪来的两岸一家亲"
+        android:textColor="@color/news_title"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <com.jm.news.customview.MImageViewBase
+            android:id="@+id/news_item_three_img_left"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:paddingRight="3dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher_background"
+            radius:left_bottom_radius="5dp"
+            radius:left_top_radius="5dp" />
+
+        <com.jm.news.customview.MImageViewBase
+            android:id="@+id/news_item_three_img_middle"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher_background" />
+
+        <com.jm.news.customview.MImageViewBase
+            android:id="@+id/news_item_three_img_rignt"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:paddingLeft="3dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher_background"
+            radius:right_bottom_radius="5dp"
+            radius:right_top_radius="5dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/news_item_three_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="头条"
+            android:textColor="@color/news_source"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/news_item_three_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="2017-05-27 15:01:10"
+            android:textColor="@color/news_source"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <View
+        style="@style/bg_line"
+        android:layout_marginTop="5dp" />
+</LinearLayout>

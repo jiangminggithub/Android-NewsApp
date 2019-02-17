@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/menu_head"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:background="@mipmap/biz_pc_main_bg"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/app_menu_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <com.jm.news.customview.MCircleImageViewBase
+                android:id="@+id/app_menu_user_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp"
+                android:clickable="false"
+                android:src="@mipmap/icon_user" />
+
+            <TextView
+                android:id="@+id/app_menu_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:singleLine="true"
+                android:text="@string/user_no_login"
+                android:textColor="@drawable/selector_app_text"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/app_menu_user_autograph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingLeft="25dp"
+            android:singleLine="true"
+            android:text="@string/account_user_empty"
+            android:textColor="@drawable/selector_app_text"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/menu_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/app_menu_foot"
+        android:layout_below="@id/menu_head"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="12dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/app_menu_message"
+                style="@style/app_menu_item">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_message" />
+
+                <TextView
+                    style="@style/app_menu_text"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/app_menu_message" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_menu_vip"
+                style="@style/app_menu_item">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_vip" />
+
+                <TextView
+
+                    style="@style/app_menu_text"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/app_menu_vip" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_menu_theme"
+                style="@style/app_menu_item">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_theme" />
+
+                <TextView
+
+                    style="@style/app_menu_text"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/app_menu_theme" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_menu_collected"
+                style="@style/app_menu_item">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_collect" />
+
+                <TextView
+                    style="@style/app_menu_text"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/app_menu_collected" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_menu_friends"
+                style="@style/app_menu_item">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_friend" />
+
+                <TextView
+                    style="@style/app_menu_text"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/app_menu_friends" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_menu_location"
+                style="@style/app_menu_item">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_location" />
+
+                <TextView
+                    style="@style/app_menu_text"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/app_menu_location" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/app_menu_foot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <View style="@style/bg_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/app_menu_about"
+                style="@style/app_menu_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_about" />
+
+                <TextView
+                    style="@style/app_menu_setting_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/app_menu_about" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/app_menu_setting"
+                style="@style/app_menu_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_setting1" />
+
+                <TextView
+                    style="@style/app_menu_setting_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/app_menu_setting" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/app_menu_exit"
+                style="@style/app_menu_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingRight="14dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_exit" />
+
+                <TextView
+                    style="@style/app_menu_setting_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/app_menu_exit" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

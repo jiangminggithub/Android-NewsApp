@@ -1,0 +1,183 @@
+<resources>
+    <!--************************** app string ******************************-->
+    <string name="app_menu_message">Message</string>
+    <string name="app_menu_vip">Member</string>
+    <string name="app_menu_theme">Theme</string>
+    <string name="app_menu_collected">Collection</string>
+    <string name="app_menu_friends">Friends</string>
+    <string name="app_menu_location">Location</string>
+    <string name="app_menu_about">On</string>
+    <string name="app_menu_setting">Set</string>
+    <string name="app_menu_exit">Exit</string>
+
+    <string name="app_menu_dialog_exit_title">Are you sure to exit ?</string>
+    <string name="app_data_request_failed">Data acquisition failed, please check network connection or Api usage balance</string>
+    <string name="app_data_request_no_more">No more data</string>
+
+    <string name="app_toobar_back">Back</string>
+    <string name="app_toobar_title_user">Personal Center</string>
+    <string name="app_toobar_title_setting">Setting Center</string>
+    <string name="app_toobar_title_webview_detail">News Detail</string>
+
+    <string name="webview_no_url">Resource link does not exist</string>
+    <string name="webview_loading">Loading...</string>
+
+    <!-- **************************** user string *************************************-->
+    <string name="user_autograph">Autograph</string>
+    <string name="user_nickname">NickName</string>
+    <string name="user_sex">Gender</string>
+    <string name="user_address">Address</string>
+    <string name="user_phone">Telphone</string>
+    <string name="user_hobby">Hobby</string>
+    <string name="user_profile">Profile</string>
+    <string name="user_more">More</string>
+    <string name="user_account">Account Manager</string>
+
+    <string name="user_dialog_name_title">User Name Settings</string>
+    <string name="user_dialog_name_hint">Up to 20 characters</string>
+    <string name="user_dialog_autograph_title">Personal Signature Settings</string>
+    <string name="user_dialog_autograph_hint">Up to 80 characters</string>
+    <string name="user_dialog_nickname_title">Nickname settings</string>
+    <string name="user_dialog_nickname_hint">Up to 20 characters</string>
+    <string name="user_dialog_sex_title">Gender setting</string>
+    <string name="user_dialog_address_title">Address settings</string>
+    <string name="user_dialog_address_hint">Please enter the location, up to 100 characters</string>
+    <string name="user_dialog_phone_title">Telephone settings</string>
+    <string name="user_dialog_phone_hint">Please enter your telephone number</string>
+    <string name="user_dialog_hobby_title">Hobby setting</string>
+    <string name="user_dialog_hobby_hint">Please outline your hobbies, up to 120 characters</string>
+    <string name="user_dialog_profile_title">Personal Instructions Settings</string>
+    <string name="user_dialog_profile_hint">Description of yourself, up to 120 characters</string>
+    <string name="user_dialog_empty_content">Content cannot be empty</string>
+    <string name="user_no_login">Sign In</string>
+    <string name="user_no_user">Sign In/Register</string>
+
+    <string name="user_empty_content">-</string>
+    <string name="user_empty_autograph">Setting signature :</string>
+    <string name="user_no_name">Set username</string>
+
+    <string name="account_user_no_exit">User does not exist, please register first</string>
+    <string name="account_user_empty">Please sign in :</string>
+    <string name="account_login_failed">Username or password is incorrect</string>
+    <string name="account_logging">Logging...</string>
+    <string name="account_registering">Registering...</string>
+    <string name="account_register_success">Congratulations, registration is successful</string>
+    <string name="account_register_failed">Registration failed, please try again</string>
+    <string name="account_login">Login</string>
+    <string name="account_login_username_hint">username</string>
+    <string name="hint_password">password</string>
+    <string name="account_register_username_hint">username</string>
+    <string name="account_login_auto_hint">Automatic log-in</string>
+    <string name="login_register">Register</string>
+    <string name="login_forget_hint">Forget password ?</string>
+    <string name="register_pwd_hint">least six digit password</string>
+    <string name="register_reader_protocol">Read and agree to the protocol</string>
+    <string name="register_protocol">Protocol</string>
+
+    <string name="account_manager_change">Switch account</string>
+    <string name="account_manager_logout">Logout</string>
+    <string name="account_manager_cancel">Cancel</string>
+    <string name="account_manager_logout_failed">Failed, please try again</string>
+
+    <!-- **************************** dialog string *************************************-->
+    <string name="menu_news_item_open_detail">News Detail</string>
+    <string name="menu_news_item_open_other">Open other</string>
+    <string name="menu_news_item_delete">Delete</string>
+
+    <string name="menu_webview_refresh">Refresh</string>
+    <string name="menu_webview_share">Share</string>
+    <string name="menu_webview_open_other">Open other</string>
+    <string name="menu_webview_share_tips">Copy share link to clipboard</string>
+
+
+    <!-- **************************** dialog string *************************************-->
+    <string name="dialog_login">LOGIN</string>
+    <string name="dialog_confirm">OK</string>
+    <string name="dialog_cancel">CANCEL</string>
+    <string name="dialog_waring_tips">Tips</string>
+    <string name="dialog_waring_content">This function is not yet open, please look forward to it!</string>
+    <string name="dialog_no_login">Currently no users, please login first</string>
+
+    <string name="dialog_clear_cache_title">Delete ?</string>
+    <string name="dialog_clear_cache_confirm">Delete</string>
+    <string name="dialog_clear_cache_content">Permanently delete cached data</string>
+    <string name="dialog_clear_cache_success_title">Deleted</string>
+    <string name="dialog_clear_cache_success_content">MB Cache data</string>
+    <string name="dialog_clear_cache_failed_title">Failed</string>
+    <string name="dialog_clear_cache_failed_content">Please check the application permissions</string>
+
+    <string name="dialog_account_change_content">Clear all user information !</string>
+    <string name="dialog_account_logout_content">Log out of the current user ?</string>
+
+    <!-- **************************** setting string *************************************-->
+    <string name="setting_basic">Basic</string>
+    <string name="setting_senior">Advanced</string>
+    <string name="setting_encourage">Score</string>
+    <string name="setting_other">Other</string>
+    <string name="setting_basic_cache">Clear cache</string>
+    <string name="setting_basic_out_clear">Clear cache on exit</string>
+    <string name="setting_basic_notify">Notification</string>
+    <string name="setting_senior_update">Automatic check updates</string>
+    <string name="setting_auto_run_on">on</string>
+    <string name="setting_auto_run_off">off</string>
+    <string name="setting_auto_run">Auto run</string>
+    <string name="setting_local_title">Language settings</string>
+    <string name="setting_local_set_failed">Failed, please try again...</string>
+    <string name="setting_local_zh">Simplified Chinese</string>
+    <string name="setting_local_en">English</string>
+    <string name="setting_senior_hid_benefits">Hidden benefits</string>
+    <string name="setting_encourage_soure">Give me a good review</string>
+    <string name="setting_encourage_share">Share it with friends</string>
+    <string name="setting_other_feedbakc">@string/feedback</string>
+    <string name="setting_app_wall">Application wall</string>
+    <string name="setting_desc_hid_benefits">Open hidden welfare</string>
+    <string name="setting_notify_is_open">Open notification</string>
+    <string name="version">Version update</string>
+    <string name="feedback">Feedback</string>
+
+    <string name="srl_header_failed">Refresh Failed</string>
+    <string name="srl_header_finish">Refresh Success</string>
+    <string name="srl_header_loading">Loading…</string>
+    <string name="srl_header_pulling">Pull Down To Refresh</string>
+    <string name="srl_header_refreshing">Wait For Loading…</string>
+    <string name="srl_header_release">Release To Refresh</string>
+    <string name="srl_header_secondary">Release To Second Floor</string>
+    <string name="srl_header_update">\'Last Update\' M-d HH:mm</string>
+
+<!--******************************* string array **************************************-->
+    <string-array name="news_channel_names">
+        <item>Headlines</item>
+        <item>International</item>
+        <item>Sociology</item>
+        <item>Finance</item>
+        <item>Technology</item>
+        <item>Internet</item>
+        <item>Digital</item>
+        <item>Estate</item>
+        <item>Car</item>
+        <item>Military</item>
+        <item>Sports</item>
+        <item>Science</item>
+    </string-array>
+
+    <string-array name="user_sex_items">
+        <item>men</item>
+        <item>women</item>
+        <item>secrecy</item>
+    </string-array>
+
+    <string-array name="user_hobby_items">
+        <item>Study</item>
+        <item>Game</item>
+        <item>KTV</item>
+        <item>Dance</item>
+        <item>Painting</item>
+        <item>Sports</item>
+    </string-array>
+
+    <string-array name="setting_locale">
+        <item>Follow system</item>
+        <item>Simplified Chinese</item>
+        <item>English</item>
+    </string-array>
+</resources>

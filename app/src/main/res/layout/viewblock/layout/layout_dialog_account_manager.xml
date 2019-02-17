@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_dialog_account_manager_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View style="@style/bg_line" />
+
+    <TextView
+        android:id="@+id/tv_popMenu_account_manager_change"
+        style="@style/account_manager"
+        android:text="@string/account_manager_change" />
+
+    <View style="@style/bg_line" />
+
+    <TextView
+        android:id="@+id/tv_popMenu_account_manager_logout"
+        style="@style/account_manager"
+        android:text="@string/account_manager_logout" />
+
+    <View style="@style/bg_line_blod" />
+
+    <TextView
+        android:id="@+id/tv_popMenu_account_manager_cancel"
+        style="@style/account_manager"
+        android:text="@string/account_manager_cancel" />
+</LinearLayout>
