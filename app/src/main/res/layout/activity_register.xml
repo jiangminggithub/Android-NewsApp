@@ -19,7 +19,7 @@
 
             <include
                 android:id="@+id/ly_register_bar"
-                layout="@layout/layout_login_navigation_bar" />
+                layout="@layout/layout_account_navigation_bar" />
 
             <LinearLayout
                 android:id="@+id/ll_register_two_username"

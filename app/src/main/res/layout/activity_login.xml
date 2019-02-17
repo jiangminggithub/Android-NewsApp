@@ -20,10 +20,10 @@
 
             <include
                 android:id="@+id/ly_retrieve_bar"
-                layout="@layout/layout_login_navigation_bar" />
+                layout="@layout/layout_account_navigation_bar" />
 
             <com.jm.news.customview.MCircleImageViewBase
-                android:id="@+id/app_menu_user_icon"
+                android:id="@+id/miv_app_menu_user_icon"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"

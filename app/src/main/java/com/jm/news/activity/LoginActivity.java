@@ -61,6 +61,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: ");
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        // 低版本兼容画面处理
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             setContentView(R.layout.activity_login);
         } else {

@@ -26,11 +26,8 @@ public class FragmentSettingViewModel extends AndroidViewModel {
     public static final int KEY_CHECK_UPDATE = 6;
     public static final int KEY_VERSION = 7;
 
-    // Radio box options
     private String[] mLocaleItems;
-    // Initial options for radio boxes
     private int mLocaleChoiceIndex = 0;
-
     private Context mContext;
     private Resources mResources;
     private SharedPreferences mSettingPrefences;

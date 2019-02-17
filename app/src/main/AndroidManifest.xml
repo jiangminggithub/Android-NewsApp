@@ -49,7 +49,7 @@
             android:name=".activity.WelcomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.WebviewActivity"
+            android:name=".activity.WebViewActivity"
             android:screenOrientation="portrait" />
     </application>
 

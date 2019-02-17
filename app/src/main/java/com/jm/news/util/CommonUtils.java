@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.jm.news.R;
 import com.jm.news.activity.MainActivity;
-import com.jm.news.activity.WebviewActivity;
+import com.jm.news.activity.WebViewActivity;
 import com.jm.news.define.DataDef;
 
 import java.lang.reflect.Field;
@@ -155,10 +155,11 @@ public class CommonUtils {
     }
 
     /**
-     *  create NewsItem PopupMenu
-     * @param context   target context
-     * @param view  PopMenu View Object
-     * @return   PopupMenu Object
+     * create NewsItem PopupMenu
+     *
+     * @param context target context
+     * @param view    PopMenu View Object
+     * @return PopupMenu Object
      */
     public PopupMenu showNewsItemPopupMenu(@NonNull Context context, @NonNull View view) {
         if (null == context || null == view) {
@@ -257,7 +258,7 @@ public class CommonUtils {
     public void jumpWebView(Context context, String newsLink, boolean isJavaScript) {
         Log.d(TAG, "jumpWebView: newsLink = " + newsLink);
         if (null != context) {
-            Intent intent = new Intent(context, WebviewActivity.class);
+            Intent intent = new Intent(context, WebViewActivity.class);
             intent.putExtra(DataDef.WebViewKey.KEY_URL, newsLink);
             intent.putExtra(DataDef.WebViewKey.KEY_OPEN_JAVASCRIPT, isJavaScript);
             context.startActivity(intent);

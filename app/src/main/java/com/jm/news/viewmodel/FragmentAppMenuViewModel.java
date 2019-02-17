@@ -13,16 +13,14 @@ import com.jm.news.R;
 import com.jm.news.common.Common;
 
 public class FragmentAppMenuViewModel extends AndroidViewModel {
+
     private static final String TAG = "FragmentAppMenuViewModel";
     public static final int ACCOUNT_TYPE_NAME = 0;
     public static final int ACCOUNT_TYPE_AUTOGRAPH = 1;
-
-    private String defaultShowText;
-
+    private static final String DEFAULT_SHOW_TEXT = Common.getInstance().getResourcesString(R.string.user_empty_content);
 
     public FragmentAppMenuViewModel(@NonNull Application application) {
         super(application);
-        defaultShowText = Common.getInstance().getResourcesString(R.string.user_empty_content);
     }
 
     @SuppressLint("LongLogTag")
@@ -47,15 +45,15 @@ public class FragmentAppMenuViewModel extends AndroidViewModel {
                 SharedPreferences preference = common.getPreference(resources.getString(R.string.app_user_detail_prefences));
                 if (null != resources && null != preference) {
                     String userID = Common.getInstance().getUser();
-                    String userAutograph = preference.getString(userID + UserActivityViewModel.UserInfo.USER_AUTOGRAPH, defaultShowText);
+                    String userAutograph = preference.getString(userID + UserActivityViewModel.UserInfo.USER_AUTOGRAPH, DEFAULT_SHOW_TEXT);
                     Log.d(TAG, "getAccountInfo: type = autograph , userAutograph = " + userAutograph);
-                    return TextUtils.isEmpty(userAutograph) ? defaultShowText : userAutograph;
+                    return TextUtils.isEmpty(userAutograph) ? DEFAULT_SHOW_TEXT : userAutograph;
                 }
 
             } else {
 
             }
         }
-        return defaultShowText;
+        return DEFAULT_SHOW_TEXT;
     }
 }

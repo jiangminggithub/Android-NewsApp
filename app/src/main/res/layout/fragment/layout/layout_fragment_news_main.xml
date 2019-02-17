@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/viewblock_smartrefresh_layout"
+        android:id="@+id/sfl_viewblock"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -15,14 +15,14 @@
             android:orientation="vertical">
 
             <com.youth.banner.Banner
-                android:id="@+id/fragment_main_news_banner"
+                android:id="@+id/banner_main_news"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:padding="8dp"
                 android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/viewblock_recyclerView"
+                android:id="@+id/rv_viewblock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"

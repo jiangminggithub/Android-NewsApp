@@ -21,7 +21,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mTvTitle = findViewById(R.id.tv_head_title);
         mTvBack.setOnClickListener(this);
         mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toobar_title_setting));
-        getFragmentManager().beginTransaction().replace(R.id.app_setting_content,new FragmentSetting()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.fl_app_setting_content, new FragmentSetting()).commit();
     }
 
     @Override

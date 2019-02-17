@@ -18,7 +18,7 @@ public class DataDef {
     }
 
     public static final class NewsChanelIDs {
-        public static  final String[] CHANEL_IDS = {
+        public static final String[] CHANEL_IDS = {
                 "5572a108b3cdc86cf39001cd",
                 "5572a108b3cdc86cf39001ce",
                 "5572a109b3cdc86cf39001da",
@@ -35,9 +35,9 @@ public class DataDef {
         public static final String BANNER_ID = "5572a10bb3cdc86cf39001f8";
     }
 
-    public static final class WebViewKey{
-        public static final String KEY_URL ="newsLink";
-        public static final String KEY_OPEN_JAVASCRIPT="openJavaScript";
+    public static final class WebViewKey {
+        public static final String KEY_URL = "newsLink";
+        public static final String KEY_OPEN_JAVASCRIPT = "openJavaScript";
     }
 
 }

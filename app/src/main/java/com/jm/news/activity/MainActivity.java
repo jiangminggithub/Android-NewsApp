@@ -123,7 +123,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mSlidingPaneListener = null;
         NewsFragmentsContainer.Instance().clearAll();
         super.onDestroy();
-//        System.exit(0);
     }
 
     @Override
@@ -153,106 +152,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 mSplSlidingPane.openPane();
                 break;
             case R.id.ib_main_search:
-//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                builder.setTitle("提示")
-//                        .setMessage("暂未开放哦")
-//                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//
-//                            }
-//                        })
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//
-//                            }
-//                        }).setCancelable(false);
-//                AlertDialog dialog = builder.create();
-//                dialog.getWindow().setWindowAnimations(R.style.diag_in_out_style);
-//                dialog.show();
-//                new SweetAlertDialog(this).setTitleText("提示").setContentText("当前功能未开放哦！").show();
-//                new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-//                        .setTitleText("数据请求失败")
-//                        .setContentText("网络状态不可用或api不可用")
-//                        .show();
-
-//                new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-//                        .setTitleText("Good job!")
-//                        .setContentText("You clicked the button!")
-//                        .show();
-
-//                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-//                        .setTitleText("Are you sure?")
-//                        .setContentText("Won't be able to recover this file!")
-//                        .setConfirmText("Yes,delete it!")
-//                        .show();
-
-//                new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-//                        .setTitleText("Sweet!")
-//                        .setContentText("Here's a custom image.")
-//                        .setCustomImage(R.mipmap.icon)
-//                        .show();
-
-
-//                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-//                        .setTitleText("Are you sure?")
-//                        .setContentText("Won't be able to recover this file!")
-//                        .setCancelText("No,cancel plx!")
-//                        .setConfirmText("Yes,delete it!")
-//                        .showCancelButton(true)
-//                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                            @Override
-//                            public void onClick(SweetAlertDialog sDialog) {
-//                                sDialog.cancel();
-//                            }
-//                        })
-//                        .show();
-
-
-//                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-//                        .setTitleText("确定删除 ?")
-//                        .setContentText("永久删除缓存数据")
-//                        .setConfirmText("删除")
-//                        .setCancelText("取消")
-//                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                            @Override
-//                            public void onClick(final SweetAlertDialog sDialog) {
-//                                boolean is = true;
-//                                if (is) {
-//                                    sDialog.setTitleText("操作失败")
-//                                            .setContentText("请检查应用相关权限")
-//                                            .setConfirmText("确定")
-//                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                                                @Override
-//                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                                                    sweetAlertDialog.dismiss();
-//                                                }
-//                                            })
-//                                            .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-//                                } else {
-//                                    sDialog
-//                                            .setTitleText("已删除")
-//                                            .setContentText("已删除 100 MB 缓存数据")
-//                                            .setConfirmText("确定")
-//                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                                                @Override
-//                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                                                    sweetAlertDialog.dismiss();
-//                                                }
-//                                            })
-//                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-//                                }
-//                                sDialog.getButton(SweetAlertDialog.BUTTON_CANCEL).setVisibility(View.GONE);
-//                            }
-//                        })
-//                        .show();
-
-//                SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-//                pDialog.getProgressHelper().setBarColor(Color.RED);
-//                pDialog.setTitleText("Loading");
-//                pDialog.setCancelable(true);
-//                pDialog.show();
                 Common common = Common.getInstance();
                 new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
@@ -283,16 +182,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public Fragment getItem(int i) {
             Log.d(TAG, "getItem: i=" + i);
             Fragment fragment = null;
-            int size = NewsFragmentsContainer.Instance().getFragmentHashMap().size();
-            if ((i + 1) > size || null == NewsFragmentsContainer.Instance().getFragmentHashMap().get(i)) {
+            NewsFragmentsContainer container = NewsFragmentsContainer.Instance();
+            int size = container.getFragmentHashMap().size();
+            if ((i + 1) > size || null == container.getFragmentHashMap().get(i)) {
                 if (i == 0) {
                     fragment = new FragmentNewsMain(i);
                 } else {
                     fragment = new FragmentNewsItem(i);
                 }
-                NewsFragmentsContainer.Instance().putFragmentHashMap(i, fragment);
+                container.putFragmentHashMap(i, fragment);
             }
-            fragment = NewsFragmentsContainer.Instance().getFragmentHashMap().get(i);
+            fragment = container.getFragmentHashMap().get(i);
             return null == fragment ? new FragmentErrorItem() : fragment;
         }
 

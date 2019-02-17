@@ -18,11 +18,11 @@ public class UserActivityViewModel extends AndroidViewModel {
     private SharedPreferences.Editor edit;
     private Context mContext;
 
-    // Radio box options
+    // Radio box mGlideOptions
     private String[] mSexItems;
-    // Initial options for radio boxes
+    // Initial mGlideOptions for radio boxes
     private int mSexCheckedItemIndex = 0;
-    // Checkbox options
+    // Checkbox mGlideOptions
     private String[] mHobbyItems;
     // Check box initial selection
     private boolean[] mHobbyCheckedItemsFlag = {false, false, false, false, false, false};

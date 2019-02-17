@@ -9,7 +9,7 @@
     <include layout="@layout/layout_head"></include>
 
     <FrameLayout
-        android:id="@+id/app_setting_content"
+        android:id="@+id/fl_app_setting_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"

@@ -9,15 +9,14 @@ import android.widget.TextView;
 import com.jm.news.R;
 import com.jm.news.customview.MImageViewBase;
 
-public class ViewHolderOneImage extends RecyclerView.ViewHolder
-{
+public class ViewHolderOneImage extends RecyclerView.ViewHolder {
     private TextView mTitle;
     private TextView mSource;
     private TextView mPubData;
     private MImageViewBase mImage;
     private LinearLayout mImageLatout;
 
-    public ViewHolderOneImage(@NonNull View itemView){
+    public ViewHolderOneImage(@NonNull View itemView) {
         super(itemView);
         mTitle = itemView.findViewById(R.id.news_item_one_title);
         mSource = itemView.findViewById(R.id.news_item_one_source);

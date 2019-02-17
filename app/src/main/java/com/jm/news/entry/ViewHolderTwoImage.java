@@ -20,8 +20,8 @@ public class ViewHolderTwoImage extends RecyclerView.ViewHolder {
         mTitle = itemView.findViewById(R.id.news_item_two_title);
         mSource = itemView.findViewById(R.id.news_item_two_source);
         mPubData = itemView.findViewById(R.id.news_item_two_data);
-        mImageLeft=itemView.findViewById(R.id.news_item_two_img_left);
-        mImageRight=itemView.findViewById(R.id.news_item_two_img_rignt);
+        mImageLeft = itemView.findViewById(R.id.news_item_two_img_left);
+        mImageRight = itemView.findViewById(R.id.news_item_two_img_rignt);
     }
 
     public TextView getmTitle() {

@@ -29,10 +29,11 @@ import com.jm.news.util.CommonUtils;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class WebviewActivity extends BaseActivity implements View.OnClickListener {
+public class WebViewActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String TAG = "WebviewActivity";
+    private static final String TAG = "WebViewActivity";
     private static final int INIT_PROGRESS_STATUS = 85;
+
     private TextView mTvBack;
     private TextView mTvTitel;
     private WebView mWebView;
@@ -97,6 +98,14 @@ public class WebviewActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
+    protected void onDestroy() {
+        if (null != mWebView) {
+            mWebView.clearCache(true);
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_head_back:
@@ -130,7 +139,7 @@ public class WebviewActivity extends BaseActivity implements View.OnClickListene
                     }
                     break;
                 case R.id.menu_webview_open_other:
-                    CommonUtils.getInstance().jumpOtherApp(WebviewActivity.this, mNewsUrl);
+                    CommonUtils.getInstance().jumpOtherApp(WebViewActivity.this, mNewsUrl);
                     break;
                 default:
                     break;

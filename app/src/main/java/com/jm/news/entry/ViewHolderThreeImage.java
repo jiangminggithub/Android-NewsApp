@@ -18,12 +18,12 @@ public class ViewHolderThreeImage extends RecyclerView.ViewHolder {
 
     public ViewHolderThreeImage(@NonNull View itemView) {
         super(itemView);
-        mTitle=itemView.findViewById(R.id.news_item_three_title);
-        mSource=itemView.findViewById(R.id.news_item_three_source);
-        mPubData=itemView.findViewById(R.id.news_item_three_data);
-        mImageLeft=itemView.findViewById(R.id.news_item_three_img_left);
-        mImageMiddle=itemView.findViewById(R.id.news_item_three_img_middle);
-        mImageRight=itemView.findViewById(R.id.news_item_three_img_rignt);
+        mTitle = itemView.findViewById(R.id.news_item_three_title);
+        mSource = itemView.findViewById(R.id.news_item_three_source);
+        mPubData = itemView.findViewById(R.id.news_item_three_data);
+        mImageLeft = itemView.findViewById(R.id.news_item_three_img_left);
+        mImageMiddle = itemView.findViewById(R.id.news_item_three_img_middle);
+        mImageRight = itemView.findViewById(R.id.news_item_three_img_rignt);
     }
 
     public TextView getmTitle() {

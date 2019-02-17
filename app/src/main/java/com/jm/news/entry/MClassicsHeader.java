@@ -16,6 +16,7 @@ import java.util.Locale;
 
 public class MClassicsHeader extends ClassicsHeader {
     private Common mCommon = Common.getInstance();
+
     public MClassicsHeader(Context context) {
         super(context);
     }

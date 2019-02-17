@@ -32,21 +32,21 @@ import q.rorbin.badgeview.QBadgeView;
 public class FragmentAppMenu extends MFragmentBase {
 
     private static final String TAG = "FragmentAppMenu";
-    private LinearLayout mUser;
-    private MCircleImageViewBase mIcon;
+    private LinearLayout mLlUser;
+    private MCircleImageViewBase mIvIcon;
     private TextView mTvUserName;
     private TextView mTvAutograph;
-    private LinearLayout mMessage;
-    private LinearLayout mVip;
-    private LinearLayout mTheme;
-    private LinearLayout mCollected;
-    private LinearLayout mFriends;
-    private LinearLayout mLoacation;
-    private LinearLayout mAbout;
-    private LinearLayout mSetting;
-    private LinearLayout mExit;
+    private LinearLayout mLlMessage;
+    private LinearLayout mLlVip;
+    private LinearLayout mLlTheme;
+    private LinearLayout mLlCollected;
+    private LinearLayout mLlFriends;
+    private LinearLayout mLlLoacation;
+    private LinearLayout mLlAbout;
+    private LinearLayout mLlSetting;
+    private LinearLayout mLlExit;
 
-    private MyClickListener clickListener;
+    private MyClickListener mClickListener;
 
     private FragmentAppMenuViewModel mViewModel;
 
@@ -59,19 +59,19 @@ public class FragmentAppMenu extends MFragmentBase {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = getInflaterView(R.layout.layout_fragment_app_menu, inflater, container, savedInstanceState);
         if (!isRecreate()) {
-            mUser = view.findViewById(R.id.app_menu_user);
-            mIcon = view.findViewById(R.id.app_menu_user_icon);
-            mTvUserName = view.findViewById(R.id.app_menu_user_name);
-            mTvAutograph = view.findViewById(R.id.app_menu_user_autograph);
-            mMessage = view.findViewById(R.id.app_menu_message);
-            mVip = view.findViewById(R.id.app_menu_vip);
-            mTheme = view.findViewById(R.id.app_menu_theme);
-            mCollected = view.findViewById(R.id.app_menu_collected);
-            mFriends = view.findViewById(R.id.app_menu_friends);
-            mLoacation = view.findViewById(R.id.app_menu_location);
-            mAbout = view.findViewById(R.id.app_menu_about);
-            mSetting = view.findViewById(R.id.app_menu_setting);
-            mExit = view.findViewById(R.id.app_menu_exit);
+            mLlUser = view.findViewById(R.id.ll_app_menu_user);
+            mIvIcon = view.findViewById(R.id.miv_app_menu_user_icon);
+            mTvUserName = view.findViewById(R.id.tv_app_menu_user_name);
+            mTvAutograph = view.findViewById(R.id.tv_app_menu_user_autograph);
+            mLlMessage = view.findViewById(R.id.ll_app_menu_message);
+            mLlVip = view.findViewById(R.id.ll_app_menu_vip);
+            mLlTheme = view.findViewById(R.id.ll_app_menu_theme);
+            mLlCollected = view.findViewById(R.id.ll_app_menu_collected);
+            mLlFriends = view.findViewById(R.id.ll_app_menu_friends);
+            mLlLoacation = view.findViewById(R.id.ll_app_menu_location);
+            mLlAbout = view.findViewById(R.id.ll_app_menu_about);
+            mLlSetting = view.findViewById(R.id.ll_app_menu_setting);
+            mLlExit = view.findViewById(R.id.ll_app_menu_exit);
 
             mViewModel = ViewModelProviders.of(this).get(FragmentAppMenuViewModel.class);
 
@@ -93,25 +93,25 @@ public class FragmentAppMenu extends MFragmentBase {
 
     @Override
     public void onDestroy() {
-        clickListener = null;
+        mClickListener = null;
         super.onDestroy();
     }
 
     private void initview() {
-        clickListener = new MyClickListener();
-        mUser.setOnClickListener(clickListener);
-        mIcon.setOnClickListener(clickListener);
-        mTvUserName.setOnClickListener(clickListener);
-        mTvAutograph.setOnClickListener(clickListener);
-        mMessage.setOnClickListener(clickListener);
-        mVip.setOnClickListener(clickListener);
-        mTheme.setOnClickListener(clickListener);
-        mCollected.setOnClickListener(clickListener);
-        mFriends.setOnClickListener(clickListener);
-        mLoacation.setOnClickListener(clickListener);
-        mAbout.setOnClickListener(clickListener);
-        mSetting.setOnClickListener(clickListener);
-        mExit.setOnClickListener(clickListener);
+        mClickListener = new MyClickListener();
+        mLlUser.setOnClickListener(mClickListener);
+        mIvIcon.setOnClickListener(mClickListener);
+        mTvUserName.setOnClickListener(mClickListener);
+        mTvAutograph.setOnClickListener(mClickListener);
+        mLlMessage.setOnClickListener(mClickListener);
+        mLlVip.setOnClickListener(mClickListener);
+        mLlTheme.setOnClickListener(mClickListener);
+        mLlCollected.setOnClickListener(mClickListener);
+        mLlFriends.setOnClickListener(mClickListener);
+        mLlLoacation.setOnClickListener(mClickListener);
+        mLlAbout.setOnClickListener(mClickListener);
+        mLlSetting.setOnClickListener(mClickListener);
+        mLlExit.setOnClickListener(mClickListener);
 
         new QBadgeView(getContext())
                 .setBadgeNumber(2)
@@ -131,7 +131,7 @@ public class FragmentAppMenu extends MFragmentBase {
 //                .setBadgePadding(3, true)
                 .setBadgePadding(5, true)
                 .setShowShadow(true)
-                .bindTarget(mMessage);
+                .bindTarget(mLlMessage);
 
         new QBadgeView(getContext())
                 .setBadgeNumber(1)
@@ -151,7 +151,7 @@ public class FragmentAppMenu extends MFragmentBase {
 //                .setBadgePadding(3, true)
                 .setBadgePadding(5, true)
                 .setShowShadow(true)
-                .bindTarget(mTheme);
+                .bindTarget(mLlTheme);
     }
 
 
@@ -187,10 +187,10 @@ public class FragmentAppMenu extends MFragmentBase {
         public void onClick(View v) {
             Intent intent = null;
             switch (v.getId()) {
-                case R.id.app_menu_user:
-                case R.id.app_menu_user_icon:
-                case R.id.app_menu_user_name:
-                case R.id.app_menu_user_autograph:
+                case R.id.ll_app_menu_user:
+                case R.id.miv_app_menu_user_icon:
+                case R.id.tv_app_menu_user_name:
+                case R.id.tv_app_menu_user_autograph:
                     if (Common.getInstance().hasUser()) {
                         intent = new Intent(getContext(), UserActivity.class);
                     } else {
@@ -198,25 +198,25 @@ public class FragmentAppMenu extends MFragmentBase {
                     }
                     startActivity(intent);
                     break;
-                case R.id.app_menu_message:
+                case R.id.ll_app_menu_message:
                     break;
-                case R.id.app_menu_vip:
+                case R.id.ll_app_menu_vip:
                     break;
-                case R.id.app_menu_theme:
+                case R.id.ll_app_menu_theme:
                     break;
-                case R.id.app_menu_collected:
+                case R.id.ll_app_menu_collected:
                     break;
-                case R.id.app_menu_friends:
+                case R.id.ll_app_menu_friends:
                     break;
-                case R.id.app_menu_location:
+                case R.id.ll_app_menu_location:
                     break;
-                case R.id.app_menu_about:
+                case R.id.ll_app_menu_about:
                     break;
-                case R.id.app_menu_setting:
+                case R.id.ll_app_menu_setting:
                     intent = new Intent(getContext(), SettingActivity.class);
                     startActivity(intent);
                     break;
-                case R.id.app_menu_exit:
+                case R.id.ll_app_menu_exit:
                     new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(Common.getInstance().getResourcesString(R.string.app_menu_dialog_exit_title))
                             .setCancelText(Common.getInstance().getResourcesString(R.string.dialog_cancel))

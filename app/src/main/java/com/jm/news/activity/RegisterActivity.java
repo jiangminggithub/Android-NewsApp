@@ -60,6 +60,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 低版本兼容画面处理
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             setContentView(R.layout.activity_register);
         } else {
@@ -171,7 +172,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
 
-
     /************************************ private function ************************************/
     private void setBtnRegisterSubmitStatus(boolean status) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -188,7 +188,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
         }
     }
-
 
 
     /************************************ inner class *****************************************/

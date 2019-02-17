@@ -55,7 +55,7 @@ public class HeaderBehavior extends CoordinatorLayout.Behavior {
                 downReach = true;
             }
             // 整体可以滑动，否则RecyclerView消费滑动事件
-            Log.d(TAG, "onNestedPreScroll: canScroll()="+canScroll(child, dy));
+            Log.d(TAG, "onNestedPreScroll: canScroll()=" + canScroll(child, dy));
 //            if (canScroll(child, dy) && pos == 0) {
 //                float finalY = child.getTranslationY() - dy;
 //                Log.d(TAG, "onNestedPreScroll: finalY=" + finalY);

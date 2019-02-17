@@ -1,12 +1,10 @@
 package com.jm.news.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.jm.news.R;
 import com.jm.news.bean.NewsBannerBean;
 import com.jm.news.bean.NewsBannerDataBean;
 import com.jm.news.bean.NewsChannelDataBean;
@@ -36,7 +34,7 @@ public class DataManager {
 
     // function related field
     private Context mContext;
-//    private Resources resources;
+    //    private Resources resources;
     private DataResponsetListener mDataResponsetListener;
 
     public void requestData() {

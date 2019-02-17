@@ -9,8 +9,9 @@ import com.youth.banner.Banner;
 
 
 public class MBannerBase extends Banner {
-    private static final String TAG="MBannerBase";
+    private static final String TAG = "MBannerBase";
     private float lastY;
+
     public MBannerBase(Context context) {
         super(context);
     }
@@ -25,11 +26,11 @@ public class MBannerBase extends Banner {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction()==MotionEvent.ACTION_DOWN){
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             float lastY = event.getY();
         }
-        if(event.getAction()==MotionEvent.ACTION_MOVE || event.getAction()==MotionEvent.ACTION_UP){
-            if(event.getY()-lastY <0){
+        if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP) {
+            if (event.getY() - lastY < 0) {
                 Log.d(TAG, "onTouchEvent: ----------------------------------------------");
                 return true;
             }

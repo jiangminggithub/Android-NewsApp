@@ -47,10 +47,10 @@ public class FragmentNewsMain extends MFragmentBase {
     private Banner mBanner;
     private SmartRefreshLayout mSmartRefreshLayout;
     private RecyclerView mRecyclerView;
-    private MyRecyclerViewAdapter myViewAdapter;
-    private int fragmentID;
+    private MyRecyclerViewAdapter mViewAdapter;
+    private int mFragmentID;
     private FragmentNewsMainViewModel mViewModel = null;
-    public RequestOptions options = new RequestOptions()
+    public RequestOptions mGlideOptions = new RequestOptions()
 //            .skipMemoryCache(true)  // 设备配置较低的可以关闭内存缓存
             .placeholder(R.mipmap.loading_static)//图片加载出来前，显示的图片 Pictures displayed before they are loaded
             .fallback(R.mipmap.load_error) //url为空的时候,显示的图片 Pictures displayed when URL is empty
@@ -62,7 +62,7 @@ public class FragmentNewsMain extends MFragmentBase {
 
     @SuppressLint("ValidFragment")
     public FragmentNewsMain(int fragmentID) {
-        this.fragmentID = fragmentID;
+        this.mFragmentID = fragmentID;
     }
 
     @Nullable
@@ -71,9 +71,9 @@ public class FragmentNewsMain extends MFragmentBase {
         Log.d(TAG, "onCreateView: ");
         // view recycler
         View view = getInflaterView(R.layout.layout_fragment_news_main, inflater, container, savedInstanceState);
-        mBanner = view.findViewById(R.id.fragment_main_news_banner);
-        mSmartRefreshLayout = view.findViewById(R.id.viewblock_smartrefresh_layout);
-        mRecyclerView = view.findViewById(R.id.viewblock_recyclerView);
+        mBanner = view.findViewById(R.id.banner_main_news);
+        mSmartRefreshLayout = view.findViewById(R.id.sfl_viewblock);
+        mRecyclerView = view.findViewById(R.id.rv_viewblock);
         if (!isRecreate()) {
             initData();
             initView();
@@ -102,7 +102,7 @@ public class FragmentNewsMain extends MFragmentBase {
 
     @Override
     public void onDestroy() {
-        myViewAdapter.removeListener();
+        mViewAdapter.removeListener();
         Log.d(TAG, "onDestroy: ");
         super.onDestroy();
     }
@@ -110,7 +110,7 @@ public class FragmentNewsMain extends MFragmentBase {
 
     private void initData() {
         mViewModel = ViewModelProviders.of(this).get(FragmentNewsMainViewModel.class);
-        mViewModel.updatetChannelID(fragmentID);
+        mViewModel.updatetChannelID(mFragmentID);
     }
 
     private void initView() {
@@ -119,13 +119,13 @@ public class FragmentNewsMain extends MFragmentBase {
         mSmartRefreshLayout.setOnRefreshListener(new MyRefreshListener());
         mSmartRefreshLayout.setOnLoadMoreListener(new MyLoadMoreListener());
 
-        myViewAdapter = new MyRecyclerViewAdapter();
-        myViewAdapter.setmOnItemClickListener(new MyItemClickListener());
+        mViewAdapter = new MyRecyclerViewAdapter();
+        mViewAdapter.setmOnItemClickListener(new MyItemClickListener());
 
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(OrientationHelper.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setAdapter(myViewAdapter);
+        mRecyclerView.setAdapter(mViewAdapter);
 //        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
         // bind observer
@@ -160,12 +160,12 @@ public class FragmentNewsMain extends MFragmentBase {
     private class NewsDataCountStatusObserver implements Observer<Boolean> {
         @Override
         public void onChanged(@Nullable Boolean b) {
-            if (null != b && null != myViewAdapter && null != mSmartRefreshLayout) {
+            if (null != b && null != mViewAdapter && null != mSmartRefreshLayout) {
                 if (b.booleanValue()) {
-                    myViewAdapter.notifyDataSetChanged();
+                    mViewAdapter.notifyDataSetChanged();
                     mSmartRefreshLayout.finishRefresh();
                 } else {
-                    myViewAdapter.notifyDataSetChanged();
+                    mViewAdapter.notifyDataSetChanged();
                     mSmartRefreshLayout.finishLoadMore();
                 }
             }
@@ -209,7 +209,7 @@ public class FragmentNewsMain extends MFragmentBase {
         public void displayImage(final Context context, Object path, final ImageView imageView) {
 //            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             Log.d(TAG, "displayImage: path" + (String) path);
-            Glide.with(imageView).load((String) path).apply(options).into(imageView);
+            Glide.with(imageView).load((String) path).apply(mGlideOptions).into(imageView);
         }
     }
 
@@ -254,7 +254,7 @@ public class FragmentNewsMain extends MFragmentBase {
                 if (mViewModel.getItemImgCount(i) > 0) {
                     holder.getmImageLatout().setVisibility(View.VISIBLE);
                     Glide.with(holder.getmImage())
-                            .load(mViewModel.getImgUrls(i, 0)).apply(options).into(holder.getmImage());
+                            .load(mViewModel.getImgUrls(i, 0)).apply(mGlideOptions).into(holder.getmImage());
                 } else {
                     holder.getmImageLatout().setVisibility(View.GONE);
                 }
@@ -264,11 +264,11 @@ public class FragmentNewsMain extends MFragmentBase {
                 holder.getmSource().setText(mViewModel.getNewsSource(i));
                 holder.getmPubData().setText(mViewModel.getPubDate(i));
                 Glide.with(holder.getmImageLeft())
-                        .load(mViewModel.getImgUrls(i, 0)).apply(options).into(holder.getmImageLeft());
+                        .load(mViewModel.getImgUrls(i, 0)).apply(mGlideOptions).into(holder.getmImageLeft());
                 Glide.with(holder.getmImageMiddle())
-                        .load(mViewModel.getImgUrls(i, 1)).apply(options).into(holder.getmImageMiddle());
+                        .load(mViewModel.getImgUrls(i, 1)).apply(mGlideOptions).into(holder.getmImageMiddle());
                 Glide.with(holder.getmImageRight())
-                        .load(mViewModel.getImgUrls(i, 2)).apply(options).into(holder.getmImageRight());
+                        .load(mViewModel.getImgUrls(i, 2)).apply(mGlideOptions).into(holder.getmImageRight());
             } else {
 
             }
