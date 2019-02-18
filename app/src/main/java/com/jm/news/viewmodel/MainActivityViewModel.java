@@ -6,12 +6,12 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.define.DataDef;
 import com.jm.news.util.CacheManager;
+import com.jm.news.util.LogUtils;
 
 public class MainActivityViewModel extends AndroidViewModel {
 
@@ -23,31 +23,33 @@ public class MainActivityViewModel extends AndroidViewModel {
     private String[] mChannelNames = null;
     private String[] mChannelIds = null;
 
-
     // livedate filed
     private MutableLiveData<Integer> mChannelDataChange = new MutableLiveData<>();
 
-
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
-        Log.d(TAG, "MainActivityViewModel: ");
+        LogUtils.d(TAG, "MainActivityViewModel: ");
         mContext = application;
         initialized();
     }
 
     @Override
     protected void onCleared() {
-        Log.d(TAG, "onCleared: ");
+        LogUtils.d(TAG, "onCleared: ");
         mChannelDataChange = null;
         if (null != mContext && Common.getInstance().isExitClearCache()) {
             int status = CacheManager.clearAllCache(mContext);
-            Log.d(TAG, "onCleared: clearAllCache status = " + status);
+            LogUtils.d(TAG, "onCleared: clearAllCache status = " + status);
         }
+        mContext = null;
+        mChannelIds = null;
+        mChannelNames = null;
         super.onCleared();
     }
 
     /***************************** public function *****************************/
     public void initialized() {
+        LogUtils.d(TAG, "initialized: ");
         Common common = Common.getInstance();
         Resources resources = common.getResources();
         if (null != resources) {
@@ -56,7 +58,7 @@ public class MainActivityViewModel extends AndroidViewModel {
             mChannelIds = DataDef.NewsChanelIDs.CHANEL_IDS;
             if (null != mChannelIds && null != mChannelNames) {
                 for (int i = 0; i < mChannelIds.length; i++) {
-                    Log.d(TAG, "initialized: channelID:" + i + " = " + mChannelIds[i]);
+                    LogUtils.d(TAG, "initialized: channelID:" + i + " = " + mChannelIds[i]);
                     common.addChannelID(i, mChannelIds[i]);
                 }
             }
@@ -68,6 +70,7 @@ public class MainActivityViewModel extends AndroidViewModel {
         return mChannelDataChange;
     }
 
+    /***************************** public function *****************************************/
     public int getChannelCount() {
         if (null != mChannelNames) {
             return mChannelNames.length;
@@ -76,6 +79,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
     public String getChannelName(int index) {
+        LogUtils.d(TAG, "getChannelName: index = " + index);
         if (null != mChannelNames && index < mChannelNames.length) {
             return mChannelNames[index];
         }

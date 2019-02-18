@@ -11,7 +11,7 @@
     android:id="@+id/ll_user_layout"
     tools:ignore="MissingDefaultResource">
 
-    <include layout="@layout/layout_head"/>
+    <include layout="@layout/layout_head" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                     android:id="@+id/ll_user_header"
                     style="@style/single_layout">
 
-                    <com.jm.news.customview.MCircleImageViewBase
+                    <com.jm.news.customview.MCircleImageView
                         android:id="@+id/miv_user_icon"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
@@ -47,7 +47,7 @@
                         android:singleLine="true"
                         android:text="日新月异" />
 
-                    <com.jm.news.customview.MImageViewBase
+                    <com.jm.news.customview.MImageView
                         android:id="@+id/miv_user_qrcode"
                         android:layout_width="40dp"
                         android:layout_height="40dp"

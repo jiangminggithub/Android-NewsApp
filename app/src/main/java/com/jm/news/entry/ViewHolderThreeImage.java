@@ -6,15 +6,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jm.news.R;
-import com.jm.news.customview.MImageViewBase;
+import com.jm.news.customview.MImageView;
 
 public class ViewHolderThreeImage extends RecyclerView.ViewHolder {
     private TextView mTvTitle;
     private TextView mTvSource;
     private TextView mTvPubData;
-    private MImageViewBase mIvImageLeft;
-    private MImageViewBase mIvImageMiddle;
-    private MImageViewBase mIvImageRight;
+    private MImageView mIvImageLeft;
+    private MImageView mIvImageMiddle;
+    private MImageView mIvImageRight;
 
     public ViewHolderThreeImage(@NonNull View itemView) {
         super(itemView);
@@ -38,15 +38,15 @@ public class ViewHolderThreeImage extends RecyclerView.ViewHolder {
         return mTvPubData;
     }
 
-    public MImageViewBase getIvImageLeft() {
+    public MImageView getIvImageLeft() {
         return mIvImageLeft;
     }
 
-    public MImageViewBase getIvImageMiddle() {
+    public MImageView getIvImageMiddle() {
         return mIvImageMiddle;
     }
 
-    public MImageViewBase getIvImageRight() {
+    public MImageView getIvImageRight() {
         return mIvImageRight;
     }
 }

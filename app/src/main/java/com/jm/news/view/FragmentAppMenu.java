@@ -1,7 +1,6 @@
 package com.jm.news.view;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,8 +20,10 @@ import com.jm.news.activity.LoginActivity;
 import com.jm.news.activity.SettingActivity;
 import com.jm.news.activity.UserActivity;
 import com.jm.news.common.Common;
-import com.jm.news.customview.MCircleImageViewBase;
+import com.jm.news.customview.MCircleImageView;
 import com.jm.news.customview.MFragmentBase;
+import com.jm.news.util.JumpUtils;
+import com.jm.news.util.LogUtils;
 import com.jm.news.viewmodel.FragmentAppMenuViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -33,7 +34,7 @@ public class FragmentAppMenu extends MFragmentBase {
 
     private static final String TAG = "FragmentAppMenu";
     private LinearLayout mLlUser;
-    private MCircleImageViewBase mIvIcon;
+    private MCircleImageView mIvIcon;
     private TextView mTvUserName;
     private TextView mTvAutograph;
     private LinearLayout mLlMessage;
@@ -41,7 +42,7 @@ public class FragmentAppMenu extends MFragmentBase {
     private LinearLayout mLlTheme;
     private LinearLayout mLlCollected;
     private LinearLayout mLlFriends;
-    private LinearLayout mLlLoacation;
+    private LinearLayout mLlLocation;
     private LinearLayout mLlAbout;
     private LinearLayout mLlSetting;
     private LinearLayout mLlExit;
@@ -57,6 +58,7 @@ public class FragmentAppMenu extends MFragmentBase {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: ");
         View view = getInflaterView(R.layout.layout_fragment_app_menu, inflater, container, savedInstanceState);
         if (!isRecreate()) {
             mLlUser = view.findViewById(R.id.ll_app_menu_user);
@@ -68,7 +70,7 @@ public class FragmentAppMenu extends MFragmentBase {
             mLlTheme = view.findViewById(R.id.ll_app_menu_theme);
             mLlCollected = view.findViewById(R.id.ll_app_menu_collected);
             mLlFriends = view.findViewById(R.id.ll_app_menu_friends);
-            mLlLoacation = view.findViewById(R.id.ll_app_menu_location);
+            mLlLocation = view.findViewById(R.id.ll_app_menu_location);
             mLlAbout = view.findViewById(R.id.ll_app_menu_about);
             mLlSetting = view.findViewById(R.id.ll_app_menu_setting);
             mLlExit = view.findViewById(R.id.ll_app_menu_exit);
@@ -82,6 +84,7 @@ public class FragmentAppMenu extends MFragmentBase {
 
     @Override
     public void onStart() {
+        Log.d(TAG, "onStart: ");
         super.onStart();
         updateView();
     }
@@ -93,11 +96,27 @@ public class FragmentAppMenu extends MFragmentBase {
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy: ");
+        mTvUserName = null;
+        mTvAutograph = null;
+        mIvIcon = null;
+        mLlAbout = null;
+        mLlCollected = null;
+        mLlExit = null;
+        mLlFriends = null;
+        mLlLocation = null;
+        mLlMessage = null;
+        mLlSetting = null;
+        mLlTheme = null;
+        mLlUser = null;
+        mLlVip = null;
         mClickListener = null;
+        mViewModel = null;
         super.onDestroy();
     }
 
     private void initview() {
+        Log.d(TAG, "initview: ");
         mClickListener = new MyClickListener();
         mLlUser.setOnClickListener(mClickListener);
         mIvIcon.setOnClickListener(mClickListener);
@@ -108,7 +127,7 @@ public class FragmentAppMenu extends MFragmentBase {
         mLlTheme.setOnClickListener(mClickListener);
         mLlCollected.setOnClickListener(mClickListener);
         mLlFriends.setOnClickListener(mClickListener);
-        mLlLoacation.setOnClickListener(mClickListener);
+        mLlLocation.setOnClickListener(mClickListener);
         mLlAbout.setOnClickListener(mClickListener);
         mLlSetting.setOnClickListener(mClickListener);
         mLlExit.setOnClickListener(mClickListener);
@@ -121,7 +140,7 @@ public class FragmentAppMenu extends MFragmentBase {
                 .setOnDragStateChangedListener(new Badge.OnDragStateChangedListener() {
                     @Override
                     public void onDragStateChanged(int dragState, Badge badge, View targetView) {
-                        Log.d(TAG, "onDragStateChanged: dragState=" + dragState);
+                        LogUtils.d(TAG, "onDragStateChanged: dragState=" + dragState);
                         if (dragState == Badge.OnDragStateChangedListener.STATE_SUCCEED) {
                             Toast.makeText(getContext(), "已取消查看", Toast.LENGTH_SHORT).show();
                         }
@@ -141,7 +160,7 @@ public class FragmentAppMenu extends MFragmentBase {
                 .setOnDragStateChangedListener(new Badge.OnDragStateChangedListener() {
                     @Override
                     public void onDragStateChanged(int dragState, Badge badge, View targetView) {
-                        Log.d(TAG, "onDragStateChanged: dragState=" + dragState);
+                        LogUtils.d(TAG, "onDragStateChanged: dragState=" + dragState);
                         if (dragState == Badge.OnDragStateChangedListener.STATE_SUCCEED) {
                             Toast.makeText(getContext(), "已取消查看", Toast.LENGTH_SHORT).show();
                         }
@@ -156,10 +175,11 @@ public class FragmentAppMenu extends MFragmentBase {
 
 
     private void updateView() {
+        LogUtils.d(TAG, "updateView: ");
         if (null != mViewModel) {
             String userName = mViewModel.getAccountInfo(FragmentAppMenuViewModel.ACCOUNT_TYPE_NAME);
             String userAutograph = mViewModel.getAccountInfo(FragmentAppMenuViewModel.ACCOUNT_TYPE_AUTOGRAPH);
-            Log.d(TAG, "updateView: name = " + userName + ", userAutograph = " + userAutograph);
+            LogUtils.d(TAG, "updateView: name = " + userName + ", userAutograph = " + userAutograph);
             if (!TextUtils.isEmpty(userName)) {
                 if ("-".equals(userName)) {
                     mTvUserName.setText(R.string.user_no_login);
@@ -185,18 +205,16 @@ public class FragmentAppMenu extends MFragmentBase {
 
         @Override
         public void onClick(View v) {
-            Intent intent = null;
             switch (v.getId()) {
                 case R.id.ll_app_menu_user:
                 case R.id.miv_app_menu_user_icon:
                 case R.id.tv_app_menu_user_name:
                 case R.id.tv_app_menu_user_autograph:
                     if (Common.getInstance().hasUser()) {
-                        intent = new Intent(getContext(), UserActivity.class);
+                        JumpUtils.jumpActivity(getContext(), UserActivity.class);
                     } else {
-                        intent = new Intent(getContext(), LoginActivity.class);
+                        JumpUtils.jumpActivity(getContext(), LoginActivity.class);
                     }
-                    startActivity(intent);
                     break;
                 case R.id.ll_app_menu_message:
                     break;
@@ -213,8 +231,7 @@ public class FragmentAppMenu extends MFragmentBase {
                 case R.id.ll_app_menu_about:
                     break;
                 case R.id.ll_app_menu_setting:
-                    intent = new Intent(getContext(), SettingActivity.class);
-                    startActivity(intent);
+                    JumpUtils.jumpActivity(getContext(), SettingActivity.class);
                     break;
                 case R.id.ll_app_menu_exit:
                     new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)

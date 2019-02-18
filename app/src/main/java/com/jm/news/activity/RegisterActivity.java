@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +24,7 @@ import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.util.CommonUtils;
+import com.jm.news.util.LogUtils;
 import com.jm.news.viewmodel.RegisterActivityViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -60,6 +60,7 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d(TAG, "onCreate: ");
         // 低版本兼容画面处理
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             setContentView(R.layout.activity_register);
@@ -98,12 +99,14 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
 
     @Override
     protected void onStart() {
+        LogUtils.d(TAG, "onStart: ");
         super.onStart();
         mEtTextChangeWatcher.afterTextChanged(null);
     }
 
     @Override
     protected void onDestroy() {
+        LogUtils.d(TAG, "onDestroy: ");
         mIbNavigationBack = null;
         mTvNavigationTitle = null;
         mEtRegisterUsername = null;
@@ -153,7 +156,7 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
 
         @Override
         public void onChanged(@Nullable Integer integer) {
-            Log.d(TAG, "onChanged: change = " + integer);
+            LogUtils.d(TAG, "onChanged: change = " + integer);
             if (null != integer) {
                 switch (integer) {
                     case RegisterActivityViewModel.REGISTER_STATUS_SUCCESS:
@@ -198,9 +201,10 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    LogUtils.d(TAG, "run: ");
                     String accountName = mEtRegisterUsername.getText().toString().trim();
                     String accountPwd = mEtRegisterPwd.getText().toString().trim();
-                    boolean isAutoLogin = mCbProtocol.isChecked();
+                    boolean isAutoLogUtilsin = mCbProtocol.isChecked();
                     if (!TextUtils.isEmpty(accountName) && !TextUtils.isEmpty(accountPwd) && accountPwd.length() >= 6) {
                         mViewModel.registerClicked(accountName, accountPwd);
                     }
@@ -255,7 +259,7 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            Log.d(TAG, "onCheckedChanged: isChecked = " + isChecked);
+            LogUtils.d(TAG, "onCheckedChanged: isChecked = " + isChecked);
             mEtTextChangeWatcher.afterTextChanged(null);
         }
     }

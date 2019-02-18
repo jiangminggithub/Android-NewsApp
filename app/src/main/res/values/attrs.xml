@@ -8,10 +8,22 @@
         <attr name="left_bottom_radius" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="MCircleImageViewBase">
+    <declare-styleable name="MCircleImageView">
         <attr name="civ_border_width" format="dimension" />
         <attr name="civ_border_color" format="color" />
         <attr name="civ_border_overlay" format="boolean" />
         <attr name="civ_circle_background_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="circleProgress">
+        <!-- 圆实心的颜色 -->
+        <attr name="circSolidColor" format="color"></attr>
+        <!-- 圆边框的颜色 -->
+        <attr name="circFrameColor" format="color"></attr>
+        <!-- 进度条的颜色 -->
+        <attr name="progressColor" format="color"></attr>
+        <!-- 文字的颜色 -->
+        <attr name="textColor" format="color"></attr>
+
     </declare-styleable>
 </resources>

@@ -2,7 +2,6 @@ package com.jm.news.util;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.jm.news.bean.NewsBannerBean;
@@ -11,7 +10,7 @@ import com.jm.news.bean.NewsChannelDataBean;
 import com.jm.news.bean.NewsDataBean;
 import com.jm.news.bean.NewsDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean;
 import com.jm.news.bean.NewsDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean.ImageurlsBean;
-import com.jm.news.bean.NewsDataItemBean;
+import com.jm.news.bean.NewsItemBean;
 import com.jm.news.define.DataDef;
 import com.show.api.ShowApiRequest;
 
@@ -31,10 +30,12 @@ public class DataManager {
     public final static int NEWS_TYPE_CHANNEL = 0;
     public final static int NEWS_TYPE_NEWS = 1;
     public final static int NEWS_TYPE_NEWS_BANNER = 3;
+    public final static String REQUEST_DEFAULT_PAGE_INDEX = "0";
+    public final static String REQUEST_DEFAULT_MAX_RESULT = "30";
+
 
     // function related field
     private Context mContext;
-    //    private Resources resources;
     private DataResponsetListener mDataResponsetListener;
 
     public void requestData() {
@@ -46,14 +47,13 @@ public class DataManager {
 
     public DataManager(Context context) {
         this.mContext = context;
-//        resources = mContext.getResources();
     }
 
 
     public void requestNewsNetworkData(@Nullable final int requestType, final String channelId, int pageIndex, int maxResult) {
-        Log.d(TAG, "requestNewsNetworkData: ------------------------------------------------------------------------------------");
-        Log.d(TAG, "requestNewsNetworkData: requestType = " + requestType + ", channelId = " + channelId + ", pageIndex = " + pageIndex + ", maxResult = " + maxResult);
-        Log.d(TAG, "requestNewsNetworkData: ------------------------------------------------------------------------------------");
+        LogUtils.d(TAG, "requestNewsNetworkData: ------------------------------------------------------------------------------------");
+        LogUtils.d(TAG, "requestNewsNetworkData: requestType = " + requestType + ", channelId = " + channelId + ", pageIndex = " + pageIndex + ", maxResult = " + maxResult);
+        LogUtils.d(TAG, "requestNewsNetworkData: ------------------------------------------------------------------------------------");
 //        if (true) {
 //            mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
 //            mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
@@ -71,8 +71,8 @@ public class DataManager {
         }
 
         final String type = requestType == NEWS_TYPE_CHANNEL ? NEWS_DATA_CHANNEL : NEWS_DATA_NEWS;
-        final String page = pageIndex > 0 ? String.valueOf(pageIndex) : "1";
-        final String maxCount = maxResult > 0 ? String.valueOf(maxResult) : "20";
+        final String page = pageIndex > 0 ? String.valueOf(pageIndex) : REQUEST_DEFAULT_PAGE_INDEX;
+        final String maxCount = maxResult > 0 ? String.valueOf(maxResult) : REQUEST_DEFAULT_MAX_RESULT;
 
         new Thread(new Runnable() {
             @Override
@@ -82,13 +82,13 @@ public class DataManager {
                         .addTextPara("page", page)
                         .addTextPara("maxResult", maxCount)
                         .post();
-                Log.d(TAG, "run: result=" + result);
+                LogUtils.d(TAG, "run: result=" + result);
 
                 Gson gson = new Gson();
                 switch (requestType) {
                     case NEWS_TYPE_CHANNEL:
                         NewsChannelDataBean chanelDataBean = gson.fromJson(result, NewsChannelDataBean.class);
-                        if (chanelDataBean.getShowapi_res_code() == 0) {
+                        if (chanelDataBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
                             mDataResponsetListener.newsChanelDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK, chanelDataBean);
                         } else {
                             mDataResponsetListener.newsChanelDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, chanelDataBean);
@@ -96,7 +96,7 @@ public class DataManager {
                         break;
                     case NEWS_TYPE_NEWS:
                         NewsDataBean dataBean = gson.fromJson(result, NewsDataBean.class);
-                        if (dataBean.getShowapi_res_code() == 0) {
+                        if (dataBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
                             newsDataConver(dataBean);
                         } else {
                             mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
@@ -104,7 +104,7 @@ public class DataManager {
                         break;
                     case NEWS_TYPE_NEWS_BANNER:
                         NewsBannerDataBean bannerBean = gson.fromJson(result, NewsBannerDataBean.class);
-                        if (bannerBean.getShowapi_res_code() == 0) {
+                        if (bannerBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
                             newsBannerDataConver(bannerBean);
                         } else {
                             mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
@@ -120,18 +120,18 @@ public class DataManager {
 
     private void newsDataConver(NewsDataBean dataBean) {
         if (null == dataBean) {
-            Log.d(TAG, "newsDataConver: NewsDataBean is NULL");
+            LogUtils.d(TAG, "newsDataConver: NewsDataBean is NULL");
             mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
             return;
         }
 
-        List<NewsDataItemBean> DataList = new ArrayList<>();
-        NewsDataItemBean newDataItem = null;
+        List<NewsItemBean> DataList = new ArrayList<>();
+        NewsItemBean newDataItem = null;
         List<ImageurlsBean> imageurlsBeanList = null;
         try {
             for (ContentlistBean bean : dataBean.getShowapi_res_body().getPagebean().getContentlist()) {
                 int imgCount = 0;
-                newDataItem = new NewsDataItemBean();
+                newDataItem = new NewsItemBean();
                 newDataItem.setId(bean.getId());
                 newDataItem.setTitle(bean.getTitle());
                 newDataItem.setSource(bean.getSource());
@@ -152,17 +152,17 @@ public class DataManager {
             }
             int allPages = dataBean.getShowapi_res_body().getPagebean().getAllPages();
             mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK, allPages, DataList);
-            Log.d(TAG, "newsDataConver: Conver is Ok");
+            LogUtils.d(TAG, "newsDataConver: Conver is Ok");
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG, "newsDataConver: Conver is Failed");
+            LogUtils.d(TAG, "newsDataConver: Conver is Failed");
             mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
         }
     }
 
     private void newsBannerDataConver(NewsBannerDataBean bannerBean) {
         if (null == bannerBean) {
-            Log.d(TAG, "newsBannerDataConver: NewsBannerDataBean is NULL");
+            LogUtils.d(TAG, "newsBannerDataConver: NewsBannerDataBean is NULL");
             mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
             return;
         }
@@ -179,12 +179,12 @@ public class DataManager {
 
                 NewsBannerDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean item = contentlist.get(i);
                 if (null == item) {
-                    Log.d(TAG, "newsBannerDataConver: nullitem");
+                    LogUtils.d(TAG, "newsBannerDataConver: nullitem");
                     continue;
                 }
                 List<NewsBannerDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean.ImageurlsBean> imageurls = item.getImageurls();
                 if (null == imageurls || imageurls.size() < 1) {
-                    Log.d(TAG, "newsBannerDataConver: null imageurls");
+                    LogUtils.d(TAG, "newsBannerDataConver: null imageurls");
                     continue;
                 }
                 String title = item.getTitle();
@@ -195,7 +195,7 @@ public class DataManager {
                     continue;
                 }
 
-                Log.d(TAG, "newsBannerDataConver: imgUrl=" + imgUrl);
+                LogUtils.d(TAG, "newsBannerDataConver: imgUrl=" + imgUrl);
                 bannerTitles.add(title);
                 bannerImages.add(imgUrl);
                 bannerUrls.add(url);
@@ -212,11 +212,11 @@ public class DataManager {
 
             if (titleSize > 0 && imgUrlsSize > 0 && urlSize > 0) {
                 mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK, bannerDataBean);
-                Log.d(TAG, "newsBannerDataConver: Conver is OK");
+                LogUtils.d(TAG, "newsBannerDataConver: Conver is OK");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG, "newsBannerDataConver: Conver is Failed");
+            LogUtils.d(TAG, "newsBannerDataConver: Conver is Failed");
             mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
         }
 
@@ -283,7 +283,7 @@ public class DataManager {
      * Data Response Listener Define
      */
     public static abstract class DataResponsetListener {
-        public void newsDataBeanChange(int requestStatus, int allPages, List<NewsDataItemBean> newsDataItemList) {
+        public void newsDataBeanChange(int requestStatus, int allPages, List<NewsItemBean> newsDataItemList) {
         }
 
         public void newsChanelDataBeanChange(int requestStatus, NewsChannelDataBean newsChannelDataBean) {

@@ -27,7 +27,7 @@
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
-        <com.jm.news.customview.MImageViewBase
+        <com.jm.news.customview.MImageView
             android:id="@+id/miv_news_item_three_img_left"
             android:layout_width="match_parent"
             android:layout_height="80dp"
@@ -38,7 +38,7 @@
             radius:left_bottom_radius="5dp"
             radius:left_top_radius="5dp" />
 
-        <com.jm.news.customview.MImageViewBase
+        <com.jm.news.customview.MImageView
             android:id="@+id/miv_news_item_three_img_middle"
             android:layout_width="match_parent"
             android:layout_height="80dp"
@@ -48,7 +48,7 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_launcher_background" />
 
-        <com.jm.news.customview.MImageViewBase
+        <com.jm.news.customview.MImageView
             android:id="@+id/miv_news_item_three_img_rignt"
             android:layout_width="match_parent"
             android:layout_height="80dp"

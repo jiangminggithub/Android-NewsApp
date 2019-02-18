@@ -21,7 +21,7 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-            <com.jm.news.customview.MCircleImageViewBase
+            <com.jm.news.customview.MCircleImageView
                 android:id="@+id/miv_app_menu_user_icon"
                 android:layout_width="60dp"
                 android:layout_height="60dp"

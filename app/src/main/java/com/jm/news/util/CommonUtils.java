@@ -3,12 +3,11 @@ package com.jm.news.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.Window;
@@ -18,8 +17,6 @@ import android.widget.Toast;
 
 import com.jm.news.R;
 import com.jm.news.activity.MainActivity;
-import com.jm.news.activity.WebViewActivity;
-import com.jm.news.define.DataDef;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -30,6 +27,7 @@ public class CommonUtils {
     private static CommonUtils mInstance = null;
     public static final int RESTART_TYPE_ALL_ACTIVITYS = 0;
     public static final int RESTART_TYPE_APP = 1;
+    public static final int APP_VERSION_FAILED_GET = -1;
 
 
     private Context mContext = null;
@@ -45,78 +43,82 @@ public class CommonUtils {
         return mInstance;
     }
 
-    public void initialize(Context context) {
+    public void initialize(@NonNull Context context) {
         this.mContext = context;
     }
 
     /**
-     * Expand the Touch and Click Response Range of View to a maximum not exceeding its parent View Range
+     * 增加View触摸区域大小，最小区域为View的默认大小
      *
-     * @param view   target view
-     * @param top    expand top range
-     * @param bottom expand bottom range
-     * @param left   expand left range
-     * @param right  expand right range
+     * @param view   target 目标View
+     * @param top    增加上部区域大小
+     * @param bottom 增加下部区域大小
+     * @param left   增加左部区域大小
+     * @param right  增加右部区域大小
      */
-    public void expandViewTouchDelegate(final View view, final int top, final int bottom, final int left, final int right) {
-        ((View) view.getParent()).post(new Runnable() {
-            @Override
-            public void run() {
-                Rect bounds = new Rect();
-                view.setEnabled(true);
-                view.getHitRect(bounds);
+    public void expandViewTouchDelegate(@NonNull final View view, final int top, final int bottom, final int left, final int right) {
+        if (null != view) {
+            ((View) view.getParent()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Rect bounds = new Rect();
+                    view.setEnabled(true);
+                    view.getHitRect(bounds);
 
-                bounds.top -= top;
-                bounds.bottom += bottom;
-                bounds.left -= left;
-                bounds.right += right;
+                    bounds.top -= top;
+                    bounds.bottom += bottom;
+                    bounds.left -= left;
+                    bounds.right += right;
 
-                TouchDelegate touchDelegate = new TouchDelegate(bounds, view);
+                    TouchDelegate touchDelegate = new TouchDelegate(bounds, view);
 
-                if (View.class.isInstance(view.getParent())) {
-                    ((View) view.getParent()).setTouchDelegate(touchDelegate);
+                    if (View.class.isInstance(view.getParent())) {
+                        ((View) view.getParent()).setTouchDelegate(touchDelegate);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
 
     /**
-     * Restore View's touch and click response range, minimum not less than View's own range
+     * 恢复view触摸区域大小
      *
-     * @param view target view
+     * @param view 目标View
      */
-    public void restoreViewTouchDelegate(final View view) {
+    public void restoreViewTouchDelegate(@NonNull final View view) {
 
-        ((View) view.getParent()).post(new Runnable() {
-            @Override
-            public void run() {
-                Rect bounds = new Rect();
-                bounds.setEmpty();
-                TouchDelegate touchDelegate = new TouchDelegate(bounds, view);
+        if (null != view) {
+            ((View) view.getParent()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Rect bounds = new Rect();
+                    bounds.setEmpty();
+                    TouchDelegate touchDelegate = new TouchDelegate(bounds, view);
 
-                if (View.class.isInstance(view.getParent())) {
-                    ((View) view.getParent()).setTouchDelegate(touchDelegate);
+                    if (View.class.isInstance(view.getParent())) {
+                        ((View) view.getParent()).setTouchDelegate(touchDelegate);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
-     * show toast text with Toast.LENGTH_SHORT
+     * 通过text显示Toast
      *
-     * @param text showed string
+     * @param text 显示的文本
      */
-    public void showToastView(String text) {
+    public void showToastView(@NonNull String text) {
         if (null != mContext) {
             Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
         }
     }
 
     /**
-     * show toast text with Toast.LENGTH_SHORT
+     * 通过ResourceID显示Toast
      *
-     * @param resID showed resID
+     * @param resID 显示的ResourceID
      */
     public void showToastView(int resID) {
         if (null != mContext) {
@@ -125,10 +127,10 @@ public class CommonUtils {
     }
 
     /**
-     * show toast text with time
+     * 显示自定义显示时间和文本的Toast
      *
-     * @param text showed string
-     * @param time showed time
+     * @param text 显示的字符
+     * @param time 显示的时间
      */
     public void showToastView(String text, int time) {
         if (null != mContext) {
@@ -137,12 +139,12 @@ public class CommonUtils {
     }
 
     /**
-     * Create PopupMenu
+     * 为指定View创建popupMenu
      *
-     * @param context   target context
-     * @param view      PopMenu View Object
-     * @param resMenuID target menu resource ID
-     * @return PopupMenu    PopupMenu Object
+     * @param context   目标的Context
+     * @param view      需要显示popupMenu的对象
+     * @param resMenuID 需要显示Menu的ResourceID
+     * @return PopupMenu    PopupMenu 对象
      */
     public PopupMenu showPopupMenu(@NonNull Context context, @NonNull View view, @NonNull int resMenuID) {
         if (null == context || null == view) {
@@ -155,11 +157,11 @@ public class CommonUtils {
     }
 
     /**
-     * create NewsItem PopupMenu
+     * 创建新闻选项popupMenu
      *
-     * @param context target context
-     * @param view    PopMenu View Object
-     * @return PopupMenu Object
+     * @param context 目标的Context
+     * @param view    需要显示popupMenu的对象
+     * @return PopupMenu 对象
      */
     public PopupMenu showNewsItemPopupMenu(@NonNull Context context, @NonNull View view) {
         if (null == context || null == view) {
@@ -173,10 +175,10 @@ public class CommonUtils {
     }
 
     /**
-     * Create NewsItem PopupMenu with icon
+     * 创建一个可以带icon的新闻选项popupMenu
      *
-     * @param context Context Object
-     * @param view    PopMenu View Object
+     * @param context Context 对象
+     * @param view    需要显示popupMenu的对象
      * @return PopupMenu
      */
     public PopupMenu showNewsItemPopupMenuIcon(@NonNull Context context, @NonNull View view) {
@@ -197,7 +199,7 @@ public class CommonUtils {
             field.setAccessible(false);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG, "showNewsItemPopupMenuIcon: class reflex failed ");
+            LogUtils.e(TAG, "showNewsItemPopupMenuIcon: class reflex failed ");
         }
 
         return popupMenu;
@@ -205,12 +207,12 @@ public class CommonUtils {
 
 
     /**
-     * Solution to part of the use of virtual keys mobile phones do not display Menu keys
+     * 解决部分虚拟键手机Menu键显示
      *
-     * @param activity target activity
+     * @param activity 目标activity
      */
-    public void setNeedsMenuKey(Activity activity) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+    public void setNeedsMenuKey(@NonNull Activity activity) {
+        if (null == activity || Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return;
         }
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
@@ -234,9 +236,9 @@ public class CommonUtils {
     }
 
     /**
-     * Restart App with type form CommonUtils restart type
+     * 重启App,两种方式，重启APP或者所有Activity
      *
-     * @param type opreation type form CommonUtils restart type
+     * @param type 重启操作类型 RESTART_TYPE_ALL_ACTIVITYS，RESTART_TYPE_APP
      */
     public void restartApp(int type) {
         if (null != mContext) {
@@ -255,51 +257,46 @@ public class CommonUtils {
         }
     }
 
-    public void jumpWebView(Context context, String newsLink, boolean isJavaScript) {
-        Log.d(TAG, "jumpWebView: newsLink = " + newsLink);
-        if (null != context) {
-            Intent intent = new Intent(context, WebViewActivity.class);
-            intent.putExtra(DataDef.WebViewKey.KEY_URL, newsLink);
-            intent.putExtra(DataDef.WebViewKey.KEY_OPEN_JAVASCRIPT, isJavaScript);
-            context.startActivity(intent);
+    /*
+     * 获取当前程序的版本名
+     */
+    public String getVersionName() {
+        if (null != mContext) {
+            PackageManager packageManager = mContext.getPackageManager();
+            PackageInfo packInfo = null;
+            try {
+                packInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+                LogUtils.e(TAG, "getVersionName: --------- failed -----------");
+            }
+            LogUtils.d("TAG", "版本名" + packInfo.versionName);
+            return packInfo.versionName;
         }
+        return null;
     }
 
-    public void jumpOtherApp(Context context, String url) {
-        Log.d(TAG, "jumpOtherApp: url = " + url);
-        if (null != context && !TextUtils.isEmpty(url)) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            context.startActivity(intent);
+    /*
+     * 获取当前程序的版本名
+     */
+    public long getVersionCode() {
+        if (null != mContext) {
+            PackageManager packageManager = mContext.getPackageManager();
+            PackageInfo packInfo = null;
+            try {
+                packInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    LogUtils.e("TAG", "版本号" + packInfo.getLongVersionCode());
+                    return packInfo.getLongVersionCode();
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+                LogUtils.e(TAG, "getVersionCode: --------- failed -----------");
+            }
+            LogUtils.d(TAG, "版本号" + packInfo.versionCode);
+            return packInfo.versionCode;
         }
+        return APP_VERSION_FAILED_GET;
     }
 
-
-//    // Restart App Activity
-//    public void restartAppActivitys() {
-//        if (null != mContext) {
-//            Intent intent = new Intent(mContext, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            mContext.startActivity(intent);
-//            System.exit(0);
-//        }
-//    }
-//
-//    // Restart App
-//    public void restartApp() {
-//        if (null != mContext) {
-//            Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(mContext.getPackageName());
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            mContext.startActivity(intent);
-//            System.exit(0);
-//        }
-//    }
-
-
-    ////获取屏幕宽高
-//        WindowManager wm = (WindowManager) getApplication()
-//                .getSystemService(Context.WINDOW_SERVICE);
-//        Display display = wm.getDefaultDisplay();
-//        int width =display.getWidth();
-//        int height=display.getHeight();
 }

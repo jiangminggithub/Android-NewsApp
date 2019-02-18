@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SlidingPaneLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -24,6 +23,7 @@ import com.jm.news.customview.MActivityBase;
 import com.jm.news.customview.MSlidingPaneLayout;
 import com.jm.news.customview.MViewPagerIndicator;
 import com.jm.news.util.CommonUtils;
+import com.jm.news.util.LogUtils;
 import com.jm.news.util.NewsFragmentsContainer;
 import com.jm.news.view.FragmentAppMenu;
 import com.jm.news.view.FragmentErrorItem;
@@ -36,6 +36,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class MainActivity extends MActivityBase implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+    private static final int MAIN_FRAGMENT_INDEX = 0;
     private MSlidingPaneLayout mSplSlidingPane;
     private FrameLayout mFlLeftMenu;
     private LinearLayout mLlRightContent;
@@ -52,8 +53,8 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LogUtils.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         // init layout
         mSplSlidingPane = findViewById(R.id.app_sliding_pane_layout);
@@ -100,19 +101,19 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
 
     @Override
     protected void onStart() {
+        LogUtils.d(TAG, "onStart: ");
         super.onStart();
-        Log.d(TAG, "onStart: ");
     }
 
     @Override
     protected void onStop() {
-        Log.d(TAG, "onStop: ");
+        LogUtils.d(TAG, "onStop: ");
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "onDestroy: ");
+        LogUtils.d(TAG, "onDestroy: ");
         mSplSlidingPane = null;
         mFlLeftMenu = null;
         mLlRightContent = null;
@@ -180,7 +181,7 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
 
         @Override
         public Fragment getItem(int i) {
-            Log.d(TAG, "getItem: i=" + i);
+            LogUtils.d(TAG, "getItem: i=" + i);
             Fragment fragment = null;
             NewsFragmentsContainer container = NewsFragmentsContainer.Instance();
             int size = container.getFragmentHashMap().size();
@@ -198,14 +199,14 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
 
         @Override
         public int getCount() {
-            Log.d(TAG, "getCount: count=" + mViewModel.getChannelCount());
+            LogUtils.d(TAG, "getCount: count=" + mViewModel.getChannelCount());
             return mViewModel.getChannelCount();
         }
 
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
-            Log.d(TAG, "getPageTitle: position=" + position);
+            LogUtils.d(TAG, "getPageTitle: position=" + position);
             return mViewModel.getChannelName(position);
         }
     }
@@ -215,17 +216,25 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
 
         @Override
         public void onPanelSlide(@NonNull View view, float v) {
-            Log.d(TAG, "onPanelSlide: v=" + v);
+            LogUtils.d(TAG, "onPanelSlide: v=" + v);
         }
 
         @Override
         public void onPanelOpened(@NonNull View view) {
-            Log.d(TAG, "onPanelOpened");
+            LogUtils.d(TAG, "onPanelOpened");
+            FragmentNewsMain fragment = (FragmentNewsMain) NewsFragmentsContainer.Instance().getFragmentHashMap().get(MAIN_FRAGMENT_INDEX);
+            if (null != fragment) {
+                fragment.setBannerAutoPaly(false);
+            }
         }
 
         @Override
         public void onPanelClosed(@NonNull View view) {
-            Log.d(TAG, "onPanelClosed");
+            LogUtils.d(TAG, "onPanelClosed");
+            FragmentNewsMain fragment = (FragmentNewsMain) NewsFragmentsContainer.Instance().getFragmentHashMap().get(MAIN_FRAGMENT_INDEX);
+            if (null != fragment) {
+                fragment.setBannerAutoPaly(true);
+            }
         }
     }
 
@@ -238,12 +247,12 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
 
         @Override
         public void onPageSelected(int i) {
-            Log.d(TAG, "onPageSelected: i=" + i);
+            LogUtils.d(TAG, "onPageSelected: i=" + i);
         }
 
         @Override
         public void onPageScrollStateChanged(int i) {
-            Log.d(TAG, "onPageScrollStateChanged: i = " + i);
+            LogUtils.d(TAG, "onPageScrollStateChanged: i = " + i);
         }
     }
 

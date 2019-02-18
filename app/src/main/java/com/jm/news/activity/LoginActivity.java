@@ -2,7 +2,6 @@ package com.jm.news.activity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,11 +24,13 @@ import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.util.CommonUtils;
+import com.jm.news.util.JumpUtils;
+import com.jm.news.util.LogUtils;
 import com.jm.news.viewmodel.LoginActivityViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class LoginActivity extends MActivityBase implements View.OnClickListener {
+public class LoginActivity extends MActivityBase {
     private static final String TAG = "LoginActivity";
     private static final boolean BUTTON_NORMAL = true;
     private static final boolean BUTTON_LOCKED = false;
@@ -59,7 +59,7 @@ public class LoginActivity extends MActivityBase implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ");
+        LogUtils.d(TAG, "onCreate: ");
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         // 低版本兼容画面处理
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -104,7 +104,7 @@ public class LoginActivity extends MActivityBase implements View.OnClickListener
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart: ");
+        LogUtils.d(TAG, "onStart: ");
         if (null != mViewModel) {
             mEtLoginUsername.setText(mViewModel.getAccountName());
             mEtLoginPwd.setText(null);
@@ -114,7 +114,7 @@ public class LoginActivity extends MActivityBase implements View.OnClickListener
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "onDestroy: ");
+        LogUtils.d(TAG, "onDestroy: ");
         mIbNavigationBack = null;
         mTvNavigationTitle = null;
         mEtLoginUsername = null;
@@ -133,46 +133,13 @@ public class LoginActivity extends MActivityBase implements View.OnClickListener
         super.onDestroy();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ib_navigation_back:
-                this.finish();
-                break;
-            case R.id.bt_login_submit:
-                mDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
-                mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                mDialog.setContentText(Common.getInstance().getResourcesString(R.string.account_logging));
-                mDialog.setCancelable(false);
-                mDialog.show();
-                mHandler.postDelayed(new LoginRunable(), 1000);
-                break;
-            case R.id.bt_login_register:
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.iv_login_username_del:
-                mEtLoginUsername.setText(null);
-                break;
-            case R.id.iv_login_pwd_del:
-                mEtLoginPwd.setText(null);
-                break;
-            case R.id.tv_login_forget_pwd:
-                // TODO forget function
-                break;
-            default:
-                break;
-        }
-
-    }
-
     /************************************ observe function ***********************************/
 
     private class LoginObserve implements Observer<Integer> {
 
         @Override
         public void onChanged(@Nullable Integer integer) {
-            Log.d(TAG, "onChanged: change = " + integer);
+            LogUtils.d(TAG, "onChanged: change = " + integer);
             if (null != mDialog) {
                 if (null != integer) {
                     switch (integer) {
@@ -303,8 +270,7 @@ public class LoginActivity extends MActivityBase implements View.OnClickListener
                     mHandler.postDelayed(new LoginRunable(), 1000);
                     break;
                 case R.id.bt_login_register:
-                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                    startActivity(intent);
+                    JumpUtils.jumpActivity(LoginActivity.this, RegisterActivity.class);
                     break;
                 case R.id.iv_login_username_del:
                     mEtLoginUsername.setText(null);

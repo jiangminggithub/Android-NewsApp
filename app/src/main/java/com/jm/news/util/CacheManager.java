@@ -2,7 +2,6 @@ package com.jm.news.util;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -26,11 +25,11 @@ public class CacheManager {
      * @throws Exception
      */
     public static String getTotalCacheSizeString(Context context) throws Exception {
-        Log.d(TAG, "getTotalCacheSizeString: context.getCacheDir() = " + context.getCacheDir());
+        LogUtils.d(TAG, "getTotalCacheSizeString: context.getCacheDir() = " + context.getCacheDir());
         long cacheSize = getFolderSize(context.getCacheDir());
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             cacheSize += getFolderSize(context.getExternalCacheDir());
-            Log.d(TAG, "getTotalCacheSizeString: context.getExternalCacheDir() = " + context.getExternalCacheDir());
+            LogUtils.d(TAG, "getTotalCacheSizeString: context.getExternalCacheDir() = " + context.getExternalCacheDir());
         }
         return getFormatSizeString(cacheSize);
     }
@@ -58,11 +57,11 @@ public class CacheManager {
     public static int clearAllCache(Context context) {
         boolean externaDirlStatus = false;
         boolean dirStatus = deleteDir(context.getCacheDir());
-        Log.d(TAG, "clearAllCache: Environment.getExternalStorageState() = " + Environment.getExternalStorageState());
+        LogUtils.d(TAG, "clearAllCache: Environment.getExternalStorageState() = " + Environment.getExternalStorageState());
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             externaDirlStatus = deleteDir(context.getExternalCacheDir());
         }
-        Log.d(TAG, "clearAllCache: dirStatus = " + dirStatus + ", externaDirlStatus = " + externaDirlStatus);
+        LogUtils.d(TAG, "clearAllCache: dirStatus = " + dirStatus + ", externaDirlStatus = " + externaDirlStatus);
         if (dirStatus && externaDirlStatus) {
             return CLEAR_CACHE_SUCCESS;
         } else if (!dirStatus && externaDirlStatus) {

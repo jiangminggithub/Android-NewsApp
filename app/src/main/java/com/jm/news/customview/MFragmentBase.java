@@ -4,10 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.jm.news.util.LogUtils;
 
 public class MFragmentBase extends Fragment {
     private static final String TAG = "MFragmentBase";
@@ -21,18 +22,18 @@ public class MFragmentBase extends Fragment {
     }
 
     public View getInflaterView(@NonNull int resource, @NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "getInflaterView: ");
+        LogUtils.d(TAG, "getInflaterView: ");
         if (null == mView) {
             mView = inflater.inflate(resource, container, false);
             recreate = false;
-            Log.d(TAG, "getInflaterView: view create");
+            LogUtils.d(TAG, "getInflaterView: view create");
         } else {
             ViewGroup parent = (ViewGroup) mView.getParent();
             if (null != parent) {
                 parent.removeView(mView);
             }
             recreate = true;
-            Log.d(TAG, "getInflaterView: view recycler");
+            LogUtils.d(TAG, "getInflaterView: view recycler");
         }
         return mView;
     }

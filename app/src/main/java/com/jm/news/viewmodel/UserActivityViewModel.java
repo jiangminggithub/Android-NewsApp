@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
+import com.jm.news.util.LogUtils;
 
 public class UserActivityViewModel extends AndroidViewModel {
 
@@ -25,7 +26,8 @@ public class UserActivityViewModel extends AndroidViewModel {
 
     public UserActivityViewModel(@NonNull Application application) {
         super(application);
-        String preName = Common.getInstance().getResourcesString(R.string.app_user_detail_prefences);
+        LogUtils.d(TAG, "UserActivityViewModel: ");
+        String preName = Common.getInstance().getResourcesString(R.string.app_user_detail_prefences_filename);
         mSexItems = Common.getInstance().getResourcesStringArray(R.array.user_sex_items);
         mHobbyItems = Common.getInstance().getResourcesStringArray(R.array.user_hobby_items);
 
@@ -37,6 +39,7 @@ public class UserActivityViewModel extends AndroidViewModel {
 
     /**************************************public function****************************************************/
     public String getPreferenceString(int key) {
+        LogUtils.d(TAG, "getPreferenceString: key = " + key);
         if (null != mPreferences && Common.getInstance().hasUser()) {
             String userID = Common.getInstance().getUser();
             String string = mPreferences.getString(userID + key, DEFAULT_SHOW_TEXT);
@@ -48,9 +51,9 @@ public class UserActivityViewModel extends AndroidViewModel {
     public String getAccountName() {
         Common common = Common.getInstance();
         Resources resources = common.getResources();
-        SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences));
+        SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences_filename));
         if (null != resources && null != preference) {
-            String accountName = preference.getString(resources.getString(R.string.app_account_name), null);
+            String accountName = preference.getString(resources.getString(R.string.pre_key_account_name), null);
             if (!TextUtils.isEmpty(accountName)) {
                 return accountName;
             }
@@ -59,6 +62,7 @@ public class UserActivityViewModel extends AndroidViewModel {
     }
 
     public String getSexPreferenceString(int key) {
+        LogUtils.d(TAG, "getSexPreferenceString: key = " + key);
         if (null != mPreferences && Common.getInstance().hasUser()) {
             String userID = Common.getInstance().getUser();
             String string = mPreferences.getString(userID + key, DEFAULT_SHOW_TEXT);
@@ -68,13 +72,13 @@ public class UserActivityViewModel extends AndroidViewModel {
                 if (index >= 0) {
                     return mSexItems[index];
                 }
-
             }
         }
         return DEFAULT_SHOW_TEXT;
     }
 
     public String getHobbyPreferenceString(int key) {
+        LogUtils.d(TAG, "getHobbyPreferenceString: key = " + key);
         if (null != mPreferences && Common.getInstance().hasUser()) {
             String userID = Common.getInstance().getUser();
             String string = mPreferences.getString(userID + key, DEFAULT_SHOW_TEXT);
@@ -118,27 +122,31 @@ public class UserActivityViewModel extends AndroidViewModel {
 
     /**************************************operation function*********************************************/
     public void setSexChoiceItemIndex(int index) {
+        LogUtils.d(TAG, "setSexChoiceItemIndex: index = " + index);
         mSexCheckedItemIndex = index;
 
     }
 
     public void setHobbyChoiceItemsFlag(int which, boolean isChecked) {
+        LogUtils.d(TAG, "setHobbyChoiceItemsFlag: which = " + which + ", isChecked = " + isChecked);
         if (which >= 0) {
             mHobbyCheckedItemsFlag[which] = isChecked;
         }
     }
 
     public void putPreferenceString(int key, String value) {
-        String userID = Common.getInstance().getUser();
+        LogUtils.d(TAG, "putPreferenceString: key = " + key + ", value = " + value);
         if (null != mEdit && null != value) {
+            String userID = Common.getInstance().getUser();
             mEdit.putString(userID + key, value);
             mEdit.apply();
         }
     }
 
     public void putPreferenceString(int key) {
-        String userID = Common.getInstance().getUser();
+        LogUtils.d(TAG, "putPreferenceString: key = " + key);
         if (null != mEdit) {
+            String userID = Common.getInstance().getUser();
             if (key == UserInfo.USER_SEX) {
                 mEdit.putString(String.valueOf(userID + key), String.valueOf(mSexCheckedItemIndex));
             } else if (key == UserInfo.USER_HOBBY) {

@@ -1,14 +1,11 @@
 <resources>
     <!--************************** app string ******************************-->
     <string name="app_name" translatable="false">头条新闻</string>
+
     <string name="app_user_id_key" translatable="false">userID</string>
-    <string name="app_setting_prefences" translatable="false">setting_prefences</string>
-    <string name="app_user_detail_prefences" translatable="false">user_detail_prefences</string>
-    <string name="app_account_prefences" translatable="false">account_prefences</string>
-    <string name="app_account_name" translatable="false">account_name</string>
-    <string name="app_account_pwd" translatable="false">account_pwd</string>
-    <string name="app_account_auto_login" translatable="false">automatic_login</string>
-    <string name="app_version" translatable="false">1.0.0</string>
+    <string name="app_setting_prefences_filename" translatable="false">setting_prefences</string>
+    <string name="app_user_detail_prefences_filename" translatable="false">user_detail_prefences</string>
+    <string name="app_account_prefences_filename" translatable="false">account_prefences</string>
 
     <string name="app_menu_message">我的消息</string>
     <string name="app_menu_vip">会员中心</string>
@@ -21,7 +18,7 @@
     <string name="app_menu_exit">退出</string>
 
     <string name="app_menu_dialog_exit_title">确定退出 ?</string>
-    <string name="app_data_request_failed">数据获取失败，请检查网络连接或者Api使用余额</string>
+    <string name="app_data_request_failed">数据获取失败，请检查网络连接或API使用余额</string>
     <string name="app_data_request_no_more">没有更多数据了哦</string>
 
     <string name="app_toobar_back">返回</string>
@@ -120,6 +117,10 @@
 
 
     <!-- **************************** setting string *************************************-->
+    <string name="pre_key_account_name" translatable="false">account_name</string>
+    <string name="pre_key_account_pwd" translatable="false">account_pwd</string>
+    <string name="pre_key_account_auto_login" translatable="false">automatic_login</string>
+
     <string name="pre_key_setting_version" translatable="false">version</string>
     <string name="pre_key_setting_feedback" translatable="false">feedback</string>
     <string name="pre_key_setting_reputation" translatable="false">reputation</string>

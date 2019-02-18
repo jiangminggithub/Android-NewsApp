@@ -7,10 +7,10 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
+import com.jm.news.util.LogUtils;
 
 public class FragmentAppMenuViewModel extends AndroidViewModel {
 
@@ -27,26 +27,26 @@ public class FragmentAppMenuViewModel extends AndroidViewModel {
     public String getAccountInfo(int type) {
         if (Common.getInstance().hasUser()) {
             if (type == ACCOUNT_TYPE_NAME) {
-                Log.d(TAG, "getAccountInfo: type = name");
+                LogUtils.d(TAG, "getAccountInfo: type = name");
                 Common common = Common.getInstance();
                 Resources resources = common.getResources();
-                SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences));
+                SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences_filename));
                 if (null != resources && null != preference) {
-                    String accountName = preference.getString(resources.getString(R.string.app_account_name), null);
-                    Log.d(TAG, "getAccountInfo: type = name , accountName = " + accountName);
+                    String accountName = preference.getString(resources.getString(R.string.pre_key_account_name), null);
+                    LogUtils.d(TAG, "getAccountInfo: type = name , accountName = " + accountName);
                     if (!TextUtils.isEmpty(accountName)) {
                         return accountName;
                     }
                 }
             } else if (type == ACCOUNT_TYPE_AUTOGRAPH) {
-                Log.d(TAG, "getAccountInfo: type = autograph");
+                LogUtils.d(TAG, "getAccountInfo: type = autograph");
                 Common common = Common.getInstance();
                 Resources resources = common.getResources();
-                SharedPreferences preference = common.getPreference(resources.getString(R.string.app_user_detail_prefences));
+                SharedPreferences preference = common.getPreference(resources.getString(R.string.app_user_detail_prefences_filename));
                 if (null != resources && null != preference) {
                     String userID = Common.getInstance().getUser();
                     String userAutograph = preference.getString(userID + UserActivityViewModel.UserInfo.USER_AUTOGRAPH, DEFAULT_SHOW_TEXT);
-                    Log.d(TAG, "getAccountInfo: type = autograph , userAutograph = " + userAutograph);
+                    LogUtils.d(TAG, "getAccountInfo: type = autograph , userAutograph = " + userAutograph);
                     return TextUtils.isEmpty(userAutograph) ? DEFAULT_SHOW_TEXT : userAutograph;
                 }
 

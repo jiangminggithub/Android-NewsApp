@@ -7,11 +7,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.util.DataManager;
+import com.jm.news.util.LogUtils;
 
 public class LoginActivityViewModel extends AndroidViewModel {
     private static final String TAG = "LoginActivityViewModel";
@@ -23,12 +23,12 @@ public class LoginActivityViewModel extends AndroidViewModel {
 
     public LoginActivityViewModel(@NonNull Application application) {
         super(application);
-        Log.d(TAG, "LoginActivityViewModel: ");
+        LogUtils.d(TAG, "LoginActivityViewModel: ");
     }
 
     @Override
     protected void onCleared() {
-        Log.d(TAG, "onCleared: ");
+        LogUtils.d(TAG, "onCleared: ");
         mLoginStatus = null;
         super.onCleared();
     }
@@ -42,9 +42,9 @@ public class LoginActivityViewModel extends AndroidViewModel {
     public String getAccountName() {
         Common common = Common.getInstance();
         Resources resources = common.getResources();
-        SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences));
+        SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences_filename));
         if (null != resources && null != preference) {
-            String accountName = preference.getString(resources.getString(R.string.app_account_name), null);
+            String accountName = preference.getString(resources.getString(R.string.pre_key_account_name), null);
             if (!TextUtils.isEmpty(accountName)) {
                 return accountName;
             }
@@ -54,19 +54,19 @@ public class LoginActivityViewModel extends AndroidViewModel {
 
     /*************************** operation function ***********************************/
     public void loginClicked(String username, String pwd, boolean isAutoLogin) {
-        Log.d(TAG, "loginClicked: username = " + username + ", pwd = " + pwd + ", isAutoLogin = " + isAutoLogin);
+        LogUtils.d(TAG, "loginClicked: username = " + username + ", pwd = " + pwd + ", isAutoLogin = " + isAutoLogin);
         if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(pwd)) {
             Common common = Common.getInstance();
             Resources resources = common.getResources();
-            SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences));
+            SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences_filename));
             if (null != resources && null != preference) {
-                String accountName = preference.getString(resources.getString(R.string.app_account_name), null);
-                String accountPwd = preference.getString(resources.getString(R.string.app_account_pwd), null);
+                String accountName = preference.getString(resources.getString(R.string.pre_key_account_name), null);
+                String accountPwd = preference.getString(resources.getString(R.string.pre_key_account_pwd), null);
                 if (TextUtils.isEmpty(accountName) || TextUtils.isEmpty(accountPwd)) {
                     mLoginStatus.postValue(LOGIN_STATUS_NO_USER);
                 } else {
                     if (username.equals(accountName) && DataManager.encode(pwd).equals(accountPwd)) {
-                        preference.edit().putBoolean(resources.getString(R.string.app_account_auto_login), isAutoLogin).apply();
+                        preference.edit().putBoolean(resources.getString(R.string.pre_key_account_auto_login), isAutoLogin).apply();
                         common.setUser(username);
                         mLoginStatus.postValue(LOGIN_STATUS_SUCCESS);
                     } else {

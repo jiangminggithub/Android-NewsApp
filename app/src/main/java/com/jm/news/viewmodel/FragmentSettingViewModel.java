@@ -8,11 +8,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.util.CacheManager;
+import com.jm.news.util.LogUtils;
 
 public class FragmentSettingViewModel extends AndroidViewModel {
     private static final String TAG = "FragmentSettingViewModel";
@@ -33,13 +33,13 @@ public class FragmentSettingViewModel extends AndroidViewModel {
     private SharedPreferences mSettingPrefences;
     private SharedPreferences.Editor mPreEditor;
 
-    @SuppressLint("LongLogTag")
+    @SuppressLint("LongLogUtilsTag")
     public FragmentSettingViewModel(@NonNull Application application) {
         super(application);
-        Log.d(TAG, "FragmentSettingViewModel: ");
+        LogUtils.d(TAG, "FragmentSettingViewModel: ");
         mContext = application.getApplicationContext();
         mResources = Common.getInstance().getResources();
-        String preSettingName = mResources.getString(R.string.app_setting_prefences);
+        String preSettingName = mResources.getString(R.string.app_setting_prefences_filename);
         if (!TextUtils.isEmpty(preSettingName)) {
             mSettingPrefences = application.getSharedPreferences(preSettingName, Context.MODE_PRIVATE);
             mPreEditor = mSettingPrefences.edit();
@@ -49,10 +49,11 @@ public class FragmentSettingViewModel extends AndroidViewModel {
 
     }
 
-    @SuppressLint("LongLogTag")
+    @SuppressLint("LongLogUtilsTag")
     @Override
     protected void onCleared() {
-        Log.d(TAG, "onCleared: ");
+        LogUtils.d(TAG, "onCleared: ");
+        mLocaleItems = null;
         mContext = null;
         mResources = null;
         mSettingPrefences = null;
@@ -61,9 +62,9 @@ public class FragmentSettingViewModel extends AndroidViewModel {
     }
 
     /********************************** public function *************************************/
-    @SuppressLint("LongLogTag")
+    @SuppressLint("LongLogUtilsTag")
     public String getPreferenceKey(int type) {
-        Log.d(TAG, "getPreferenceKey: type = " + type);
+        LogUtils.d(TAG, "getPreferenceKey: type = " + type);
         String key = null;
         if (null != mResources) {
             switch (type) {
@@ -98,7 +99,7 @@ public class FragmentSettingViewModel extends AndroidViewModel {
         return key;
     }
 
-    @SuppressLint("LongLogTag")
+    @SuppressLint("LongLogUtilsTag")
     public double getTotalCacheSize() {
         double totalCacheSize = 0.0;
         if (null != mContext) {
@@ -106,13 +107,13 @@ public class FragmentSettingViewModel extends AndroidViewModel {
                 totalCacheSize = CacheManager.getTotalCacheSize(mContext);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d(TAG, "getTotalCacheSize: operation is failed!");
+                LogUtils.d(TAG, "getTotalCacheSize: operation is failed!");
             }
         }
         return totalCacheSize;
     }
 
-    @SuppressLint("LongLogTag")
+    @SuppressLint("LongLogUtilsTag")
     public String getTotalCacheFormatString() {
         if (null != mContext) {
             try {
@@ -120,7 +121,7 @@ public class FragmentSettingViewModel extends AndroidViewModel {
                 return totalCacheSizeString;
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d(TAG, "getTotalCacheFormatString: operation is failed!");
+                LogUtils.d(TAG, "getTotalCacheFormatString: operation is failed!");
             }
         }
 
@@ -169,15 +170,18 @@ public class FragmentSettingViewModel extends AndroidViewModel {
 
 
     /********************************** operation function *************************************/
-
+    @SuppressLint("LongLogUtilsTag")
     public void putBoolean(String key, boolean value) {
+        LogUtils.d(TAG, "putBoolean: key = " + key + ", value = " + value);
         if (null != mPreEditor && !TextUtils.isEmpty(key)) {
             mPreEditor.putBoolean(key, value);
             mPreEditor.apply();
         }
     }
 
+    @SuppressLint("LongLogUtilsTag")
     public boolean putLocalSelected(String key) {
+        LogUtils.d(TAG, "putLocalSelected: key = " + key);
         if (null != mPreEditor && !TextUtils.isEmpty(key)) {
             mPreEditor.putInt(key, mLocaleChoiceIndex);
             return mPreEditor.commit();
@@ -185,7 +189,9 @@ public class FragmentSettingViewModel extends AndroidViewModel {
         return false;
     }
 
+    @SuppressLint("LongLogUtilsTag")
     public int clearAllCache() {
+        LogUtils.d(TAG, "clearAllCache: ");
         if (null != mContext) {
             return CacheManager.clearAllCache(mContext);
         }

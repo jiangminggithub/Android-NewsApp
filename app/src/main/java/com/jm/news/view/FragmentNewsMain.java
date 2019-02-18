@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,13 +21,15 @@ import android.widget.PopupMenu;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jm.news.R;
+import com.jm.news.customview.MClassicsHeaderView;
 import com.jm.news.customview.MFragmentBase;
 import com.jm.news.define.BaseViewClickListener;
 import com.jm.news.define.DataDef;
-import com.jm.news.entry.MClassicsHeader;
 import com.jm.news.entry.ViewHolderOneImage;
 import com.jm.news.entry.ViewHolderThreeImage;
 import com.jm.news.util.CommonUtils;
+import com.jm.news.util.JumpUtils;
+import com.jm.news.util.LogUtils;
 import com.jm.news.viewmodel.FragmentNewsMainViewModel;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -68,7 +69,7 @@ public class FragmentNewsMain extends MFragmentBase {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
+        LogUtils.d(TAG, "onCreateView: ");
         // view recycler
         View view = getInflaterView(R.layout.layout_fragment_news_main, inflater, container, savedInstanceState);
         mBanner = view.findViewById(R.id.banner_main_news);
@@ -84,37 +85,42 @@ public class FragmentNewsMain extends MFragmentBase {
 
     @Override
     public void onStart() {
+        LogUtils.d(TAG, "onStart: ");
         super.onStart();
-        if (null != mBanner) {
-            mBanner.startAutoPlay();
-        }
-        Log.d(TAG, "onStart: ");
+        setBannerAutoPaly(true);
     }
 
     @Override
     public void onStop() {
-        Log.d(TAG, "onStop: ");
-        if (null != mBanner) {
-            mBanner.stopAutoPlay();
-        }
+        LogUtils.d(TAG, "onStop: ");
+        setBannerAutoPaly(false);
         super.onStop();
     }
 
     @Override
     public void onDestroy() {
-        mViewAdapter.removeListener();
-        Log.d(TAG, "onDestroy: ");
+        LogUtils.d(TAG, "onDestroy: ");
+        if (null != mViewAdapter) {
+            mViewAdapter.removeListener();
+        }
+        mViewAdapter = null;
+        mViewModel = null;
+        mBanner = null;
+        mSmartRefreshLayout = null;
+        mRecyclerView = null;
+        mGlideOptions = null;
         super.onDestroy();
     }
 
 
     private void initData() {
+        LogUtils.d(TAG, "initData: ");
         mViewModel = ViewModelProviders.of(this).get(FragmentNewsMainViewModel.class);
         mViewModel.updatetChannelID(mFragmentID);
     }
 
     private void initView() {
-        mSmartRefreshLayout.setRefreshHeader(new MClassicsHeader(getContext()));
+        mSmartRefreshLayout.setRefreshHeader(new MClassicsHeaderView(getContext()));
         mSmartRefreshLayout.setRefreshFooter(new BallPulseFooter(getContext()).setSpinnerStyle(SpinnerStyle.FixedBehind));
         mSmartRefreshLayout.setOnRefreshListener(new MyRefreshListener());
         mSmartRefreshLayout.setOnLoadMoreListener(new MyLoadMoreListener());
@@ -139,11 +145,11 @@ public class FragmentNewsMain extends MFragmentBase {
         mSmartRefreshLayout.autoRefresh();
     }
 
-    /*************************************** inner class *******************************************/
+    /*************************************** observer function *******************************************/
     private class NewsDataStatusObserver implements Observer<Integer> {
         @Override
         public void onChanged(@Nullable Integer integer) {
-            Log.d(TAG, "onChanged: getNewsDataStatus status = " + integer);
+            LogUtils.d(TAG, "onChanged: getNewsDataStatus status = " + integer);
             if (null != integer && null != mSmartRefreshLayout) {
                 if (integer == DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED) {
                     mSmartRefreshLayout.finishRefresh();
@@ -160,6 +166,7 @@ public class FragmentNewsMain extends MFragmentBase {
     private class NewsDataCountStatusObserver implements Observer<Boolean> {
         @Override
         public void onChanged(@Nullable Boolean b) {
+            LogUtils.d(TAG, "onChanged: b = " + b);
             if (null != b && null != mViewAdapter && null != mSmartRefreshLayout) {
                 if (b.booleanValue()) {
                     mViewAdapter.notifyDataSetChanged();
@@ -175,6 +182,7 @@ public class FragmentNewsMain extends MFragmentBase {
     private class NewsBannerDataStatusObserver implements Observer<Integer> {
         @Override
         public void onChanged(@Nullable Integer integer) {
+            LogUtils.d(TAG, "onChanged: integer = " + integer);
             if (null != integer && null != mBanner && null != mViewModel) {
                 if (integer == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
                     // screen orientation optimization
@@ -202,13 +210,96 @@ public class FragmentNewsMain extends MFragmentBase {
         }
     }
 
+    /*************************************** public function *******************************************/
+    public void setBannerAutoPaly(boolean isAutoPlay) {
+        LogUtils.d(TAG, "setBannerAutoPaly: isAutoPlay = " + isAutoPlay);
+        if (null != mBanner) {
+            if (isAutoPlay) {
+                mBanner.startAutoPlay();
+            } else {
+                mBanner.stopAutoPlay();
+            }
+        }
+    }
+
+    /*************************************** listener function *******************************************/
+    private class MyItemClickListener extends BaseViewClickListener {
+        @Override
+        public void onItemClick(View view, int position) {
+            LogUtils.d(TAG, "onItemClick: position=" + position);
+            String newsLink = mViewModel.getNewsLink(position);
+            if (!TextUtils.isEmpty(newsLink)) {
+                JumpUtils.jumpWebView(getActivity(), newsLink, true);
+            }
+        }
+
+        @Override
+        public void onItemLongClick(View view, final int position) {
+            PopupMenu popupMenu = CommonUtils.getInstance().showNewsItemPopupMenu(getActivity(), view);
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.menu_news_item_open_detail:
+                            String newsLink = mViewModel.getNewsLink(position);
+                            if (!TextUtils.isEmpty(newsLink)) {
+                                JumpUtils.jumpWebView(getActivity(), newsLink, true);
+                            }
+                            break;
+                        case R.id.menu_news_item_open_other:
+                            String jumpURl = mViewModel.getNewsLink(position);
+                            if (!TextUtils.isEmpty(jumpURl)) {
+                                JumpUtils.jumpOtherApp(getActivity(), jumpURl);
+                            }
+                            break;
+                        case R.id.menu_news_item_delete:
+                            mViewModel.removeNewsItem(position);
+                            break;
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+            });
+            popupMenu.show();
+        }
+    }
+
+    private class MyRefreshListener implements OnRefreshListener {
+        @Override
+        public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+            LogUtils.d(TAG, "onRefresh: ");
+            mViewModel.requestRefreshData();
+        }
+    }
+
+    private class MyLoadMoreListener implements OnLoadMoreListener {
+        @Override
+        public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+            LogUtils.d(TAG, "onLoadMore: ");
+            mViewModel.requestLoadMoreData();
+        }
+    }
+
+    private class MyBannerListener implements OnBannerListener {
+        @Override
+        public void OnBannerClick(int position) {
+            LogUtils.d(TAG, "OnBannerClick: position = " + position);
+            String newsLink = mViewModel.getBannerLink(position);
+            if (!TextUtils.isEmpty(newsLink)) {
+                JumpUtils.jumpWebView(getActivity(), newsLink, true);
+            }
+        }
+    }
+
+
     /*************************************** inner class *******************************************/
     private class MyBannerImageLoader extends com.youth.banner.loader.ImageLoader {
 
         @Override
         public void displayImage(final Context context, Object path, final ImageView imageView) {
 //            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            Log.d(TAG, "displayImage: path" + (String) path);
+            LogUtils.d(TAG, "displayImage: path" + (String) path);
             Glide.with(imageView).load((String) path).apply(mGlideOptions).into(imageView);
         }
     }
@@ -229,7 +320,7 @@ public class FragmentNewsMain extends MFragmentBase {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, final int i) {
-            Log.d(TAG, "onCreateViewHolder: i=" + i);
+            LogUtils.d(TAG, "onCreateViewHolder: i=" + i);
             View view = null;
             RecyclerView.ViewHolder holder = null;
             if (i >= 3) {
@@ -277,7 +368,7 @@ public class FragmentNewsMain extends MFragmentBase {
         @Override
         public int getItemViewType(int position) {
             int itemImgCount = mViewModel.getItemImgCount(position);
-            Log.d(TAG, "getItemViewType: count=" + itemImgCount);
+            LogUtils.d(TAG, "getItemViewType: count=" + itemImgCount);
             return itemImgCount;
         }
 
@@ -305,75 +396,5 @@ public class FragmentNewsMain extends MFragmentBase {
         }
     }
 
-
-    /*************************************** listener function *******************************************/
-    private class MyItemClickListener extends BaseViewClickListener {
-        @Override
-        public void onItemClick(View view, int position) {
-            Log.d(TAG, "onItemClick: position=" + position);
-            String newsLink = mViewModel.getNewsLink(position);
-            if (!TextUtils.isEmpty(newsLink)) {
-                CommonUtils.getInstance().jumpWebView(getActivity(), newsLink, true);
-            }
-        }
-
-        @Override
-        public void onItemLongClick(View view, final int position) {
-            PopupMenu popupMenu = CommonUtils.getInstance().showNewsItemPopupMenu(getActivity(), view);
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.menu_news_item_open_detail:
-                            String newsLink = mViewModel.getNewsLink(position);
-                            if (!TextUtils.isEmpty(newsLink)) {
-                                CommonUtils.getInstance().jumpWebView(getActivity(), newsLink, true);
-                            }
-                            break;
-                        case R.id.menu_news_item_open_other:
-                            String jumpURl = mViewModel.getNewsLink(position);
-                            if (!TextUtils.isEmpty(jumpURl)) {
-                                CommonUtils.getInstance().jumpOtherApp(getActivity(), jumpURl);
-                            }
-                            break;
-                        case R.id.menu_news_item_delete:
-                            mViewModel.removeNewsItem(position);
-                            break;
-                        default:
-                            break;
-                    }
-                    return true;
-                }
-            });
-            popupMenu.show();
-        }
-    }
-
-    private class MyRefreshListener implements OnRefreshListener {
-        @Override
-        public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-            Log.d(TAG, "onRefresh: ");
-            mViewModel.requestRefreshData();
-        }
-    }
-
-    private class MyLoadMoreListener implements OnLoadMoreListener {
-        @Override
-        public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-            Log.d(TAG, "onLoadMore: ");
-            mViewModel.requestLoadMoreData();
-        }
-    }
-
-    private class MyBannerListener implements OnBannerListener {
-        @Override
-        public void OnBannerClick(int position) {
-            Log.d(TAG, "OnBannerClick: position = " + position);
-            String newsLink = mViewModel.getBannerLink(position);
-            if (!TextUtils.isEmpty(newsLink)) {
-                CommonUtils.getInstance().jumpWebView(getActivity(), newsLink, true);
-            }
-        }
-    }
 
 }

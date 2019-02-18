@@ -47,7 +47,7 @@
                     android:layout_height="48dp" />
             </LinearLayout>
 
-            <com.jm.news.customview.MCircleImageViewBase
+            <com.jm.news.customview.MCircleImageView
                 android:id="@+id/miv_app_menu_user_icon"
                 android:layout_width="80dp"
                 android:layout_height="80dp"

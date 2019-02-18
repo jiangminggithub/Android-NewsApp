@@ -7,13 +7,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jm.news.R;
-import com.jm.news.customview.MImageViewBase;
+import com.jm.news.customview.MImageView;
 
 public class ViewHolderOneImage extends RecyclerView.ViewHolder {
     private TextView mTvTitle;
     private TextView mTvSource;
     private TextView mTvPubData;
-    private MImageViewBase mIvImage;
+    private MImageView mIvImage;
     private LinearLayout mLlImageLatout;
 
     public ViewHolderOneImage(@NonNull View itemView) {
@@ -37,7 +37,7 @@ public class ViewHolderOneImage extends RecyclerView.ViewHolder {
         return mTvPubData;
     }
 
-    public MImageViewBase getIvImage() {
+    public MImageView getIvImage() {
         return mIvImage;
     }
 

@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,13 +19,15 @@ import android.widget.PopupMenu;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jm.news.R;
+import com.jm.news.customview.MClassicsHeaderView;
 import com.jm.news.customview.MFragmentBase;
 import com.jm.news.define.BaseViewClickListener;
 import com.jm.news.define.DataDef;
-import com.jm.news.entry.MClassicsHeader;
 import com.jm.news.entry.ViewHolderOneImage;
 import com.jm.news.entry.ViewHolderThreeImage;
 import com.jm.news.util.CommonUtils;
+import com.jm.news.util.JumpUtils;
+import com.jm.news.util.LogUtils;
 import com.jm.news.viewmodel.FragmentNewsItemViewModel;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -61,7 +62,7 @@ public class FragmentNewsItem extends MFragmentBase {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
+        LogUtils.d(TAG, "onCreateView: ");
         View view = getInflaterView(R.layout.layout_fragment_news_item, inflater, container, savedInstanceState);
         mSmartRefreshLayout = view.findViewById(R.id.sfl_viewblock);
         mRecyclerView = view.findViewById(R.id.rv_viewblock);
@@ -84,6 +85,15 @@ public class FragmentNewsItem extends MFragmentBase {
 
     @Override
     public void onDestroy() {
+        LogUtils.d(TAG, "onDestroy: ");
+        if (null != mViewAdapter) {
+            mViewAdapter.removeListener();
+        }
+        mViewModel = null;
+        mViewAdapter = null;
+        mSmartRefreshLayout = null;
+        mRecyclerView = null;
+        mGlideOptions = null;
         super.onDestroy();
     }
 
@@ -95,7 +105,7 @@ public class FragmentNewsItem extends MFragmentBase {
 
     private void initView() {
 //        mSmartRefreshLayout.setRefreshHeader(new BezierRadarHeader(getContext()).setEnableHorizontalDrag(true));
-        mSmartRefreshLayout.setRefreshHeader(new MClassicsHeader(getContext()));
+        mSmartRefreshLayout.setRefreshHeader(new MClassicsHeaderView(getContext()));
         mSmartRefreshLayout.setRefreshFooter(new BallPulseFooter(getContext()).setSpinnerStyle(SpinnerStyle.FixedBehind));
         mSmartRefreshLayout.setOnRefreshListener(new MyRefreshListener());
         mSmartRefreshLayout.setOnLoadMoreListener(new MyLoadMoreListener());
@@ -121,7 +131,7 @@ public class FragmentNewsItem extends MFragmentBase {
     private class NewsDataStatusObserver implements Observer<Integer> {
         @Override
         public void onChanged(@Nullable Integer integer) {
-            Log.d(TAG, "onChanged: getNewsDataStatus status = " + integer);
+            LogUtils.d(TAG, "onChanged: getNewsDataStatus status = " + integer);
             if (integer == DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED) {
                 mSmartRefreshLayout.finishRefresh();
                 mSmartRefreshLayout.finishLoadMore();
@@ -163,7 +173,7 @@ public class FragmentNewsItem extends MFragmentBase {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, final int i) {
-            Log.d(TAG, "onCreateViewHolder: i=" + i);
+            LogUtils.d(TAG, "onCreateViewHolder: i=" + i);
             View view = null;
             RecyclerView.ViewHolder holder = null;
             if (i >= 3) {
@@ -211,7 +221,7 @@ public class FragmentNewsItem extends MFragmentBase {
         @Override
         public int getItemViewType(int position) {
             int itemImgCount = mViewModel.getItemImgCount(position);
-            Log.d(TAG, "getItemViewType: count=" + itemImgCount);
+            LogUtils.d(TAG, "getItemViewType: count=" + itemImgCount);
             return itemImgCount;
         }
 
@@ -243,10 +253,10 @@ public class FragmentNewsItem extends MFragmentBase {
     private class MyItemClickListener extends BaseViewClickListener {
         @Override
         public void onItemClick(View view, int position) {
-            Log.d(TAG, "onItemClick: position=" + position);
+            LogUtils.d(TAG, "onItemClick: position=" + position);
             String newsLink = mViewModel.getNewsLink(position);
             if (!TextUtils.isEmpty(newsLink)) {
-                CommonUtils.getInstance().jumpWebView(getActivity(), newsLink, true);
+                JumpUtils.jumpWebView(getActivity(), newsLink, true);
             }
         }
 
@@ -260,13 +270,13 @@ public class FragmentNewsItem extends MFragmentBase {
                         case R.id.menu_news_item_open_detail:
                             String newsLink = mViewModel.getNewsLink(position);
                             if (!TextUtils.isEmpty(newsLink)) {
-                                CommonUtils.getInstance().jumpWebView(getActivity(), newsLink, true);
+                                JumpUtils.jumpWebView(getActivity(), newsLink, true);
                             }
                             break;
                         case R.id.menu_news_item_open_other:
                             String jumpURl = mViewModel.getNewsLink(position);
                             if (!TextUtils.isEmpty(jumpURl)) {
-                                CommonUtils.getInstance().jumpOtherApp(getActivity(), jumpURl);
+                                JumpUtils.jumpOtherApp(getActivity(), jumpURl);
                             }
                             break;
                         case R.id.menu_news_item_delete:
@@ -285,7 +295,7 @@ public class FragmentNewsItem extends MFragmentBase {
     private class MyRefreshListener implements OnRefreshListener {
         @Override
         public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-            Log.d(TAG, "onRefresh: ");
+            LogUtils.d(TAG, "onRefresh: ");
             mViewModel.requestRefreshData();
         }
     }
@@ -293,7 +303,7 @@ public class FragmentNewsItem extends MFragmentBase {
     private class MyLoadMoreListener implements OnLoadMoreListener {
         @Override
         public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-            Log.d(TAG, "onLoadMore: ");
+            LogUtils.d(TAG, "onLoadMore: ");
             mViewModel.requestLoadMoreData();
         }
     }

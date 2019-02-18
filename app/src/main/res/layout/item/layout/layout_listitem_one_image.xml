@@ -62,7 +62,7 @@
             android:paddingRight="10dp"
             android:paddingBottom="8dp">
 
-            <com.jm.news.customview.MImageViewBase
+            <com.jm.news.customview.MImageView
                 android:id="@+id/miv_news_item_one_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

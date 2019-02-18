@@ -1,7 +1,6 @@
 package com.jm.news.util;
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import java.util.HashMap;
 
@@ -20,29 +19,29 @@ public class NewsFragmentsContainer {
     public static synchronized NewsFragmentsContainer Instance() {
         if (null == mInstance) {
             mInstance = new NewsFragmentsContainer();
-            Log.d(TAG, "Instance: create");
+            LogUtils.d(TAG, "Instance: create");
         }
         return mInstance;
     }
 
     public HashMap<Integer, Fragment> getFragmentHashMap() {
-        Log.d(TAG, "getFragmentHashMap:");
+        LogUtils.d(TAG, "getFragmentHashMap:");
         return fragments;
     }
 
     public void putFragmentHashMap(Integer index, Fragment fragment) {
-        Log.d(TAG, "putFragmentHashMap: index = " + index);
+        LogUtils.d(TAG, "putFragmentHashMap: index = " + index);
         this.fragments.put(index, fragment);
     }
 
     public void clearAll() {
         fragments.clear();
         mInstance = null;
-        Log.d(TAG, "clearAll: ");
+        LogUtils.d(TAG, "clearAll: ");
     }
 
     public void clearFragments() {
         fragments.clear();
-        Log.d(TAG, "clearFragments: ");
+        LogUtils.d(TAG, "clearFragments: ");
     }
 }

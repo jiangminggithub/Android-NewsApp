@@ -9,9 +9,9 @@ import android.os.LocaleList;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import com.jm.news.R;
+import com.jm.news.util.LogUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -49,11 +49,14 @@ public class Common {
     }
 
     /****************************** operation function *****************************/
+    /**
+     * 初始化App的基本信息
+     */
     private void initializedAppInfo() {
-        SharedPreferences settingPreference = getPreference(mResources.getString(R.string.app_setting_prefences));
-        SharedPreferences accountPreference = getPreference(mResources.getString(R.string.app_account_prefences));
+        SharedPreferences settingPreference = getPreference(mResources.getString(R.string.app_setting_prefences_filename));
+        SharedPreferences accountPreference = getPreference(mResources.getString(R.string.app_account_prefences_filename));
         if (null != mResources) {
-            // locale initialized
+            // locale and exitClearCache initialized
             String localeKey = mResources.getString(R.string.pre_key_setting_local);
             String exitClearCachekey = mResources.getString(R.string.pre_key_setting_app_out_clear);
             if (null != settingPreference && !TextUtils.isEmpty(localeKey)) {
@@ -69,8 +72,8 @@ public class Common {
 
             // account initialized
             if (null != accountPreference) {
-                boolean isAutoLogin = accountPreference.getBoolean(mResources.getString(R.string.app_account_auto_login), false);
-                String accountName = accountPreference.getString(mResources.getString(R.string.app_account_name), null);
+                boolean isAutoLogin = accountPreference.getBoolean(mResources.getString(R.string.pre_key_account_auto_login), false);
+                String accountName = accountPreference.getString(mResources.getString(R.string.pre_key_account_name), null);
                 if (isAutoLogin && !TextUtils.isEmpty(accountName)) {
                     setUser(accountName);
                 }
@@ -78,6 +81,11 @@ public class Common {
         }
     }
 
+    /**
+     * 设置App的本地Locale
+     *
+     * @param localType LOCALE_TYPE_SIMPLIFIED_CHINESE，LOCALE_TYPE_ENGLISH
+     */
     public void setAppLocale(int localType) {
         if (null != mContext) {
             Resources resources = mContext.getResources();
@@ -90,40 +98,45 @@ public class Common {
                 mLocale = Locale.ENGLISH;
             } else {
                 mLocale = Locale.getDefault();
-                Log.d(TAG, "setAppLocale: default------------------------------------- = " + mLocale);
+                LogUtils.d(TAG, "setAppLocale: default------------------------------------- = " + mLocale);
             }
 
-            Log.d(TAG, "setAppLocale: Build.Version = " + Build.VERSION.SDK_INT);
+            LogUtils.d(TAG, "setAppLocale: Build.Version = " + Build.VERSION.SDK_INT);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 config.setLocale(mLocale);
                 config.setLocales(new LocaleList(mLocale));
                 mContext.createConfigurationContext(config);
-                Log.d(TAG, "setAppLocale: Locale = " + mLocale);
+                LogUtils.d(TAG, "setAppLocale: Locale = " + mLocale);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 config.setLocale(mLocale);
             } else {
                 config.locale = mLocale;
             }
             resources.updateConfiguration(config, dm);
-            Log.d(TAG, "setAppLocale: " + mLocale);
+            LogUtils.d(TAG, "setAppLocale: " + mLocale);
         }
     }
 
     public Locale getLocale() {
-        Log.d(TAG, "getLocale: " + mLocale);
+        LogUtils.d(TAG, "getLocale: " + mLocale);
         if (null != mLocale) {
             return mLocale;
         }
         return Locale.getDefault();
     }
 
+    /**
+     * 注销用户登录
+     *
+     * @return 操作成功与否
+     */
     public boolean logoutUser() {
         if (null != mResources) {
-            SharedPreferences preference = getPreference(mResources.getString(R.string.app_account_prefences));
+            SharedPreferences preference = getPreference(mResources.getString(R.string.app_account_prefences_filename));
             if (null != preference) {
                 SharedPreferences.Editor edit = preference.edit();
-                boolean isCommit = edit.putBoolean(mResources.getString(R.string.app_account_auto_login), false).commit();
+                boolean isCommit = edit.putBoolean(mResources.getString(R.string.pre_key_account_auto_login), false).commit();
                 mUser = null;
                 return isCommit;
             }
@@ -131,10 +144,13 @@ public class Common {
         return false;
     }
 
+    /**
+     * 切换用户操作
+     */
     public void changeAccount() {
         if (null != mResources) {
-            SharedPreferences accountPreference = getPreference(mResources.getString(R.string.app_account_prefences));
-            SharedPreferences userDetailPreference = getPreference(mResources.getString(R.string.app_user_detail_prefences));
+            SharedPreferences accountPreference = getPreference(mResources.getString(R.string.app_account_prefences_filename));
+            SharedPreferences userDetailPreference = getPreference(mResources.getString(R.string.app_user_detail_prefences_filename));
             if (null != accountPreference) {
                 accountPreference.edit().clear().commit();
             }
@@ -145,13 +161,19 @@ public class Common {
         }
     }
 
+    /**
+     * 设置所有Activity的BaseContext的attach的熟悉
+     *
+     * @param context 目标Context对象
+     * @return Context对象
+     */
     public Context attachBaseContext(Context context) {
         if (null != mLocale && null != context && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Configuration config = context.getResources().getConfiguration();
             config.setLocale(mLocale);
             config.setLocales(new LocaleList(mLocale));
             Context newContext = mContext.createConfigurationContext(config);
-            Log.d(TAG, "attachBaseContext: newContext = " + newContext);
+            LogUtils.d(TAG, "attachBaseContext: newContext = " + newContext);
             return newContext;
         }
         return null;
@@ -175,7 +197,7 @@ public class Common {
     }
 
     public void addChannelID(int key, @NonNull String channelID) {
-        Log.d(TAG, "addChannelID: key=" + key + ", channelID=" + channelID);
+        LogUtils.d(TAG, "addChannelID: key=" + key + ", channelID=" + channelID);
 
         if (null != channelID && !"".equals(channelID)) {
             mChannelIDMap.put(key, channelID);
@@ -183,7 +205,7 @@ public class Common {
     }
 
     public String getChannelID(int key) {
-        Log.d(TAG, "getChannelID: key=" + key);
+        LogUtils.d(TAG, "getChannelID: key=" + key);
         return mChannelIDMap.get(key);
     }
 

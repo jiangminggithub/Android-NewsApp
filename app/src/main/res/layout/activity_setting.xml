@@ -6,12 +6,12 @@
     android:orientation="vertical"
     tools:ignore="MissingDefaultResource">
 
-    <include layout="@layout/layout_head"/>
+    <include layout="@layout/layout_head" />
 
     <FrameLayout
         android:id="@+id/fl_app_setting_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
-        android:background="@color/white"/>
+        android:background="@color/white" />
 </LinearLayout>

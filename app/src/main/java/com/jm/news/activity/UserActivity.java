@@ -2,7 +2,6 @@ package com.jm.news.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,6 +27,8 @@ import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.util.CommonUtils;
+import com.jm.news.util.JumpUtils;
+import com.jm.news.util.LogUtils;
 import com.jm.news.viewmodel.UserActivityViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -64,6 +64,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_user);
 
         mTvBack = findViewById(R.id.tv_head_back);
@@ -96,12 +97,40 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
     @Override
     protected void onStart() {
         super.onStart();
+        LogUtils.d(TAG, "onStart: ");
         updateView();
     }
 
     @Override
+    protected void onDestroy() {
+        LogUtils.d(TAG, "onDestroy: ");
+        mTvBack = null;
+        mTvTitle = null;
+        mLlUserHead = null;
+        mLlAutograph = null;
+        mLlUserNickName = null;
+        mLlUserSex = null;
+        mLlUserAddress = null;
+        mLlUserPhone = null;
+        mLlUserHoppy = null;
+        mLlUserProfile = null;
+        mLlUserMore = null;
+        mLlUserAccount = null;
+        mTvNameInfo = null;
+        mTvAutographInfo = null;
+        mTvNickNameInfo = null;
+        mTvSexInfo = null;
+        mTvAddressInfo = null;
+        mTvPhoneInfo = null;
+        mTvHobbyInfo = null;
+        mTvProfileInfo = null;
+        mViewModel = null;
+        super.onDestroy();
+    }
+
+    @Override
     public void onClick(View v) {
-        Log.d(TAG, "onClick: userID = " + Common.getInstance().getUser());
+        LogUtils.d(TAG, "onClick: userID = " + Common.getInstance().getUser());
         if (v.getId() != R.id.tv_head_back && v.getId() != R.id.ll_user_header && !Common.getInstance().hasUser()) {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setContentText(Common.getInstance().getResourcesString(R.string.dialog_no_login))
@@ -177,6 +206,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
 
     /************************************** private function ****************************************************/
     private void initView() {
+        LogUtils.d(TAG, "initView: ");
         mTvBack.setOnClickListener(this);
         mLlUserHead.setOnClickListener(this);
         mLlAutograph.setOnClickListener(this);
@@ -192,6 +222,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
     }
 
     private void updateView() {
+        LogUtils.d(TAG, "updateView: ");
         if (null != mViewModel) {
             if (Common.getInstance().hasUser()) {
                 String userName = mViewModel.getAccountName();
@@ -216,7 +247,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
     }
 
     private void showEditDialog(@NonNull int title, int hint, final int infoType) {
-        Log.d(TAG, "showEditDialog: title = " + title + ", hint = " + hint + ", infoType = " + infoType);
+        LogUtils.d(TAG, "showEditDialog: title = " + title + ", hint = " + hint + ", infoType = " + infoType);
         if (null == mViewModel) {
             return;
         }
@@ -283,7 +314,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
             @Override
             public void onClick(View v) {
                 String value = etContent.getText().toString().trim();
-                Log.d(TAG, "onClick: infoType = " + infoType + ", editor.getText() = " + value);
+                LogUtils.d(TAG, "onClick: infoType = " + infoType + ", editor.getText() = " + value);
                 if (TextUtils.isEmpty(value)) {
                     CommonUtils.getInstance().showToastView(R.string.user_dialog_empty_content);
                     dialog.dismiss();
@@ -320,7 +351,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d(TAG, "onClick: which = " + which + ", infoType = " + infoType);
+                LogUtils.d(TAG, "onClick: which = " + which + ", infoType = " + infoType);
                 mViewModel.setSexChoiceItemIndex(which);
             }
         });
@@ -366,7 +397,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
 
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                Log.d(TAG, "onClick: which = " + which + ", isChecked = " + isChecked);
+                LogUtils.d(TAG, "onClick: which = " + which + ", isChecked = " + isChecked);
                 mViewModel.setHobbyChoiceItemsFlag(which, isChecked);
             }
         });
@@ -375,7 +406,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d(TAG, "onClick: infoType = " + infoType);
+                LogUtils.d(TAG, "onClick: infoType = " + infoType);
                 mViewModel.putPreferenceString(infoType);
                 updateView();
             }
@@ -490,8 +521,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
     }
 
     private void jumpLoginActivity() {
-        Intent intent = new Intent(UserActivity.this, LoginActivity.class);
-        startActivity(intent);
+        JumpUtils.jumpActivity(UserActivity.this, LoginActivity.class);
     }
 
     /***************************** inner class *************************************/

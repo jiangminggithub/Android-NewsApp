@@ -8,11 +8,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.util.DataManager;
+import com.jm.news.util.LogUtils;
 
 public class RegisterActivityViewModel extends AndroidViewModel {
     private static final String TAG = "RegisterActivityViewModel";
@@ -24,13 +24,13 @@ public class RegisterActivityViewModel extends AndroidViewModel {
     @SuppressLint("LongLogTag")
     public RegisterActivityViewModel(@NonNull Application application) {
         super(application);
-        Log.d(TAG, "RegisterActivityViewModel: ");
+        LogUtils.d(TAG, "RegisterActivityViewModel: ");
     }
 
     @SuppressLint("LongLogTag")
     @Override
     protected void onCleared() {
-        Log.d(TAG, "onCleared: ");
+        LogUtils.d(TAG, "onCleared: ");
         mRegisterStatus = null;
         super.onCleared();
     }
@@ -43,15 +43,15 @@ public class RegisterActivityViewModel extends AndroidViewModel {
     /*************************** operation function ***********************************/
     @SuppressLint("LongLogTag")
     public void registerClicked(String accountName, String accountPwd) {
-        Log.d(TAG, "registerClicked: accountName = " + accountName + ", accountPwd = " + accountPwd);
+        LogUtils.d(TAG, "registerClicked: accountName = " + accountName + ", accountPwd = " + accountPwd);
         if (!TextUtils.isEmpty(accountName) && !TextUtils.isEmpty(accountPwd)) {
             Common common = Common.getInstance();
             Resources resources = common.getResources();
-            SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences));
+            SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences_filename));
             if (null != resources && null != preference) {
                 SharedPreferences.Editor edit = preference.edit();
-                edit.putString(resources.getString(R.string.app_account_name), accountName);
-                edit.putString(resources.getString(R.string.app_account_pwd), DataManager.encode(accountPwd));
+                edit.putString(resources.getString(R.string.pre_key_account_name), accountName);
+                edit.putString(resources.getString(R.string.pre_key_account_pwd), DataManager.encode(accountPwd));
                 boolean isRegister = edit.commit();
                 if (isRegister) {
                     mRegisterStatus.postValue(REGISTER_STATUS_SUCCESS);

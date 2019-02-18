@@ -1,15 +1,14 @@
 package com.jm.news.activity;
 
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.SslErrorHandler;
@@ -26,16 +25,18 @@ import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.define.DataDef;
 import com.jm.news.util.CommonUtils;
+import com.jm.news.util.JumpUtils;
+import com.jm.news.util.LogUtils;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class WebViewActivity extends MActivityBase implements View.OnClickListener {
 
     private static final String TAG = "WebViewActivity";
-    private static final int INIT_PROGRESS_STATUS = 85;
+    private static final int SUCCESS_PROGRESS_STATUS = 100;
 
     private TextView mTvBack;
-    private TextView mTvTitel;
+    private TextView mTvTitle;
     private WebView mWebView;
     private ImageButton mIbMore;
     private SweetAlertDialog mDialog;
@@ -45,16 +46,16 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ");
+        LogUtils.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_webview);
 
         mTvBack = findViewById(R.id.tv_head_back);
-        mTvTitel = findViewById(R.id.tv_head_title);
+        mTvTitle = findViewById(R.id.tv_head_title);
         mWebView = findViewById(R.id.wv_webview);
         mIbMore = findViewById(R.id.ib_head_more);
 
         mTvBack.setOnClickListener(this);
-        mTvTitel.setText(Common.getInstance().getResourcesString(R.string.app_toobar_title_webview_detail));
+        mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toobar_title_webview_detail));
 
         mIbMore.setVisibility(View.VISIBLE);
         mIbMore.setOnClickListener(this);
@@ -63,7 +64,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
         Intent intent = getIntent();
         mNewsUrl = intent.getStringExtra(DataDef.WebViewKey.KEY_URL);
         boolean isOpenJavaScript = intent.getBooleanExtra(DataDef.WebViewKey.KEY_OPEN_JAVASCRIPT, false);
-        Log.d(TAG, "onCreate: mNewsUrl = " + mNewsUrl + ", isOpenJavaScript = " + isOpenJavaScript);
+        LogUtils.d(TAG, "onCreate: mNewsUrl = " + mNewsUrl + ", isOpenJavaScript = " + isOpenJavaScript);
 
         mDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -102,6 +103,12 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
         if (null != mWebView) {
             mWebView.clearCache(true);
         }
+        mTvBack = null;
+        mTvTitle = null;
+        mIbMore = null;
+        mWebView = null;
+        mDialog = null;
+        mNewsUrl = null;
         super.onDestroy();
     }
 
@@ -134,12 +141,12 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
                 case R.id.menu_webview_share:
                     if (!TextUtils.isEmpty(mNewsUrl)) {
                         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                        cm.setText(mNewsUrl);
+                        cm.setPrimaryClip(ClipData.newPlainText(null, mNewsUrl));
                         CommonUtils.getInstance().showToastView(R.string.menu_webview_share_tips);
                     }
                     break;
                 case R.id.menu_webview_open_other:
-                    CommonUtils.getInstance().jumpOtherApp(WebViewActivity.this, mNewsUrl);
+                    JumpUtils.jumpOtherApp(WebViewActivity.this, mNewsUrl);
                     break;
                 default:
                     break;
@@ -153,16 +160,12 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
-            if (url == null) {
-                return false;
-            }
-
-            // 拦截自定义协议的请求导致访问失败
             try {
+                // 拦截自定义协议的请求导致访问失败
                 if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
+                    // 让系统寻找可处理的程序处理
+//                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                    startActivity(intent);
                     return true;
                 }
             } catch (Exception e) {     //防止crash (如果手机上没有安装处理某个scheme开头的url的APP, 会导致crash)
@@ -170,6 +173,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
             }
 
             view.loadUrl(url);
+            //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
             return true;
         }
 
@@ -187,7 +191,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
             if (null != mDialog) {
                 mDialog.dismiss();
             }
-            Log.d(TAG, "onPageFinished: ");
+            LogUtils.d(TAG, "onPageFinished: ");
         }
 
     }
@@ -195,9 +199,13 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
     private class MyWebChromeClient extends WebChromeClient {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
-            Log.d(TAG, "onProgressChanged: progress=" + newProgress);
-            if (null != mDialog && newProgress >= INIT_PROGRESS_STATUS) {
-                mDialog.dismiss();
+            LogUtils.d(TAG, "onProgressChanged: progress=" + newProgress);
+            if (null != mDialog) {
+                if (newProgress < SUCCESS_PROGRESS_STATUS) {
+                    mDialog.setTitleText(newProgress + "%");
+                } else {
+                    mDialog.dismiss();
+                }
             }
         }
     }
