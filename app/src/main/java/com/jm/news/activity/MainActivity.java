@@ -127,12 +127,6 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
     protected void onStop() {
         LogUtils.d(TAG, "onStop: ");
         super.onStop();
