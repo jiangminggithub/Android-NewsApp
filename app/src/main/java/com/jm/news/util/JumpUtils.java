@@ -10,6 +10,7 @@ import com.jm.news.activity.WebViewActivity;
 import com.jm.news.define.DataDef;
 
 public class JumpUtils {
+
     private static final String TAG = "JumpUtils";
 
     /**
@@ -35,10 +36,15 @@ public class JumpUtils {
     public static final void jumpWebView(@NonNull Context context, @NonNull String newsLink, boolean isJavaScript) {
         LogUtils.d(TAG, "jumpWebView: newsLink = " + newsLink);
         if (null != context) {
-            Intent intent = new Intent(context, WebViewActivity.class);
-            intent.putExtra(DataDef.WebViewKey.KEY_URL, newsLink);
-            intent.putExtra(DataDef.WebViewKey.KEY_OPEN_JAVASCRIPT, isJavaScript);
-            context.startActivity(intent);
+            if (CommonUtils.getInstance().isNetworkAvailable()) {
+                Intent intent = new Intent(context, WebViewActivity.class);
+                intent.putExtra(DataDef.WebViewKey.KEY_URL, newsLink);
+                intent.putExtra(DataDef.WebViewKey.KEY_OPEN_JAVASCRIPT, isJavaScript);
+                context.startActivity(intent);
+            } else {
+                CommonUtils.getInstance().showNetInvisibleDialog(context);
+                LogUtils.d(TAG, "jumpWebView: context = " + context.toString());
+            }
         }
     }
 

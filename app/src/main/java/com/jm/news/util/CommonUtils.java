@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.TouchDelegate;
@@ -17,9 +19,12 @@ import android.widget.Toast;
 
 import com.jm.news.R;
 import com.jm.news.activity.MainActivity;
+import com.jm.news.common.Common;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CommonUtils {
 
@@ -31,6 +36,7 @@ public class CommonUtils {
 
 
     private Context mContext = null;
+    private SweetAlertDialog mNetInvisibleDialog;
 
     private CommonUtils() {
 
@@ -298,5 +304,79 @@ public class CommonUtils {
         }
         return APP_VERSION_FAILED_GET;
     }
+
+    /**
+     * 检查网络是否可用
+     *
+     * @return Boolean
+     */
+    public boolean isNetworkAvailable() {
+        if (null != mContext) {
+            ConnectivityManager connectivity = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivity != null) {
+                NetworkInfo info = connectivity.getActiveNetworkInfo();
+                if (info != null && info.isConnected()) {
+                    // 当前网络是连接的
+                    if (info.getState() == NetworkInfo.State.CONNECTED) {
+                        // 当前所连接的网络可用
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 显示网络断开的提示框
+     *
+     * @param context 目标的Activity context对象
+     */
+    public void showNetInvisibleDialog(Context context) {
+        if (null == context) {
+            return;
+        }
+        if (mNetInvisibleDialog == null) {
+            Common common = Common.getInstance();
+            mNetInvisibleDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
+            mNetInvisibleDialog.setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
+                    .setContentText(common.getResourcesString(R.string.dialog_net_invisible_content))
+                    .setConfirmText(common.getResourcesString(R.string.dialog_net_invisible_confirm))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismissWithAnimation();
+                            mNetInvisibleDialog = null;
+                            System.exit(0);
+                        }
+                    })
+                    .setCancelText(common.getResourcesString(R.string.dialog_cancel))
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismissWithAnimation();
+                            mNetInvisibleDialog = null;
+                        }
+                    });
+            mNetInvisibleDialog.setCancelable(false);
+            mNetInvisibleDialog.show();
+
+        } else if (!mNetInvisibleDialog.isShowing()) {
+            mNetInvisibleDialog.show();
+        } else {
+
+        }
+    }
+
+    /**
+     * 关闭网络断开的提示框
+     */
+    public void dismissNetInvisibleDialog() {
+        if (null != mNetInvisibleDialog && mNetInvisibleDialog.isShowing()) {
+            mNetInvisibleDialog.dismiss();
+            mNetInvisibleDialog = null;
+        }
+    }
+
 
 }

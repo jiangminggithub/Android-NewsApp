@@ -27,6 +27,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class FragmentAppSetting extends PreferenceFragment {
     private static final String TAG = "FragmentAppSetting";
+    private static final int LOCALE_CHOICE_TITLE_LEFT = 10;
+    private static final int LOCALE_CHOICE_TITLE_TOP = 20;
+    private static final int LOCALE_CHOICE_TITLE_RIGHT = 10;
+    private static final int LOCALE_CHOICE_TITLE_BOTTON = 10;
+    private static final int LOCALE_CHOICE_TITLE_SIZE = 20;
 
     private FragmentSettingViewModel mViewModel;
 
@@ -201,15 +206,13 @@ public class FragmentAppSetting extends PreferenceFragment {
         }
     }
 
-
-    /************************************************************************************************/
     private void showLocaleChoiceDialog(final String key) {
         TextView mTitle = new TextView(getActivity());
         mTitle.setBackgroundColor(Color.WHITE);
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, LOCALE_CHOICE_TITLE_SIZE);
         mTitle.setGravity(Gravity.CENTER);
         mTitle.setText(R.string.setting_local_title);
-        mTitle.setPadding(10, 20, 10, 10);
+        mTitle.setPadding(LOCALE_CHOICE_TITLE_LEFT, LOCALE_CHOICE_TITLE_TOP, LOCALE_CHOICE_TITLE_RIGHT, LOCALE_CHOICE_TITLE_BOTTON);
         mTitle.setTextColor(Color.BLACK);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCustomTitle(mTitle);

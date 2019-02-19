@@ -39,21 +39,6 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> mNewsDataStatus = new MutableLiveData<>();
     private MutableLiveData<Boolean> mNewsDataCountStatus = new MutableLiveData<>();
 
-    @SuppressLint("LongLogTag")
-    public FragmentNewsMainViewModel(@NonNull Application application) {
-        super(application);
-        LogUtils.d(TAG, "FragmentNewsMainViewModel: ");
-        mDataManager = new DataManager(application);
-        mDataRequestListener = new MyDataResponsetListener();
-        mDataManager.setDataRequestListener(mDataRequestListener);
-        String bannerID = DataDef.NewsChanelIDs.BANNER_ID;
-        if (null != bannerID && !"".equals(bannerID)) {
-            mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS_BANNER, bannerID, 1, 50);
-        } else {
-            mNewsBannerDataStatus.postValue(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED);
-        }
-    }
-
     @Override
     protected void onCleared() {
         if (null != mDataManager) {
@@ -67,6 +52,16 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
         mNewsDataStatus = null;
         mNewsDataCountStatus = null;
         super.onCleared();
+    }
+
+    @SuppressLint("LongLogTag")
+    public FragmentNewsMainViewModel(@NonNull Application application) {
+        super(application);
+        LogUtils.d(TAG, "FragmentNewsMainViewModel: ");
+        mDataManager = new DataManager(application);
+        mDataRequestListener = new MyDataResponsetListener();
+        mDataManager.setDataRequestListener(mDataRequestListener);
+        mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS_BANNER, DataDef.NewsChanelIDs.BANNER_ID, 1, 50);
     }
 
     /***************************** livedata function *****************************************/
@@ -174,7 +169,13 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
             mNewsDataStatus.postValue(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED);
             LogUtils.d(TAG, "requestRefreshData: Failed");
         }
+//        requestBannerDate();
+    }
 
+    public void requestBannerDate() {
+        if (null != mDataManager) {
+            mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS_BANNER, DataDef.NewsChanelIDs.BANNER_ID, 1, 50);
+        }
     }
 
     @SuppressLint("LongLogTag")

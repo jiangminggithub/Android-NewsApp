@@ -16,12 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jm.news.R;
-import com.jm.news.customview.MClassicsHeaderView;
 import com.jm.news.customview.MFragmentBase;
 import com.jm.news.define.BaseViewClickListener;
 import com.jm.news.define.DataDef;
@@ -35,6 +36,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
@@ -49,6 +51,10 @@ public class FragmentNewsMain extends MFragmentBase {
     private SmartRefreshLayout mSmartRefreshLayout;
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter mViewAdapter;
+    private LinearLayout mLlNewsContentView;
+    private TextView mTvErrorTips;
+
+
     private int mFragmentID;
     private FragmentNewsMainViewModel mViewModel = null;
     public RequestOptions mGlideOptions = new RequestOptions()
@@ -75,6 +81,8 @@ public class FragmentNewsMain extends MFragmentBase {
         mBanner = view.findViewById(R.id.banner_main_news);
         mSmartRefreshLayout = view.findViewById(R.id.sfl_viewblock);
         mRecyclerView = view.findViewById(R.id.rv_viewblock);
+        mLlNewsContentView = view.findViewById(R.id.ll_news_content);
+        mTvErrorTips = view.findViewById(R.id.tv_error_tips);
         if (!isRecreate()) {
             initData();
             initView();
@@ -88,6 +96,9 @@ public class FragmentNewsMain extends MFragmentBase {
         LogUtils.d(TAG, "onStart: ");
         super.onStart();
         setBannerAutoPaly(true);
+        if (mTvErrorTips.getVisibility() == View.VISIBLE && CommonUtils.getInstance().isNetworkAvailable()) {
+            updateStatus(true);
+        }
     }
 
     @Override
@@ -109,10 +120,12 @@ public class FragmentNewsMain extends MFragmentBase {
         mSmartRefreshLayout = null;
         mRecyclerView = null;
         mGlideOptions = null;
+        mLlNewsContentView = null;
+        mTvErrorTips = null;
         super.onDestroy();
     }
 
-
+    /******************************* private function *****************************/
     private void initData() {
         LogUtils.d(TAG, "initData: ");
         mViewModel = ViewModelProviders.of(this).get(FragmentNewsMainViewModel.class);
@@ -120,13 +133,14 @@ public class FragmentNewsMain extends MFragmentBase {
     }
 
     private void initView() {
-        mSmartRefreshLayout.setRefreshHeader(new MClassicsHeaderView(getContext()));
+        mSmartRefreshLayout.setRefreshHeader(new ClassicsHeader(getContext()));
         mSmartRefreshLayout.setRefreshFooter(new BallPulseFooter(getContext()).setSpinnerStyle(SpinnerStyle.FixedBehind));
         mSmartRefreshLayout.setOnRefreshListener(new MyRefreshListener());
         mSmartRefreshLayout.setOnLoadMoreListener(new MyLoadMoreListener());
 
         mViewAdapter = new MyRecyclerViewAdapter();
         mViewAdapter.setmOnItemClickListener(new MyItemClickListener());
+        mTvErrorTips.setOnClickListener(new MyOnClickListener());
 
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(OrientationHelper.VERTICAL);
@@ -142,7 +156,21 @@ public class FragmentNewsMain extends MFragmentBase {
         NewsBannerDataStatusObserver newsBannerDataStatusObserver = new NewsBannerDataStatusObserver();
         mViewModel.getNewsBannerDataStatus().observe(this, newsBannerDataStatusObserver);
 
-        mSmartRefreshLayout.autoRefresh();
+        updateStatus(true);
+    }
+
+    private void updateStatus(boolean isRefresh) {
+        if (CommonUtils.getInstance().isNetworkAvailable()) {
+            mLlNewsContentView.setVisibility(View.VISIBLE);
+            mTvErrorTips.setVisibility(View.GONE);
+            if (isRefresh) {
+                mSmartRefreshLayout.autoRefresh();
+            }
+        } else {
+            mLlNewsContentView.setVisibility(View.GONE);
+            mTvErrorTips.setVisibility(View.VISIBLE);
+            mTvErrorTips.setText(R.string.tips_net_invisible);
+        }
     }
 
     /*************************************** observer function *******************************************/
@@ -152,11 +180,19 @@ public class FragmentNewsMain extends MFragmentBase {
             LogUtils.d(TAG, "onChanged: getNewsDataStatus status = " + integer);
             if (null != integer && null != mSmartRefreshLayout) {
                 if (integer == DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED) {
-                    mSmartRefreshLayout.finishRefresh();
-                    mSmartRefreshLayout.finishLoadMore();
-                    CommonUtils.getInstance().showToastView(R.string.app_data_request_failed);
+                    mSmartRefreshLayout.finishRefresh(false);
+                    mSmartRefreshLayout.finishLoadMore(false);
+                    mLlNewsContentView.setVisibility(View.GONE);
+                    mTvErrorTips.setVisibility(View.VISIBLE);
+                    mTvErrorTips.setText(R.string.tips_request_failed);
+                } else if (integer == DataDef.RequestStatusType.DATA_STATUS_NETWORK_DISCONNECTED) {
+                    mSmartRefreshLayout.finishRefresh(false);
+                    mSmartRefreshLayout.finishLoadMore(false);
+                    mLlNewsContentView.setVisibility(View.GONE);
+                    mTvErrorTips.setVisibility(View.VISIBLE);
+                    mTvErrorTips.setText(R.string.tips_net_invisible);
                 } else if (integer == DataDef.RequestStatusType.DATA_STATUS_NO_MOREDATA) {
-                    mSmartRefreshLayout.finishLoadMore();
+                    mSmartRefreshLayout.finishLoadMore(true);
                     CommonUtils.getInstance().showToastView(R.string.app_data_request_no_more);
                 }
             }
@@ -168,13 +204,14 @@ public class FragmentNewsMain extends MFragmentBase {
         public void onChanged(@Nullable Boolean b) {
             LogUtils.d(TAG, "onChanged: b = " + b);
             if (null != b && null != mViewAdapter && null != mSmartRefreshLayout) {
+                mViewAdapter.notifyDataSetChanged();
                 if (b.booleanValue()) {
-                    mViewAdapter.notifyDataSetChanged();
-                    mSmartRefreshLayout.finishRefresh();
+                    mSmartRefreshLayout.finishRefresh(true);
                 } else {
-                    mViewAdapter.notifyDataSetChanged();
-                    mSmartRefreshLayout.finishLoadMore();
+                    mSmartRefreshLayout.finishLoadMore(true);
                 }
+                mLlNewsContentView.setVisibility(View.VISIBLE);
+                mTvErrorTips.setVisibility(View.GONE);
             }
         }
     }
@@ -185,9 +222,6 @@ public class FragmentNewsMain extends MFragmentBase {
             LogUtils.d(TAG, "onChanged: integer = " + integer);
             if (null != integer && null != mBanner && null != mViewModel) {
                 if (integer == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
-                    // screen orientation optimization
-//                    int orientation = getResources().getConfiguration().orientation;
-//                    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                     mBanner.setVisibility(View.VISIBLE);
                     mBanner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE);
                     mBanner.setImageLoader(new MyBannerImageLoader());
@@ -198,10 +232,9 @@ public class FragmentNewsMain extends MFragmentBase {
                     mBanner.setImages(mViewModel.getBannerImgUrls());
                     mBanner.setOnBannerListener(new MyBannerListener());
                     mBanner.start();
-//                    } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//                        Toast.makeText(getContext(), "已针对屏幕状态优化显示", Toast.LENGTH_SHORT).show();
-//                        mBanner.setVisibility(View.GONE);
-//                    }
+                } else if (integer == DataDef.RequestStatusType.DATA_STATUS_NETWORK_DISCONNECTED) {
+                    mBanner.setVisibility(View.GONE);
+                    CommonUtils.getInstance().showToastView(R.string.toast_net_invisible);
                 } else {
                     mBanner.setVisibility(View.GONE);
                     CommonUtils.getInstance().showToastView(R.string.app_data_request_failed);
@@ -269,7 +302,12 @@ public class FragmentNewsMain extends MFragmentBase {
         @Override
         public void onRefresh(@NonNull RefreshLayout refreshLayout) {
             LogUtils.d(TAG, "onRefresh: ");
-            mViewModel.requestRefreshData();
+            if (CommonUtils.getInstance().isNetworkAvailable()) {
+                mViewModel.requestRefreshData();
+            } else {
+                mSmartRefreshLayout.finishRefresh(false);
+            }
+            updateStatus(false);
         }
     }
 
@@ -277,7 +315,12 @@ public class FragmentNewsMain extends MFragmentBase {
         @Override
         public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
             LogUtils.d(TAG, "onLoadMore: ");
-            mViewModel.requestLoadMoreData();
+            if (CommonUtils.getInstance().isNetworkAvailable()) {
+                mViewModel.requestLoadMoreData();
+            } else {
+                mSmartRefreshLayout.finishLoadMore(false);
+            }
+            updateStatus(false);
         }
     }
 
@@ -396,5 +439,17 @@ public class FragmentNewsMain extends MFragmentBase {
         }
     }
 
+    private class MyOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            if (CommonUtils.getInstance().isNetworkAvailable()) {
+                updateStatus(true);
+                LogUtils.d(TAG, "onClick: net is visible");
+            } else {
+                LogUtils.d(TAG, "onClick: net is invisible");
+            }
+        }
+    }
 
 }

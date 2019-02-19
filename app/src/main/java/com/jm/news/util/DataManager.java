@@ -38,12 +38,6 @@ public class DataManager {
     private Context mContext;
     private DataResponsetListener mDataResponsetListener;
 
-    public void requestData() {
-        if (null == mDataResponsetListener) {
-
-        }
-
-    }
 
     public DataManager(Context context) {
         this.mContext = context;
@@ -51,15 +45,10 @@ public class DataManager {
 
 
     public void requestNewsNetworkData(@Nullable final int requestType, final String channelId, int pageIndex, int maxResult) {
-        LogUtils.d(TAG, "requestNewsNetworkData: ------------------------------------------------------------------------------------");
         LogUtils.d(TAG, "requestNewsNetworkData: requestType = " + requestType + ", channelId = " + channelId + ", pageIndex = " + pageIndex + ", maxResult = " + maxResult);
-        LogUtils.d(TAG, "requestNewsNetworkData: ------------------------------------------------------------------------------------");
-//        if (true) {
-//            mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
-//            mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
-//            mDataResponsetListener.newsChanelDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
-//            return;
-//        }
+        if (!requestNetDataPreChecked()) {
+            return;
+        }
 
         if (null == channelId) {
             if (null != mDataResponsetListener) {
@@ -77,42 +66,52 @@ public class DataManager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String result = new ShowApiRequest(type, decode(DataDef.ApiInfo.API_ID), decode(DataDef.ApiInfo.API_SECRET))
-                        .addTextPara("channelId", channelId)
-                        .addTextPara("page", page)
-                        .addTextPara("maxResult", maxCount)
-                        .post();
-                LogUtils.d(TAG, "run: result=" + result);
 
-                Gson gson = new Gson();
-                switch (requestType) {
-                    case NEWS_TYPE_CHANNEL:
-                        NewsChannelDataBean chanelDataBean = gson.fromJson(result, NewsChannelDataBean.class);
-                        if (chanelDataBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
-                            mDataResponsetListener.newsChanelDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK, chanelDataBean);
-                        } else {
-                            mDataResponsetListener.newsChanelDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, chanelDataBean);
-                        }
-                        break;
-                    case NEWS_TYPE_NEWS:
-                        NewsDataBean dataBean = gson.fromJson(result, NewsDataBean.class);
-                        if (dataBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
-                            newsDataConver(dataBean);
-                        } else {
-                            mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
-                        }
-                        break;
-                    case NEWS_TYPE_NEWS_BANNER:
-                        NewsBannerDataBean bannerBean = gson.fromJson(result, NewsBannerDataBean.class);
-                        if (bannerBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
-                            newsBannerDataConver(bannerBean);
-                        } else {
-                            mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
-                        }
-                        break;
-                    default:
-                        break;
+                String result = null;
+                try {
+                    result = new ShowApiRequest(type, decode(DataDef.ApiInfo.API_ID), decode(DataDef.ApiInfo.API_SECRET))
+                            .addTextPara("channelId", channelId)
+                            .addTextPara("page", page)
+                            .addTextPara("maxResult", maxCount)
+                            .post();
+
+                    LogUtils.d(TAG, "run: result=" + result);
+
+                    Gson gson = new Gson();
+                    switch (requestType) {
+                        case NEWS_TYPE_CHANNEL:
+                            NewsChannelDataBean chanelDataBean = gson.fromJson(result, NewsChannelDataBean.class);
+                            if (chanelDataBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
+                                mDataResponsetListener.newsChanelDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK, chanelDataBean);
+                            } else {
+                                mDataResponsetListener.newsChanelDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, chanelDataBean);
+                            }
+                            break;
+                        case NEWS_TYPE_NEWS:
+                            NewsDataBean dataBean = gson.fromJson(result, NewsDataBean.class);
+                            if (dataBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
+                                newsDataConver(dataBean);
+                            } else {
+                                mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
+                            }
+                            break;
+                        case NEWS_TYPE_NEWS_BANNER:
+                            NewsBannerDataBean bannerBean = gson.fromJson(result, NewsBannerDataBean.class);
+                            if (bannerBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
+                                newsBannerDataConver(bannerBean);
+                            } else {
+                                mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (Exception e) {
+                    LogUtils.d(TAG, "run: failed request ");
+                    requestFialdResponse(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED);
+                    e.printStackTrace();
                 }
+
             }
         }).start();
 
@@ -227,11 +226,38 @@ public class DataManager {
 
     }
 
-    private boolean isRequestVisible() {
+    /**
+     * 网络请求检查
+     *
+     * @return Boolean 是否可以访问
+     */
+    public boolean requestNetDataPreChecked() {
         if (null != mDataResponsetListener) {
-
+            // 判断网络是否可用
+            LogUtils.d(TAG, "requestDataChecked: isNetworkAvailable " + CommonUtils.getInstance().isNetworkAvailable());
+            if (!CommonUtils.getInstance().isNetworkAvailable()) {
+                requestFialdResponse(DataDef.RequestStatusType.DATA_STATUS_NETWORK_DISCONNECTED);
+                return false;
+            } else {
+                return true;
+            }
         }
+
         return false;
+    }
+
+    /**
+     * 数据请求失败响应
+     *
+     * @param requestStatus 需要响应的状态
+     */
+    private void requestFialdResponse(int requestStatus) {
+        if (null != mDataResponsetListener) {
+            mDataResponsetListener.newsBannerDataBeanChange(requestStatus, null);
+            mDataResponsetListener.newsDataBeanChange(requestStatus, 0, null);
+            mDataResponsetListener.newsChanelDataBeanChange(requestStatus, null);
+            LogUtils.d(TAG, "requestFialdResponse: ");
+        }
     }
 
 

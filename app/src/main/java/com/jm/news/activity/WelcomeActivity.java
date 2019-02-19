@@ -22,7 +22,7 @@ public class WelcomeActivity extends MActivityBase {
         super.onCreate(savedInstanceState);
         LogUtils.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_welcome);
-        mProgressView = findViewById(R.id.mpv_propress);
+        mProgressView = findViewById(R.id.mpv_progress);
 
         mProgressView.setProgressListener(new MyPropressListener());
         mProgressView.setOnClickListener(new MyOnClickListener());

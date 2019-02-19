@@ -22,6 +22,11 @@
     <string name="webview_no_url">Resource link does not exist</string>
     <string name="webview_loading">Loading...</string>
 
+    <!-- **************************** notification string *************************************-->
+    <string name="toast_net_invisible">Network is not connection !</string>
+    <string name="tips_net_invisible">The network is not connected. Please check the network connection and try again.</string>
+    <string name="tips_request_failed">Data acquisition failed, please check the network connection and API usage balance</string>
+
     <!-- **************************** user string *************************************-->
     <string name="user_autograph">Autograph</string>
     <string name="user_nickname">NickName</string>
@@ -79,7 +84,7 @@
     <string name="account_manager_cancel">Cancel</string>
     <string name="account_manager_logout_failed">Failed, please try again</string>
 
-    <!-- **************************** dialog string *************************************-->
+    <!-- **************************** menu string *************************************-->
     <string name="menu_news_item_open_detail">News Detail</string>
     <string name="menu_news_item_open_other">Open other</string>
     <string name="menu_news_item_delete">Delete</string>
@@ -108,6 +113,9 @@
 
     <string name="dialog_account_change_content">Clear all user information !</string>
     <string name="dialog_account_logout_content">Log out of the current user ?</string>
+
+    <string name="dialog_net_invisible_content">No internet connection !</string>
+    <string name="dialog_net_invisible_confirm">EXIT</string>
 
     <!-- **************************** setting string *************************************-->
     <string name="setting_basic">Basic</string>

@@ -9,29 +9,45 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@color/transparent">
 
-            <com.youth.banner.Banner
-                android:id="@+id/banner_main_news"
+            <LinearLayout
+                android:id="@+id/ll_news_content"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:padding="8dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.youth.banner.Banner
+                    android:id="@+id/banner_main_news"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:padding="8dp"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_viewblock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="#fff"
+                    android:overScrollMode="never"
+                    android:paddingRight="1px"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_error_tips"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingBottom="200dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18dp"
                 android:visibility="gone" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_viewblock"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="#fff"
-                android:overScrollMode="never"
-                android:paddingRight="1px"
-                android:scrollbars="vertical" />
-        </LinearLayout>
-
+        </FrameLayout>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
