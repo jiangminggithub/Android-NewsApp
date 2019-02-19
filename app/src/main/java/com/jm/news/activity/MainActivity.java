@@ -127,12 +127,6 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
     protected void onStop() {
         LogUtils.d(TAG, "onStop: ");
         super.onStop();
@@ -163,7 +157,9 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
             } else {
                 moveTaskToBack(false);
             }
+
             return true;
+
         } else if ((keyCode == KeyEvent.KEYCODE_MENU)) {
             if (mSplSlidingPane.isOpen()) {
                 mSplSlidingPane.closePane();
