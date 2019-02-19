@@ -157,7 +157,9 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
             } else {
                 moveTaskToBack(false);
             }
+
             return true;
+
         } else if ((keyCode == KeyEvent.KEYCODE_MENU)) {
             if (mSplSlidingPane.isOpen()) {
                 mSplSlidingPane.closePane();
