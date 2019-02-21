@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.jm.news.customview.MSlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/app_sliding_pane_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/fl_left_menu"
+        android:layout_width="280dp"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_right_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="#F23030">
+
+            <ImageButton
+                android:id="@+id/ib_main_menu"
+                android:layout_width="36dp"
+                android:layout_height="35dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/showright_selector" />
+
+            <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:text="头条新闻"-->
+            <!--android:textColor="#fffddd"-->
+            <!--android:textSize="20sp" />-->
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/icon_title" />
+
+            <ImageButton
+                android:id="@+id/ib_main_search"
+                android:layout_width="26dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/selsector_search" />
+        </RelativeLayout>
+
+        <com.jm.news.customview.MViewPagerIndicator
+            android:id="@+id/mvpi_pager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
+    </LinearLayout>
+</com.jm.news.customview.MSlidingPaneLayout>
