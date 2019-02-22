@@ -32,16 +32,19 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class WebViewActivity extends MActivityBase implements View.OnClickListener {
 
+    // static field
     private static final String TAG = "WebViewActivity";
     private static final int SUCCESS_PROGRESS_STATUS = 100;
-
+    private static final int EXPAND_VIEW_TOUCH_DELEGATE = 50;
+    // control field
     private TextView mTvBack;
     private TextView mTvTitle;
     private WebView mWebView;
     private ImageButton mIbMore;
     private SweetAlertDialog mDialog;
-
+    // URL field
     private String mNewsUrl;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +58,11 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
         mIbMore = findViewById(R.id.ib_head_more);
 
         mTvBack.setOnClickListener(this);
-        mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toobar_title_webview_detail));
+        mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toolbar_title_webview_detail));
 
         mIbMore.setVisibility(View.VISIBLE);
         mIbMore.setOnClickListener(this);
-        CommonUtils.getInstance().expandViewTouchDelegate(mIbMore, 50, 50, 50, 50);
+        CommonUtils.getInstance().expandViewTouchDelegate(mIbMore, EXPAND_VIEW_TOUCH_DELEGATE, EXPAND_VIEW_TOUCH_DELEGATE, EXPAND_VIEW_TOUCH_DELEGATE, EXPAND_VIEW_TOUCH_DELEGATE);
 
         Intent intent = getIntent();
         mNewsUrl = intent.getStringExtra(DataDef.WebViewKey.KEY_URL);
@@ -68,7 +71,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
 
         mDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        mDialog.setContentText(Common.getInstance().getResourcesString(R.string.webview_loading));
+        mDialog.setContentText(Common.getInstance().getResourcesString(R.string.dialog_webview_loading));
         mDialog.setCancelable(true);
         mDialog.show();
 
@@ -88,7 +91,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
             mWebView.loadUrl(mNewsUrl);
         } else {
             mDialog.dismiss();
-            CommonUtils.getInstance().showToastView(R.string.webview_no_url);
+            CommonUtils.getInstance().showToastView(R.string.toast_webview_no_url);
         }
 
     }
@@ -119,7 +122,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
                 this.finish();
                 break;
             case R.id.ib_head_more: {
-                PopupMenu popupMenu = CommonUtils.getInstance().showPopupMenu(this, v, R.menu.menu_popup_webview_more);
+                PopupMenu popupMenu = CommonUtils.getInstance().getPopupMenu(this, v, R.menu.menu_popup_webview_more, false);
                 popupMenu.setOnMenuItemClickListener(new MyPopMenuClickListener());
                 popupMenu.show();
             }
@@ -130,7 +133,6 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
     }
 
     /********************************** listener function ********************************************/
-
     private class MyPopMenuClickListener implements PopupMenu.OnMenuItemClickListener {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
@@ -142,7 +144,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
                     if (!TextUtils.isEmpty(mNewsUrl)) {
                         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                         cm.setPrimaryClip(ClipData.newPlainText(null, mNewsUrl));
-                        CommonUtils.getInstance().showToastView(R.string.menu_webview_share_tips);
+                        CommonUtils.getInstance().showToastView(R.string.toast_menu_webview_share_tips);
                     }
                     break;
                 case R.id.menu_webview_open_other:
@@ -156,7 +158,6 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
     }
 
     /********************************** inner class ********************************************/
-
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {

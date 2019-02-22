@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:radius="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -28,9 +29,9 @@
                 android:ellipsize="end"
                 android:lineSpacingExtra="3dp"
                 android:maxLines="2"
-                android:text="毛克疾：印度优秀工程师那么多，为什么是中国抓住了全球化机会"
                 android:textColor="@color/news_title"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tool:text="毛克疾：印度优秀工程师那么多，为什么是中国抓住了全球化机会" />
 
             <TextView
                 android:id="@+id/tv_news_item_one_source"
@@ -38,9 +39,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:text="头条"
                 android:textColor="@color/news_source"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tool:text="头条" />
 
             <TextView
                 android:id="@+id/tv_news_item_one_date"
@@ -48,9 +49,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:text="2017-05-27 15:01:10"
                 android:textColor="@color/news_source"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tool:text="2017-05-27 15:01:10" />
         </RelativeLayout>
 
         <LinearLayout

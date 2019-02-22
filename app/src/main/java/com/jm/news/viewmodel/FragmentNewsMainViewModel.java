@@ -1,6 +1,5 @@
 package com.jm.news.viewmodel;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
@@ -18,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentNewsMainViewModel extends AndroidViewModel {
+
     // static filed
     private static final String TAG = "FragmentNewsMainViewModel";
     private static final int DEFAULT_PAGE_INDEX = 1;
     private static final int DEFAULT_REQUEST_COUNT = 30;
-
     // function related filed
     private boolean isRefresh = true;
     private String mChannelID = null;
@@ -30,14 +29,23 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
     private int mAllPagesCount = 0;
     private int mRequestCount = DEFAULT_REQUEST_COUNT;
     private DataManager mDataManager = null;
-    private MyDataResponsetListener mDataRequestListener = null;
+    private MyDataResponseListener mDataRequestListener = null;
     private List<NewsItemBean> mNewsDataItemList = new ArrayList<>();
     private NewsBannerBean mNewsBannerDataBean = null;
-
     // livedate filed
     private MutableLiveData<Integer> mNewsBannerDataStatus = new MutableLiveData<>();
     private MutableLiveData<Integer> mNewsDataStatus = new MutableLiveData<>();
     private MutableLiveData<Boolean> mNewsDataCountStatus = new MutableLiveData<>();
+
+
+    public FragmentNewsMainViewModel(@NonNull Application application) {
+        super(application);
+        LogUtils.d(TAG, "FragmentNewsMainViewModel: ");
+        mDataManager = new DataManager(application);
+        mDataRequestListener = new MyDataResponseListener();
+        mDataManager.setDataRequestListener(mDataRequestListener);
+        mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS_BANNER, DataDef.NewsChanelIDs.BANNER_ID, 1, 50);
+    }
 
     @Override
     protected void onCleared() {
@@ -54,18 +62,7 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
         super.onCleared();
     }
 
-    @SuppressLint("LongLogTag")
-    public FragmentNewsMainViewModel(@NonNull Application application) {
-        super(application);
-        LogUtils.d(TAG, "FragmentNewsMainViewModel: ");
-        mDataManager = new DataManager(application);
-        mDataRequestListener = new MyDataResponsetListener();
-        mDataManager.setDataRequestListener(mDataRequestListener);
-        mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS_BANNER, DataDef.NewsChanelIDs.BANNER_ID, 1, 50);
-    }
-
     /***************************** livedata function *****************************************/
-
     public MutableLiveData<Integer> getNewsDataStatus() {
         return mNewsDataStatus;
     }
@@ -152,13 +149,11 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
     }
 
     /***************************** operation function   **************************************/
-    @SuppressLint("LongLogTag")
     public void updatetChannelID(int Index) {
         mChannelID = Common.getInstance().getChannelID(Index);
         LogUtils.d(TAG, "updatetChannelID: mChannelID=" + mChannelID);
     }
 
-    @SuppressLint("LongLogTag")
     public void requestRefreshData() {
         if (null != mChannelID) {
             mCurrentPageIndex = DEFAULT_PAGE_INDEX;
@@ -178,7 +173,7 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
         }
     }
 
-    @SuppressLint("LongLogTag")
+
     public void requestLoadMoreData() {
         if (null != mChannelID) {
             mCurrentPageIndex += mCurrentPageIndex;
@@ -186,17 +181,16 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
             if (mCurrentPageIndex <= mAllPagesCount) {
                 mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS, mChannelID, mCurrentPageIndex, mRequestCount);
             } else {
-                mNewsDataStatus.postValue(DataDef.RequestStatusType.DATA_STATUS_NO_MOREDATA);
+                mNewsDataStatus.postValue(DataDef.RequestStatusType.DATA_STATUS_NO_MORE_DATA);
             }
             LogUtils.d(TAG, "requestLoadMoreData: OK ");
-
         } else {
             mNewsDataStatus.postValue(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED);
             LogUtils.d(TAG, "requestLoadMoreData: Failed ");
         }
     }
 
-    @SuppressLint("LongLogTag")
+
     public void removeNewsItem(int index) {
         LogUtils.d(TAG, "removeNewsItem: index = " + index);
         if (index >= 0) {
@@ -206,9 +200,8 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
     }
 
     /***************************** listener function *****************************************/
-    private class MyDataResponsetListener extends DataResponsetListener {
+    private class MyDataResponseListener extends DataResponsetListener {
 
-        @SuppressLint("LongLogTag")
         @Override
         public void newsDataBeanChange(int requestStatus, int allPages, List<NewsItemBean> newsDataItemList) {
             LogUtils.d(TAG, "newsDataBeanChange: requestStatus=" + requestStatus + " , allPages=" + allPages);
@@ -236,7 +229,6 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
             }
         }
 
-        @SuppressLint("LongLogTag")
         @Override
         public void newsBannerDataBeanChange(int requestStatus, NewsBannerBean newsBannerBean) {
             LogUtils.d(TAG, "newsBannerDataBeanChange: requestStatus = " + requestStatus);

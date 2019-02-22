@@ -27,7 +27,7 @@
         <Preference
             android:key="@string/pre_key_setting_local"
             android:title="@string/setting_local_title"
-            tools:summary="简体中文" />
+            tools:summary="Simplified Chinese" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/pre_key_setting_hide_benefits"

@@ -19,7 +19,7 @@
             android:drawableLeft="@mipmap/icon_left"
             android:gravity="center"
             android:singleLine="true"
-            android:text="@string/app_toobar_back"
+            android:text="@string/app_toolbar_back"
             android:textColor="@drawable/selector_app_text"
             android:textSize="16sp"
             android:visibility="visible" />

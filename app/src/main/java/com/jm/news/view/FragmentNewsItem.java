@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jm.news.R;
+import com.jm.news.customview.MClassicsHeaderView;
 import com.jm.news.customview.MFragmentBase;
 import com.jm.news.define.BaseViewClickListener;
 import com.jm.news.define.DataDef;
@@ -33,29 +34,32 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 public class FragmentNewsItem extends MFragmentBase {
 
+    // static field
     private static final String TAG = "FragmentNewsItem";
+    // Fragment ID
     private int mFragmentID;
+    // control field
     private SmartRefreshLayout mSmartRefreshLayout;
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter mViewAdapter;
     private TextView mTvErrorTips;
-
+    // function related field
+    public RequestOptions mGlideOptions = new RequestOptions()
+//            .skipMemoryCache(true)                // 设备配置较低的可以关闭内存缓存
+            .placeholder(R.mipmap.loading_static)   // 图片加载出来前，显示的图片
+            .fallback(R.mipmap.load_error)          // url为空的时候,显示的图片
+            .error(R.mipmap.load_error);            // 图片加载失败后，显示的图片
+    // viewmodel related field
     private FragmentNewsItemViewModel mViewModel;
 
-    private RequestOptions mGlideOptions = new RequestOptions()
-//            .skipMemoryCache(true)  // 设备配置较低的可以关闭内存缓存
-            .placeholder(R.mipmap.loading_static)//图片加载出来前，显示的图片
-            .fallback(R.mipmap.load_error) //url为空的时候,显示的图片
-            .error(R.mipmap.load_error);//图片加载失败后，显示的图片
 
     public FragmentNewsItem() {
-
+        super();
     }
 
     @SuppressLint("ValidFragment")
@@ -115,7 +119,7 @@ public class FragmentNewsItem extends MFragmentBase {
 
     private void initView() {
 //        mSmartRefreshLayout.setRefreshHeader(new BezierRadarHeader(getContext()).setEnableHorizontalDrag(true));
-        mSmartRefreshLayout.setRefreshHeader(new ClassicsHeader(getContext()));
+        mSmartRefreshLayout.setRefreshHeader(new MClassicsHeaderView(getContext()));
         mSmartRefreshLayout.setRefreshFooter(new BallPulseFooter(getContext()).setSpinnerStyle(SpinnerStyle.Translate));
         mSmartRefreshLayout.setOnRefreshListener(new MyRefreshListener());
         mSmartRefreshLayout.setOnLoadMoreListener(new MyLoadMoreListener());
@@ -169,9 +173,9 @@ public class FragmentNewsItem extends MFragmentBase {
                 mRecyclerView.setVisibility(View.GONE);
                 mTvErrorTips.setVisibility(View.VISIBLE);
                 mTvErrorTips.setText(R.string.tips_net_invisible);
-            } else if (integer == DataDef.RequestStatusType.DATA_STATUS_NO_MOREDATA) {
+            } else if (integer == DataDef.RequestStatusType.DATA_STATUS_NO_MORE_DATA) {
                 mSmartRefreshLayout.finishLoadMore(true);
-                CommonUtils.getInstance().showToastView(R.string.app_data_request_no_more);
+                CommonUtils.getInstance().showToastView(R.string.toast_app_data_request_no_more);
             }
         }
     }
@@ -187,6 +191,88 @@ public class FragmentNewsItem extends MFragmentBase {
             }
             mRecyclerView.setVisibility(View.VISIBLE);
             mTvErrorTips.setVisibility(View.GONE);
+        }
+    }
+
+    /*************************************** listener function *******************************************/
+    private class MyItemClickListener extends BaseViewClickListener {
+        @Override
+        public void onItemClick(View view, int position) {
+            LogUtils.d(TAG, "onItemClick: position=" + position);
+            String newsLink = mViewModel.getNewsLink(position);
+            if (!TextUtils.isEmpty(newsLink)) {
+                JumpUtils.jumpWebView(getActivity(), newsLink, true);
+            }
+        }
+
+        @Override
+        public void onItemLongClick(View view, final int position) {
+            PopupMenu popupMenu = CommonUtils.getInstance().getPopupMenu(getActivity(), view, R.menu.menu_popup_news_item, false);
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.menu_news_item_open_detail:
+                            String newsLink = mViewModel.getNewsLink(position);
+                            if (!TextUtils.isEmpty(newsLink)) {
+                                JumpUtils.jumpWebView(getActivity(), newsLink, true);
+                            }
+                            break;
+                        case R.id.menu_news_item_open_other:
+                            String jumpURl = mViewModel.getNewsLink(position);
+                            if (!TextUtils.isEmpty(jumpURl)) {
+                                JumpUtils.jumpOtherApp(getActivity(), jumpURl);
+                            }
+                            break;
+                        case R.id.menu_news_item_delete:
+                            mViewModel.removeNewsItem(position);
+                            break;
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+            });
+            popupMenu.show();
+        }
+    }
+
+    private class MyRefreshListener implements OnRefreshListener {
+        @Override
+        public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+            LogUtils.d(TAG, "onRefresh: ");
+            if (CommonUtils.getInstance().isNetworkAvailable()) {
+                mViewModel.requestRefreshData();
+            } else {
+                mSmartRefreshLayout.finishRefresh(false);
+            }
+            updateStatus(false);
+        }
+    }
+
+    private class MyLoadMoreListener implements OnLoadMoreListener {
+        @Override
+        public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+            LogUtils.d(TAG, "onLoadMore: ");
+            if (CommonUtils.getInstance().isNetworkAvailable()) {
+                mViewModel.requestLoadMoreData();
+            } else {
+                mSmartRefreshLayout.finishLoadMore(false);
+            }
+            updateStatus(false);
+        }
+    }
+
+    private class MyOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            if (CommonUtils.getInstance().isNetworkAvailable()) {
+                updateStatus(true);
+                LogUtils.d(TAG, "onClick: net is visible");
+            } else {
+                LogUtils.d(TAG, "onClick: net is invisible");
+            }
         }
     }
 
@@ -280,88 +366,6 @@ public class FragmentNewsItem extends MFragmentBase {
                 mItemClickListener.onItemLongClick(v, position);
             }
             return true;
-        }
-    }
-
-    /*************************************** listener function *******************************************/
-    private class MyItemClickListener extends BaseViewClickListener {
-        @Override
-        public void onItemClick(View view, int position) {
-            LogUtils.d(TAG, "onItemClick: position=" + position);
-            String newsLink = mViewModel.getNewsLink(position);
-            if (!TextUtils.isEmpty(newsLink)) {
-                JumpUtils.jumpWebView(getActivity(), newsLink, true);
-            }
-        }
-
-        @Override
-        public void onItemLongClick(View view, final int position) {
-            PopupMenu popupMenu = CommonUtils.getInstance().showNewsItemPopupMenu(getActivity(), view);
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.menu_news_item_open_detail:
-                            String newsLink = mViewModel.getNewsLink(position);
-                            if (!TextUtils.isEmpty(newsLink)) {
-                                JumpUtils.jumpWebView(getActivity(), newsLink, true);
-                            }
-                            break;
-                        case R.id.menu_news_item_open_other:
-                            String jumpURl = mViewModel.getNewsLink(position);
-                            if (!TextUtils.isEmpty(jumpURl)) {
-                                JumpUtils.jumpOtherApp(getActivity(), jumpURl);
-                            }
-                            break;
-                        case R.id.menu_news_item_delete:
-                            mViewModel.removeNewsItem(position);
-                            break;
-                        default:
-                            break;
-                    }
-                    return true;
-                }
-            });
-            popupMenu.show();
-        }
-    }
-
-    private class MyRefreshListener implements OnRefreshListener {
-        @Override
-        public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-            LogUtils.d(TAG, "onRefresh: ");
-            if (CommonUtils.getInstance().isNetworkAvailable()) {
-                mViewModel.requestRefreshData();
-            } else {
-                mSmartRefreshLayout.finishRefresh(false);
-            }
-            updateStatus(false);
-        }
-    }
-
-    private class MyLoadMoreListener implements OnLoadMoreListener {
-        @Override
-        public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-            LogUtils.d(TAG, "onLoadMore: ");
-            if (CommonUtils.getInstance().isNetworkAvailable()) {
-                mViewModel.requestLoadMoreData();
-            } else {
-                mSmartRefreshLayout.finishLoadMore(false);
-            }
-            updateStatus(false);
-        }
-    }
-
-    private class MyOnClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            if (CommonUtils.getInstance().isNetworkAvailable()) {
-                updateStatus(true);
-                LogUtils.d(TAG, "onClick: net is visible");
-            } else {
-                LogUtils.d(TAG, "onClick: net is invisible");
-            }
         }
     }
 }

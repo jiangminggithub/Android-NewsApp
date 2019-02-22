@@ -28,13 +28,15 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CommonUtils {
 
+    // static field
     private static final String TAG = "CommonUtils";
-    private static CommonUtils mInstance = null;
-    public static final int RESTART_TYPE_ALL_ACTIVITYS = 0;
+    public static final int RESTART_TYPE_ALL_ACTIVITY = 0;
     public static final int RESTART_TYPE_APP = 1;
     public static final int APP_VERSION_FAILED_GET = -1;
-
-
+    private static final String REFLEX_DECLARED_FIELD = "mPopup";
+    private static final String REFLEX_DECLARED_METHOD = "setForceShowIcon";
+    private static CommonUtils mInstance = null;
+    // function field
     private Context mContext = null;
     private SweetAlertDialog mNetInvisibleDialog;
 
@@ -150,67 +152,34 @@ public class CommonUtils {
      * @param context   目标的Context
      * @param view      需要显示popupMenu的对象
      * @param resMenuID 需要显示Menu的ResourceID
+     * @param hasIcon   标记可以带icon的选项，注意在不同系统中显示不可控，谨慎使用
      * @return PopupMenu    PopupMenu 对象
      */
-    public PopupMenu showPopupMenu(@NonNull Context context, @NonNull View view, @NonNull int resMenuID) {
+    public PopupMenu getPopupMenu(@NonNull Context context, @NonNull View view, int resMenuID, boolean hasIcon) {
         if (null == context || null == view) {
             return null;
         }
+
         PopupMenu popupMenu = new PopupMenu(context, view);
         popupMenu.inflate(resMenuID);
 
-        return popupMenu;
-    }
-
-    /**
-     * 创建新闻选项popupMenu
-     *
-     * @param context 目标的Context
-     * @param view    需要显示popupMenu的对象
-     * @return PopupMenu 对象
-     */
-    public PopupMenu showNewsItemPopupMenu(@NonNull Context context, @NonNull View view) {
-        if (null == context || null == view) {
-            return null;
-        }
-
-        PopupMenu popupMenu = new PopupMenu(context, view);
-        popupMenu.inflate(R.menu.menu_popup_news_item);
-
-        return popupMenu;
-    }
-
-    /**
-     * 创建一个可以带icon的新闻选项popupMenu
-     *
-     * @param context Context 对象
-     * @param view    需要显示popupMenu的对象
-     * @return PopupMenu
-     */
-    public PopupMenu showNewsItemPopupMenuIcon(@NonNull Context context, @NonNull View view) {
-        if (null == context || null == view) {
-            return null;
-        }
-
-        PopupMenu popupMenu = new PopupMenu(context, view);
-        popupMenu.inflate(R.menu.menu_popup_news_item);
-
-        // used reflex show menu icon
-        try {
-            Field field = popupMenu.getClass().getDeclaredField("mPopup");
-            field.setAccessible(true);
-            Object helper = field.get(popupMenu);
-            Method mSetForceShowIcon = helper.getClass().getDeclaredMethod("setForceShowIcon", boolean.class);
-            mSetForceShowIcon.invoke(helper, true);
-            field.setAccessible(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtils.e(TAG, "showNewsItemPopupMenuIcon: class reflex failed ");
+        if (hasIcon) {
+            // used reflex show menu icon
+            try {
+                Field field = popupMenu.getClass().getDeclaredField(REFLEX_DECLARED_FIELD);
+                field.setAccessible(true);
+                Object helper = field.get(popupMenu);
+                Method mSetForceShowIcon = helper.getClass().getDeclaredMethod(REFLEX_DECLARED_METHOD, boolean.class);
+                mSetForceShowIcon.invoke(helper, true);
+                field.setAccessible(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtils.e(TAG, "getPopupMenuIcon: class reflex failed ");
+            }
         }
 
         return popupMenu;
     }
-
 
     /**
      * 解决部分虚拟键手机Menu键显示
@@ -244,12 +213,12 @@ public class CommonUtils {
     /**
      * 重启App,两种方式，重启APP或者所有Activity
      *
-     * @param type 重启操作类型 RESTART_TYPE_ALL_ACTIVITYS，RESTART_TYPE_APP
+     * @param type 重启操作类型 RESTART_TYPE_ALL_ACTIVITY，RESTART_TYPE_APP
      */
     public void restartApp(int type) {
         if (null != mContext) {
             Intent intent = null;
-            if (type == RESTART_TYPE_ALL_ACTIVITYS) {
+            if (type == RESTART_TYPE_ALL_ACTIVITY) {
                 intent = new Intent(mContext, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             } else if (type == RESTART_TYPE_APP) {
@@ -336,22 +305,13 @@ public class CommonUtils {
         if (null == context) {
             return;
         }
-        if (mNetInvisibleDialog == null) {
+        if (null == mNetInvisibleDialog) {
             Common common = Common.getInstance();
             mNetInvisibleDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
             mNetInvisibleDialog.setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
                     .setContentText(common.getResourcesString(R.string.dialog_net_invisible_content))
-                    .setConfirmText(common.getResourcesString(R.string.dialog_net_invisible_confirm))
+                    .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismissWithAnimation();
-                            mNetInvisibleDialog = null;
-                            System.exit(0);
-                        }
-                    })
-                    .setCancelText(common.getResourcesString(R.string.dialog_cancel))
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                             sweetAlertDialog.dismissWithAnimation();
@@ -360,11 +320,10 @@ public class CommonUtils {
                     });
             mNetInvisibleDialog.setCancelable(false);
             mNetInvisibleDialog.show();
-
         } else if (!mNetInvisibleDialog.isShowing()) {
             mNetInvisibleDialog.show();
         } else {
-
+            // nothing to do
         }
     }
 
@@ -375,6 +334,28 @@ public class CommonUtils {
         if (null != mNetInvisibleDialog && mNetInvisibleDialog.isShowing()) {
             mNetInvisibleDialog.dismiss();
             mNetInvisibleDialog = null;
+        }
+    }
+
+    /**
+     * 显示暂时未实现功能提示框
+     *
+     * @param context context对象
+     */
+    public static void showFunctionNotOpenDialog(Context context) {
+        if (null != context) {
+            Common common = Common.getInstance();
+            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
+                    .setContentText(common.getResourcesString(R.string.dialog_waring_content))
+                    .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismiss();
+                        }
+                    })
+                    .show();
         }
     }
 

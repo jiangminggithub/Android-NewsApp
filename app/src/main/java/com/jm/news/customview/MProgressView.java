@@ -19,25 +19,26 @@ import com.jm.news.util.LogUtils;
  * 倒计时控件
  */
 public class MProgressView extends AppCompatTextView {
-    //TODO 圆实心的颜色
+
+    // 圆实心的颜色
     private int circSolidColor;
 
-    //TODO 圆边框的颜色
+    // 圆边框的颜色
     private int circFrameColor;
 
-    //TODO 圆边框的宽度
+    // 圆边框的宽度
     private int circFrameWidth = 4;
 
-    //TODO 圆的半径
+    // 圆的半径
     private int circRadius;
 
-    //TODO 进度条的颜色
+    // 进度条的颜色
     private int progressColor;
 
-    //TODO 进度条的宽度
+    // 进度条的宽度
     private int progressWidth = 4;
 
-    //TODO 文字的颜色
+    // 文字的颜色
     private int textColor;
 
 
@@ -51,16 +52,16 @@ public class MProgressView extends AppCompatTextView {
     private String mText = "跳过";
 
 
-    //TODO 进度倒计时时间
+    // 进度倒计时时间
     private long timeMillis = 3000;
 
-    //TODO 进度条通知
+    // 进度条通知
     private OnProgressListener mProgressListener;
 
-    //TODO 进度默认100
+    // 进度默认100
     private int progress = 100;
 
-    //TODO 进度条类型
+    // 进度条类型
     private ProgressType mProgressType = ProgressType.COUNT_BACK;
 
     /**
@@ -79,7 +80,7 @@ public class MProgressView extends AppCompatTextView {
     }
 
     /**
-     * 设置进度条类型。
+     * 设置进度条类型
      *
      * @param progressType {@link ProgressType}.
      */
@@ -88,23 +89,23 @@ public class MProgressView extends AppCompatTextView {
         resetProgress();
         /**
          * 请求重绘View
-         * 1,直接调用invalidate()方法，请求重新draw()，但只会绘制调用者本身。
-         * 2,setSelection()方法 ：请求重新draw()，但只会绘制调用者本身。
+         * 1,直接调用invalidate()方法，请求重新draw()，但只会绘制调用者本身
+         * 2,setSelection()方法 ：请求重新draw()，但只会绘制调用者本身
          * 3,setVisibility()方法 ： 当View可视状态在INVISIBLE转换VISIBLE时，会间接调用invalidate()方法，继而绘制该View
-         * 4 ,setEnabled()方法 ： 请求重新draw()，但不会重新绘制任何视图包括该调用者本身。
+         * 4 ,setEnabled()方法 ： 请求重新draw()，但不会重新绘制任何视图包括该调用者本身
          */
         invalidate();
     }
 
     /**
-     * 进度监听。
+     * 进度监听
      */
     public interface OnProgressListener {
 
         /**
          * 进度通知
          *
-         * @param progress 进度值。
+         * @param progress 进度值
          */
         void onProgress(int progress);
     }
@@ -115,7 +116,7 @@ public class MProgressView extends AppCompatTextView {
     }
 
     /**
-     * 获取attrs。xml文件中的自定义属性
+     * 获取attrsxml文件中的自定义属性
      *
      * @param context
      * @param attrs
@@ -125,7 +126,7 @@ public class MProgressView extends AppCompatTextView {
         init();
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.circleProgress);
         if (typedArray != null) {
-            //TODO 圆实心的颜色属性
+            // 圆实心的颜色属性
             if (typedArray.hasValue(R.styleable.circleProgress_circSolidColor)) {
                 //有这个属性索引 获取用户设置的颜色
                 circSolidColor = typedArray.getColor(R.styleable.circleProgress_circSolidColor, 0);
@@ -134,7 +135,7 @@ public class MProgressView extends AppCompatTextView {
                 circSolidColor = typedArray.getColor(R.styleable.circleProgress_circSolidColor, Color.parseColor("#D3D3D3"));
             }
 
-            //TODO 园边框颜色属性
+            // 园边框颜色属性
             if (typedArray.hasValue(R.styleable.circleProgress_circFrameColor)) {
                 //有这个属性索引 获取用户设置的颜色
                 circFrameColor = typedArray.getColor(R.styleable.circleProgress_circFrameColor, 0);
@@ -143,7 +144,7 @@ public class MProgressView extends AppCompatTextView {
                 circFrameColor = typedArray.getColor(R.styleable.circleProgress_circFrameColor, Color.parseColor("#A9A9A9"));
             }
 
-            //TODO 文字颜色属性
+            // 文字颜色属性
             if (typedArray.hasValue(R.styleable.circleProgress_textColor)) {
                 //有这个属性索引 获取用户设置的颜色
                 textColor = typedArray.getColor(R.styleable.circleProgress_textColor, 0);
@@ -152,7 +153,7 @@ public class MProgressView extends AppCompatTextView {
                 textColor = typedArray.getColor(R.styleable.circleProgress_textColor, Color.parseColor("#ffffff"));
             }
 
-            //TODO 进度条颜色属性
+            // 进度条颜色属性
             if (typedArray.hasValue(R.styleable.circleProgress_progressColor)) {
                 //有这个属性索引 获取用户设置的颜色
                 progressColor = typedArray.getColor(R.styleable.circleProgress_progressColor, 0);
@@ -201,7 +202,7 @@ public class MProgressView extends AppCompatTextView {
 
     /**
      * 绘制过程
-     * 注意：canvas在绘制过程中是一层层覆盖的。所以绘制顺序不要写反了。如果先绘制实心圆在绘制文字在绘制空心圆。这时你会发现文字是看不到了，被覆盖了。
+     * 注意：canvas在绘制过程中是一层层覆盖的所以绘制顺序不要写反了如果先绘制实心圆在绘制文字在绘制空心圆这时你会发现文字是看不到了，被覆盖了
      *
      * @param canvas
      */
@@ -216,22 +217,22 @@ public class MProgressView extends AppCompatTextView {
         mCenterX = mBounds.centerX();
         mCenterY = mBounds.centerY();
 
-        //TODO 画实心圆
+        // 画实心圆
         mPaint.setAntiAlias(true); //设置抗锯齿
         mPaint.setStyle(Paint.Style.FILL); //实心填充style
         mPaint.setColor(circSolidColor);
         canvas.drawCircle(mBounds.centerX(), mBounds.centerY(), circRadius, mPaint);
 
 
-        //TODO 画外边框(空心圆,即园边框)
+        // 画外边框(空心圆,即园边框)
         mPaint.setAntiAlias(true);//设置抗锯齿
         mPaint.setStyle(Paint.Style.STROKE);//空心style
         mPaint.setStrokeWidth(circFrameWidth);//设置空心线宽度
         mPaint.setColor(circFrameColor);
         canvas.drawCircle(mBounds.centerX(), mBounds.centerY(), circRadius - circFrameWidth, mPaint);
 
-        //TODO 画文字
-        Paint text_paint = getPaint(); //注意：如果是继承的view，这里是没有这个getPaint()方法的。大家可以看到它是Textview包下的方法
+        // 画文字
+        Paint text_paint = getPaint(); //注意：如果是继承的view，这里是没有这个getPaint()方法的大家可以看到它是Textview包下的方法
         text_paint.setColor(textColor);
         text_paint.setAntiAlias(true);
         text_paint.setTextAlign(Paint.Align.CENTER);
@@ -239,7 +240,7 @@ public class MProgressView extends AppCompatTextView {
         canvas.drawText(mText, mCenterX, textY, text_paint);
 
 
-        //TODO 画进度条
+        // 画进度条
         mPaint.setColor(progressColor);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(progressWidth);
@@ -252,7 +253,7 @@ public class MProgressView extends AppCompatTextView {
 
 
     /**
-     * 开始。
+     * 开始
      */
     public void start() {
         stop();
@@ -260,14 +261,14 @@ public class MProgressView extends AppCompatTextView {
     }
 
     /**
-     * 停止。
+     * 停止
      */
     public void stop() {
         removeCallbacks(progressChangeTask);
     }
 
     /**
-     * 重新开始。
+     * 重新开始
      */
     public void reStart() {
         resetProgress();
@@ -276,7 +277,7 @@ public class MProgressView extends AppCompatTextView {
 
 
     /**
-     * 重置进度。
+     * 重置进度
      */
     private void resetProgress() {
         switch (mProgressType) {
@@ -315,10 +316,10 @@ public class MProgressView extends AppCompatTextView {
     };
 
     /**
-     * 验证进度。
+     * 验证进度
      *
-     * @param progress 你要验证的进度值。
-     * @return 返回真正的进度值。
+     * @param progress 你要验证的进度值
+     * @return 返回真正的进度值
      */
     private int validateProgress(int progress) {
         if (progress > 100)
@@ -342,7 +343,7 @@ public class MProgressView extends AppCompatTextView {
     /**
      * 设置倒计时总时间,默认3000
      *
-     * @param timeMillis 毫秒。
+     * @param timeMillis 毫秒
      */
     public void setTimeMillis(long timeMillis) {
         this.timeMillis = timeMillis;
@@ -352,7 +353,7 @@ public class MProgressView extends AppCompatTextView {
     /**
      * 设置进度监听
      *
-     * @param mProgressListener 监听器。
+     * @param mProgressListener 监听器
      */
     public void setProgressListener(OnProgressListener mProgressListener) {
         this.mProgressListener = mProgressListener;
@@ -361,8 +362,8 @@ public class MProgressView extends AppCompatTextView {
 
     /**
      * 注意：由于我们是继承的textview，而textview本身就有setOnClickListener方法，所以可以直接在activity监听点击事件即可
-     * 这里重写onTouchEvent方法来判断点击是否在园内，是方便有需要或刚接触自定义控件的人学习的。
-     * 这2种方式都有一个小缺陷就是它计算的其实是矩形范围内。也就是你稍微偏离园外4个角点击都是可以响应的。
+     * 这里重写onTouchEvent方法来判断点击是否在园内，是方便有需要或刚接触自定义控件的人学习的
+     * 这2种方式都有一个小缺陷就是它计算的其实是矩形范围内也就是你稍微偏离园外4个角点击都是可以响应的
      *
      * @param event
      * @return

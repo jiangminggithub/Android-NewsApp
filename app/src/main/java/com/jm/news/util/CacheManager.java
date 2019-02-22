@@ -11,6 +11,7 @@ import java.math.BigDecimal;
  */
 public class CacheManager {
 
+    // static field
     private static final String TAG = "CacheManager";
     public static final int CLEAR_CACHE_SUCCESS = 0;
     public static final int CLEAR_CACHE_DIR_SUCCESS = 1;

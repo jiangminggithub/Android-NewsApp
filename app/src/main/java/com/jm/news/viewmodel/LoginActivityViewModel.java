@@ -14,12 +14,15 @@ import com.jm.news.util.DataManager;
 import com.jm.news.util.LogUtils;
 
 public class LoginActivityViewModel extends AndroidViewModel {
+
+    // static filed
     private static final String TAG = "LoginActivityViewModel";
     public static final int LOGIN_STATUS_NO_USER = 0;
     public static final int LOGIN_STATUS_SUCCESS = 1;
     public static final int LOGIN_STATUS_FAILED = 2;
-
+    // livedate filed
     private MutableLiveData<Integer> mLoginStatus = new MutableLiveData<>();
+
 
     public LoginActivityViewModel(@NonNull Application application) {
         super(application);
@@ -42,7 +45,7 @@ public class LoginActivityViewModel extends AndroidViewModel {
     public String getAccountName() {
         Common common = Common.getInstance();
         Resources resources = common.getResources();
-        SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences_filename));
+        SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_preferences_filename));
         if (null != resources && null != preference) {
             String accountName = preference.getString(resources.getString(R.string.pre_key_account_name), null);
             if (!TextUtils.isEmpty(accountName)) {
@@ -58,7 +61,7 @@ public class LoginActivityViewModel extends AndroidViewModel {
         if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(pwd)) {
             Common common = Common.getInstance();
             Resources resources = common.getResources();
-            SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences_filename));
+            SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_preferences_filename));
             if (null != resources && null != preference) {
                 String accountName = preference.getString(resources.getString(R.string.pre_key_account_name), null);
                 String accountPwd = preference.getString(resources.getString(R.string.pre_key_account_pwd), null);

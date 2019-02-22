@@ -31,11 +31,13 @@ import com.jm.news.viewmodel.LoginActivityViewModel;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class LoginActivity extends MActivityBase {
+
+    // static field
     private static final String TAG = "LoginActivity";
     private static final boolean BUTTON_NORMAL = true;
     private static final boolean BUTTON_LOCKED = false;
     private static final int INPUT_TEXT_MIN_SIZE = 6;
-
+    // control field
     private ImageButton mIbNavigationBack;
     private TextView mTvNavigationTitle;
     private EditText mEtLoginUsername;
@@ -47,14 +49,15 @@ public class LoginActivity extends MActivityBase {
     private CheckBox mCbRememberLogin;
     private TextView mTvForgetPwd;
     private SweetAlertDialog mDialog;
-
+    // function related field
     private Handler mHandler;
     private EtTextChangeWatcher mEtTextChangeWatcher;
     private MyBtnOnClickListener mBtnOnClickListener;
     private MyBtnOnTouchListener mBtnOnTouchListener;
-
+    // viewmodel related field
     private LoginActivityViewModel mViewModel;
     private LoginObserve mLoginObserve;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +137,6 @@ public class LoginActivity extends MActivityBase {
     }
 
     /************************************ observe function ***********************************/
-
     private class LoginObserve implements Observer<Integer> {
 
         @Override
@@ -144,13 +146,13 @@ public class LoginActivity extends MActivityBase {
                 if (null != integer) {
                     switch (integer) {
                         case LoginActivityViewModel.LOGIN_STATUS_NO_USER:
-                            CommonUtils.getInstance().showToastView(R.string.account_user_no_exit);
+                            CommonUtils.getInstance().showToastView(R.string.toast_account_user_no_exit);
                             break;
                         case LoginActivityViewModel.LOGIN_STATUS_SUCCESS:
                             finish();
                             break;
                         case LoginActivityViewModel.LOGIN_STATUS_FAILED:
-                            CommonUtils.getInstance().showToastView(R.string.account_login_failed);
+                            CommonUtils.getInstance().showToastView(R.string.toast_account_login_failed);
                             break;
                         default:
                             break;
@@ -162,27 +164,40 @@ public class LoginActivity extends MActivityBase {
     }
 
 
-    /************************************ inner class *****************************************/
-
-    private class LoginRunable implements Runnable {
-
-        @Override
-        public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String userName = mEtLoginUsername.getText().toString().trim();
-                    String userPwd = mEtLoginPwd.getText().toString().trim();
-                    boolean isAutoLogin = mCbRememberLogin.isChecked();
-                    if (null != mViewModel && !TextUtils.isEmpty(userName) && !TextUtils.isEmpty(userPwd)) {
-                        mViewModel.loginClicked(userName, userPwd, isAutoLogin);
-                    }
-                }
-            });
-
+    /************************************ private function *****************************************/
+    private void setBtnLoginSubmitStatus(boolean status) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (status == BUTTON_NORMAL) {
+                mBtnLoginSubmit.setBackgroundResource(R.drawable.bg_login_submit);
+            } else {
+                mBtnLoginSubmit.setBackgroundResource(R.drawable.bg_login_submit_lock);
+            }
+        } else {
+            if (status == BUTTON_NORMAL) {
+                mBtnLoginSubmit.setBackgroundColor(getResources().getColor(R.color.account_login_submit));
+            } else {
+                mBtnLoginSubmit.setBackgroundColor(getResources().getColor(R.color.account_login_submit_lock));
+            }
         }
     }
 
+    private void setBtnLoginRegisterStatus(boolean status) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (status == BUTTON_NORMAL) {
+                mBtnLoginRegister.setBackgroundResource(R.drawable.bg_login_register);
+            } else {
+                mBtnLoginRegister.setBackgroundResource(R.drawable.bg_login_register);
+            }
+        } else {
+            if (status == BUTTON_NORMAL) {
+                mBtnLoginRegister.setBackgroundColor(getResources().getColor(R.color.account_login_register_normal));
+            } else {
+                mBtnLoginRegister.setBackgroundColor(getResources().getColor(R.color.account_login_register_pressed));
+            }
+        }
+    }
+
+    /************************************ listener function *****************************************/
     private class EtTextChangeWatcher implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -221,38 +236,6 @@ public class LoginActivity extends MActivityBase {
         }
     }
 
-    private void setBtnLoginSubmitStatus(boolean status) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (status == BUTTON_NORMAL) {
-                mBtnLoginSubmit.setBackgroundResource(R.drawable.bg_login_submit);
-            } else {
-                mBtnLoginSubmit.setBackgroundResource(R.drawable.bg_login_submit_lock);
-            }
-        } else {
-            if (status == BUTTON_NORMAL) {
-                mBtnLoginSubmit.setBackgroundColor(getResources().getColor(R.color.account_login_submit));
-            } else {
-                mBtnLoginSubmit.setBackgroundColor(getResources().getColor(R.color.account_login_submit_lock));
-            }
-        }
-    }
-
-    private void setBtnLoginRegisterStatus(boolean status) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (status == BUTTON_NORMAL) {
-                mBtnLoginRegister.setBackgroundResource(R.drawable.bg_login_register);
-            } else {
-                mBtnLoginRegister.setBackgroundResource(R.drawable.bg_login_register);
-            }
-        } else {
-            if (status == BUTTON_NORMAL) {
-                mBtnLoginRegister.setBackgroundColor(getResources().getColor(R.color.account_login_register_normal));
-            } else {
-                mBtnLoginRegister.setBackgroundColor(getResources().getColor(R.color.account_login_register_pressed));
-            }
-        }
-    }
-
     private class MyBtnOnClickListener implements View.OnClickListener {
 
         @Override
@@ -267,7 +250,7 @@ public class LoginActivity extends MActivityBase {
                     mDialog.setContentText(Common.getInstance().getResourcesString(R.string.account_logging));
                     mDialog.setCancelable(false);
                     mDialog.show();
-                    mHandler.postDelayed(new LoginRunable(), 1000);
+                    mHandler.postDelayed(new LoginRunnable(), 1000);
                     break;
                 case R.id.bt_login_register:
                     JumpUtils.jumpActivity(LoginActivity.this, RegisterActivity.class);
@@ -311,6 +294,27 @@ public class LoginActivity extends MActivityBase {
                 }
             }
             return false;
+        }
+    }
+
+
+    /************************************ inner class *****************************************/
+    private class LoginRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String userName = mEtLoginUsername.getText().toString().trim();
+                    String userPwd = mEtLoginPwd.getText().toString().trim();
+                    boolean isAutoLogin = mCbRememberLogin.isChecked();
+                    if (null != mViewModel && !TextUtils.isEmpty(userName) && !TextUtils.isEmpty(userPwd)) {
+                        mViewModel.loginClicked(userName, userPwd, isAutoLogin);
+                    }
+                }
+            });
+
         }
     }
 

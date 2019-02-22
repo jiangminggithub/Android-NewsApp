@@ -9,6 +9,7 @@ import com.jm.news.R;
 import com.jm.news.customview.MImageView;
 
 public class ViewHolderThreeImage extends RecyclerView.ViewHolder {
+
     private TextView mTvTitle;
     private TextView mTvSource;
     private TextView mTvPubData;

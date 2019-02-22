@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tool="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <TextView
@@ -12,27 +11,23 @@
         android:background="@drawable/dialog_bg_text"
         android:gravity="center"
         android:padding="15dp"
-        tool:text="@string/dialog_user_name_title"
+        android:text="@string/setting_encourage"
         android:textColor="@color/app_text"
         android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:background="@color/white">
 
-        <EditText
-            android:id="@+id/et_dialog_editor"
-            android:layout_width="match_parent"
+        <RatingBar
+            android:id="@+id/rtb_rating"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            tool:hint="@string/dialog_user_name_hint"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:padding="10dp">
-
-        </EditText>
+            android:numStars="5"
+            android:rating="5"
+            android:stepSize="0.5" />
     </LinearLayout>
 
     <LinearLayout

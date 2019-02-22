@@ -5,6 +5,12 @@ package com.jm.news.define;
  */
 public class DataDef {
 
+    public static final class AppInfo {
+        public static final String APP_SHARE_LINK = "https://github.com/jiangminggithub/Android-NewsApp";
+        public static final String APP_GITHUB_LINK = "https://github.com/jiangminggithub/Android-NewsApp";
+        public static final String APP_DOWNLOAD_LINK = "https://github.com/jiangminggithub/Android-NewsApp";
+    }
+
     public static final class ApiInfo {
         public static final String API_ID = "q}~{q";
         public static final String API_SECRET = "+**}*||\u007F~z(~}{,|+/x|x+q-*~}p{+({";
@@ -14,7 +20,7 @@ public class DataDef {
         public static final int DATA_STATUS_REQUEST_OK = 0;
         public static final int DATA_STATUS_REQUEST_FAILED = 1;
         public static final int DATA_STATUS_NETWORK_DISCONNECTED = 2;
-        public static final int DATA_STATUS_NO_MOREDATA = 3;
+        public static final int DATA_STATUS_NO_MORE_DATA = 3;
     }
 
     public static final class NewsChanelIDs {

@@ -11,6 +11,7 @@ import com.jm.news.define.DataDef;
 
 public class JumpUtils {
 
+    // static field
     private static final String TAG = "JumpUtils";
 
     /**

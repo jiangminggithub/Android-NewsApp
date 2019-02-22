@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.jm.news.R;
+import com.jm.news.customview.MClassicsHeaderView;
 import com.jm.news.customview.MFragmentBase;
 import com.jm.news.define.BaseViewClickListener;
 import com.jm.news.define.DataDef;
@@ -36,7 +37,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.youth.banner.Banner;
@@ -46,25 +46,29 @@ import com.youth.banner.listener.OnBannerListener;
 
 public class FragmentNewsMain extends MFragmentBase {
 
+    // static field
     private static final String TAG = "FragmentNewsMain";
+    // fragment ID
+    private int mFragmentID;
+    // control field
     private Banner mBanner;
     private SmartRefreshLayout mSmartRefreshLayout;
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter mViewAdapter;
     private LinearLayout mLlNewsContentView;
     private TextView mTvErrorTips;
-
-
-    private int mFragmentID;
-    private FragmentNewsMainViewModel mViewModel = null;
+    // function related field
     public RequestOptions mGlideOptions = new RequestOptions()
-//            .skipMemoryCache(true)  // 设备配置较低的可以关闭内存缓存
-            .placeholder(R.mipmap.loading_static)//图片加载出来前，显示的图片 Pictures displayed before they are loaded
-            .fallback(R.mipmap.load_error) //url为空的时候,显示的图片 Pictures displayed when URL is empty
-            .error(R.mipmap.load_error);//图片加载失败后，显示的图片 Pictures displayed after failed loading
+//            .skipMemoryCache(true)                // 设备配置较低的可以关闭内存缓存
+            .placeholder(R.mipmap.loading_static)   // 图片加载出来前，显示的图片
+            .fallback(R.mipmap.load_error)          // url为空的时候,显示的图片
+            .error(R.mipmap.load_error);            // 图片加载失败后，显示的图片
+    // viewmodel related field
+    private FragmentNewsMainViewModel mViewModel = null;
+
 
     public FragmentNewsMain() {
-
+        super();
     }
 
     @SuppressLint("ValidFragment")
@@ -87,7 +91,6 @@ public class FragmentNewsMain extends MFragmentBase {
             initData();
             initView();
         }
-
         return view;
     }
 
@@ -133,7 +136,7 @@ public class FragmentNewsMain extends MFragmentBase {
     }
 
     private void initView() {
-        mSmartRefreshLayout.setRefreshHeader(new ClassicsHeader(getContext()));
+        mSmartRefreshLayout.setRefreshHeader(new MClassicsHeaderView(getContext()));
         mSmartRefreshLayout.setRefreshFooter(new BallPulseFooter(getContext()).setSpinnerStyle(SpinnerStyle.FixedBehind));
         mSmartRefreshLayout.setOnRefreshListener(new MyRefreshListener());
         mSmartRefreshLayout.setOnLoadMoreListener(new MyLoadMoreListener());
@@ -191,9 +194,9 @@ public class FragmentNewsMain extends MFragmentBase {
                     mLlNewsContentView.setVisibility(View.GONE);
                     mTvErrorTips.setVisibility(View.VISIBLE);
                     mTvErrorTips.setText(R.string.tips_net_invisible);
-                } else if (integer == DataDef.RequestStatusType.DATA_STATUS_NO_MOREDATA) {
+                } else if (integer == DataDef.RequestStatusType.DATA_STATUS_NO_MORE_DATA) {
                     mSmartRefreshLayout.finishLoadMore(true);
-                    CommonUtils.getInstance().showToastView(R.string.app_data_request_no_more);
+                    CommonUtils.getInstance().showToastView(R.string.toast_app_data_request_no_more);
                 }
             }
         }
@@ -237,7 +240,7 @@ public class FragmentNewsMain extends MFragmentBase {
                     CommonUtils.getInstance().showToastView(R.string.toast_net_invisible);
                 } else {
                     mBanner.setVisibility(View.GONE);
-                    CommonUtils.getInstance().showToastView(R.string.app_data_request_failed);
+                    CommonUtils.getInstance().showToastView(R.string.toast_app_data_request_failed);
                 }
             }
         }
@@ -268,7 +271,7 @@ public class FragmentNewsMain extends MFragmentBase {
 
         @Override
         public void onItemLongClick(View view, final int position) {
-            PopupMenu popupMenu = CommonUtils.getInstance().showNewsItemPopupMenu(getActivity(), view);
+            PopupMenu popupMenu = CommonUtils.getInstance().getPopupMenu(getActivity(), view, R.menu.menu_popup_news_item, false);
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -335,13 +338,25 @@ public class FragmentNewsMain extends MFragmentBase {
         }
     }
 
+    /***************************** listener function **********************************/
+    private class MyOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            if (CommonUtils.getInstance().isNetworkAvailable()) {
+                updateStatus(true);
+                LogUtils.d(TAG, "onClick: net is visible");
+            } else {
+                LogUtils.d(TAG, "onClick: net is invisible");
+            }
+        }
+    }
 
     /*************************************** inner class *******************************************/
     private class MyBannerImageLoader extends com.youth.banner.loader.ImageLoader {
 
         @Override
         public void displayImage(final Context context, Object path, final ImageView imageView) {
-//            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             LogUtils.d(TAG, "displayImage: path" + (String) path);
             Glide.with(imageView).load((String) path).apply(mGlideOptions).into(imageView);
         }
@@ -439,17 +454,5 @@ public class FragmentNewsMain extends MFragmentBase {
         }
     }
 
-    private class MyOnClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            if (CommonUtils.getInstance().isNetworkAvailable()) {
-                updateStatus(true);
-                LogUtils.d(TAG, "onClick: net is visible");
-            } else {
-                LogUtils.d(TAG, "onClick: net is invisible");
-            }
-        }
-    }
 
 }

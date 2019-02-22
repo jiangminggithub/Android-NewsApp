@@ -24,7 +24,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.jm.news.R;
-import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.customview.MSlidingPaneLayout;
 import com.jm.news.customview.MViewPagerIndicator;
@@ -37,10 +36,9 @@ import com.jm.news.view.FragmentNewsItem;
 import com.jm.news.view.FragmentNewsMain;
 import com.jm.news.viewmodel.MainActivityViewModel;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
 public class MainActivity extends MActivityBase implements View.OnClickListener {
 
+    // static field
     private static final String TAG = "MainActivity";
     private static final int MAIN_FRAGMENT_INDEX = 0;
     private static final int INDICATOR_HEIGHT = 2;
@@ -49,7 +47,7 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
     private static final int INDICATOR_PADDING_TOP = 5;
     private static final int INDICATOR_PADDING_RIGHT = 10;
     private static final int INDICATOR_PADDING_BOTTOM = 8;
-
+    // control field
     private MSlidingPaneLayout mSplSlidingPane;
     private FrameLayout mFlLeftMenu;
     private LinearLayout mLlRightContent;
@@ -57,11 +55,13 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
     private ViewPager mViewPager;
     private ImageButton mIbMainMenu;
     private ImageButton mIbMainSearch;
+    // function related field
     private SlidingPaneLayoutListener mSlidingPaneListener;
     private ViewPagerListener mViewPagerListener;
     private ViewPagerAdapter mViewPagerAdapter;
-
     private NetworkConnectReceiver mReceiver;
+
+    // viewmodel related field
     private MainActivityViewModel mViewModel;
 
 
@@ -80,6 +80,7 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
         mIbMainSearch = findViewById(R.id.ib_main_search);
 
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        mViewModel.initialized();
         CommonUtils.getInstance().setNeedsMenuKey(this);
 
         // related  component bind
@@ -118,18 +119,6 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
         this.registerReceiver(mReceiver, filter);
         LogUtils.d(TAG, "onCreate: AppReceiver is register");
 
-    }
-
-    @Override
-    protected void onStart() {
-        LogUtils.d(TAG, "onStart: ");
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        LogUtils.d(TAG, "onStop: ");
-        super.onStop();
     }
 
     @Override
@@ -176,18 +165,7 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
                 mSplSlidingPane.openPane();
                 break;
             case R.id.ib_main_search:
-                Common common = Common.getInstance();
-                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
-                        .setContentText(common.getResourcesString(R.string.dialog_waring_content))
-                        .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                sDialog.dismissWithAnimation();
-                            }
-                        })
-                        .show();
+                CommonUtils.showFunctionNotOpenDialog(MainActivity.this);
             default:
                 break;
         }

@@ -35,9 +35,20 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class UserActivity extends MActivityBase implements View.OnClickListener {
 
+    // static field
     private static final String TAG = "UserActivity";
-    private static final int CONFIRM_TYPE_CHANGE_ACCOUNT = 0;
-    private static final int CONFIRM_TYPE_LOGOUT = 1;
+    private static final int DIALOG_TITLE_SIZE = 20;
+    private static final int DIALOG_TITLE_PADDING_LEFT = 10;
+    private static final int DIALOG_TITLE_PADDING_TOP = 20;
+    private static final int DIALOG_TITLE_PADDING_RIGHT = 10;
+    private static final int DIALOG_TITLE_PADDING_BOTTOM = 10;
+    private static final int DIALOG_EDIT_MAX_LINE = 5;
+    private static final int USER_NAME_LENGTH = 20;
+    private static final int USER_AUTOGRAPH_LENGTH = 80;
+    private static final int USER_ADDRESS_LENGTH = 100;
+    private static final int USER_PHONE_LENGTH = 25;
+    private static final int USER_PROFILE_LENGTH = 120;
+    // control field
     private TextView mTvBack;
     private TextView mTvTitle;
     private LinearLayout mLlUserHead;
@@ -58,8 +69,9 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
     private TextView mTvPhoneInfo;
     private TextView mTvHobbyInfo;
     private TextView mTvProfileInfo;
-
+    // viewmodel related field
     private UserActivityViewModel mViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +103,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         mTvProfileInfo = findViewById(R.id.tv_user_profile);
 
         mViewModel = ViewModelProviders.of(this).get(UserActivityViewModel.class);
+        mViewModel.initialized();
         initView();
     }
 
@@ -158,48 +171,38 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
                 break;
             case R.id.ll_user_header:
                 if (Common.getInstance().hasUser()) {
-                    showEditDialog(R.string.user_dialog_name_title, R.string.user_dialog_name_hint, UserActivityViewModel.UserInfo.USER_NAME);
+                    showEditDialog(R.string.dialog_user_name_title, R.string.dialog_user_name_hint, UserActivityViewModel.UserInfo.USER_NAME);
                 } else {
                     jumpLoginActivity();
                 }
                 break;
             case R.id.ll_user_autograph:
-                showEditDialog(R.string.user_dialog_autograph_title, R.string.user_dialog_autograph_hint, UserActivityViewModel.UserInfo.USER_AUTOGRAPH);
+                showEditDialog(R.string.dialog_user_autograph_title, R.string.dialog_user_autograph_hint, UserActivityViewModel.UserInfo.USER_AUTOGRAPH);
                 break;
             case R.id.ll_user_nickname:
-                showEditDialog(R.string.user_dialog_nickname_title, R.string.user_dialog_nickname_hint, UserActivityViewModel.UserInfo.USER_NICKNAME);
+                showEditDialog(R.string.dialog_user_nickname_title, R.string.dialog_user_nickname_hint, UserActivityViewModel.UserInfo.USER_NICKNAME);
                 break;
             case R.id.ll_user_sex:
-                showSexChoiceDialog(R.string.user_dialog_sex_title, UserActivityViewModel.UserInfo.USER_SEX);
+                showSexChoiceDialog(R.string.dialog_user_sex_title, UserActivityViewModel.UserInfo.USER_SEX);
                 break;
             case R.id.ll_user_address:
-                showEditDialog(R.string.user_dialog_address_title, R.string.user_dialog_address_hint, UserActivityViewModel.UserInfo.USER_ADDRESS);
+                showEditDialog(R.string.dialog_user_address_title, R.string.dialog_user_address_hint, UserActivityViewModel.UserInfo.USER_ADDRESS);
                 break;
             case R.id.ll_user_phone:
-                showEditDialog(R.string.user_dialog_phone_title, R.string.user_dialog_phone_hint, UserActivityViewModel.UserInfo.USER_PHONE);
+                showEditDialog(R.string.dialog_user_phone_title, R.string.dialog_user_phone_hint, UserActivityViewModel.UserInfo.USER_PHONE);
                 break;
             case R.id.ll_user_hobby:
-                showHobbyChoiceDialog(R.string.user_dialog_hobby_title, UserActivityViewModel.UserInfo.USER_HOBBY);
+                showHobbyChoiceDialog(R.string.dialog_user_hobby_title, UserActivityViewModel.UserInfo.USER_HOBBY);
                 break;
             case R.id.ll_user_profile:
-                showEditDialog(R.string.user_dialog_profile_title, R.string.user_dialog_profile_hint, UserActivityViewModel.UserInfo.USER_PROFILE);
+                showEditDialog(R.string.dialog_user_profile_title, R.string.dialog_user_profile_hint, UserActivityViewModel.UserInfo.USER_PROFILE);
                 break;
             case R.id.ll_user_account:
                 showAccountManagerDialog();
                 break;
             case R.id.ll_user_more:
             default:
-                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(Common.getInstance().getResourcesString(R.string.dialog_waring_tips))
-                        .setContentText(Common.getInstance().getResourcesString(R.string.dialog_waring_content))
-                        .setConfirmText(Common.getInstance().getResourcesString(R.string.dialog_confirm))
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                sDialog.dismissWithAnimation();
-                            }
-                        })
-                        .show();
+                CommonUtils.showFunctionNotOpenDialog(UserActivity.this);
                 break;
         }
     }
@@ -218,7 +221,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         mLlUserProfile.setOnClickListener(this);
         mLlUserMore.setOnClickListener(this);
         mLlUserAccount.setOnClickListener(this);
-        mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toobar_title_user));
+        mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toolbar_title_user));
     }
 
     private void updateView() {
@@ -226,7 +229,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         if (null != mViewModel) {
             if (Common.getInstance().hasUser()) {
                 String userName = mViewModel.getAccountName();
-                if ("-".equals(userName)) {
+                if (UserActivityViewModel.DEFAULT_SHOW_TEXT.equals(userName)) {
                     mTvNameInfo.setText(R.string.user_no_name);
                 } else {
                     mTvNameInfo.setText(userName);
@@ -252,16 +255,16 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
             return;
         }
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
-        dialog.setCanceledOnTouchOutside(false);    // 设置为点击对话框之外的区域对话框不消失
+        dialog.setCanceledOnTouchOutside(false);    // 设置为点击对话框之外的区域对话框是否关闭
         Window window = dialog.getWindow();
         dialog.show();
 
         window.setBackgroundDrawableResource(android.R.color.transparent);
         window.setContentView(R.layout.layout_dialog_editor);
+        window.setWindowAnimations(R.style.diag_in_out_style);
         // 设置AlertDialog中可以弹出输入法键盘
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        window.setWindowAnimations(R.style.diag_in_out_style);
 
         TextView tvTitle = window.findViewById(R.id.tv_dialog_title);
         final EditText etContent = window.findViewById(R.id.et_dialog_editor);
@@ -272,23 +275,23 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         switch (infoType) {
             case UserActivityViewModel.UserInfo.USER_NAME:
             case UserActivityViewModel.UserInfo.USER_NICKNAME:
-                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(USER_NAME_LENGTH)});
                 break;
             case UserActivityViewModel.UserInfo.USER_AUTOGRAPH:
-                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(80)});
-                etContent.setMaxLines(5);
+                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(USER_AUTOGRAPH_LENGTH)});
+                etContent.setMaxLines(DIALOG_EDIT_MAX_LINE);
                 break;
             case UserActivityViewModel.UserInfo.USER_ADDRESS:
-                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100)});
-                etContent.setMaxLines(5);
+                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(USER_ADDRESS_LENGTH)});
+                etContent.setMaxLines(DIALOG_EDIT_MAX_LINE);
                 break;
             case UserActivityViewModel.UserInfo.USER_PHONE:
                 etContent.setInputType(InputType.TYPE_CLASS_PHONE);
-                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(25)});
+                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(USER_PHONE_LENGTH)});
                 break;
             case UserActivityViewModel.UserInfo.USER_PROFILE:
-                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(120)});
-                etContent.setMaxLines(5);
+                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(USER_PROFILE_LENGTH)});
+                etContent.setMaxLines(DIALOG_EDIT_MAX_LINE);
                 break;
             default:
                 break;
@@ -301,7 +304,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
             initText = mViewModel.getPreferenceString(infoType);
         }
 
-        if (TextUtils.isEmpty(initText) || "-".equals(initText)) {
+        if (TextUtils.isEmpty(initText) || UserActivityViewModel.DEFAULT_SHOW_TEXT.equals(initText)) {
             etContent.setHint(hint);
         } else {
             etContent.setText(initText);
@@ -316,7 +319,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
                 String value = etContent.getText().toString().trim();
                 LogUtils.d(TAG, "onClick: infoType = " + infoType + ", editor.getText() = " + value);
                 if (TextUtils.isEmpty(value)) {
-                    CommonUtils.getInstance().showToastView(R.string.user_dialog_empty_content);
+                    CommonUtils.getInstance().showToastView(R.string.toast_dialog_user_empty_content);
                     dialog.dismiss();
                     return;
                 }
@@ -339,15 +342,15 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         }
         TextView mTitle = new TextView(this);
         mTitle.setBackgroundColor(Color.WHITE);
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, DIALOG_TITLE_SIZE);
         mTitle.setGravity(Gravity.CENTER);
         mTitle.setText(title);
-        mTitle.setPadding(10, 20, 10, 10);
+        mTitle.setPadding(DIALOG_TITLE_PADDING_LEFT, DIALOG_TITLE_PADDING_TOP, DIALOG_TITLE_PADDING_RIGHT, DIALOG_TITLE_PADDING_BOTTOM);
         mTitle.setTextColor(Color.BLACK);
         AlertDialog.Builder builder = new AlertDialog.Builder(UserActivity.this);
         builder.setCustomTitle(mTitle);
 
-        builder.setSingleChoiceItems(mViewModel.getSexitems(), mViewModel.getSexCheckedItemIndex(), new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(mViewModel.getSexItems(), mViewModel.getSexCheckedItemIndex(), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -386,10 +389,10 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
 
         TextView mTitle = new TextView(this);
         mTitle.setBackgroundColor(Color.WHITE);
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, DIALOG_TITLE_SIZE);
         mTitle.setGravity(Gravity.CENTER);
         mTitle.setText(title);
-        mTitle.setPadding(10, 20, 10, 10);
+        mTitle.setPadding(DIALOG_TITLE_PADDING_LEFT, DIALOG_TITLE_PADDING_TOP, DIALOG_TITLE_PADDING_RIGHT, DIALOG_TITLE_PADDING_BOTTOM);
         mTitle.setTextColor(Color.BLACK);
         AlertDialog.Builder builder = new AlertDialog.Builder(UserActivity.this);
         builder.setCustomTitle(mTitle);
@@ -501,7 +504,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
                             common.changeAccount();
                         } else if (viewID == R.id.tv_popMenu_account_manager_logout) {
                             if (!common.logoutUser()) {
-                                CommonUtils.getInstance().showToastView(R.string.account_manager_logout_failed);
+                                CommonUtils.getInstance().showToastView(R.string.toast_account_manager_logout_failed);
                                 return;
                             }
                         } else {

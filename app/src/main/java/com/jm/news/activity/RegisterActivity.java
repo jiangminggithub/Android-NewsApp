@@ -31,11 +31,12 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class RegisterActivity extends MActivityBase implements View.OnClickListener {
 
+    // static field
     private static final String TAG = "RegisterActivity";
     private static final boolean BUTTON_NORMAL = true;
     private static final boolean BUTTON_LOCKED = false;
     private static final int INPUT_TEXT_MIN_SIZE = 6;
-
+    // control field
     private ImageButton mIbNavigationBack;
     private TextView mTvNavigationTitle;
     private EditText mEtRegisterUsername;
@@ -46,13 +47,12 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
     private CheckBox mCbProtocol;
     private TextView mTvProtocol;
     private SweetAlertDialog mDialog;
-
+    // function related field
     private Handler mHandler;
     private EtTextChangeWatcher mEtTextChangeWatcher;
     private CbCheckedListener mCbCheckedListener;
     private MyBtnOnTouchListener mBtnOnTouchListener;
-
-
+    // viewmodel related field
     private RegisterActivityViewModel mViewModel;
     private RegisterObserve mRegisterObserve;
 
@@ -151,7 +151,6 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
     }
 
     /************************************ observe function ***********************************/
-
     private class RegisterObserve implements Observer<Integer> {
 
         @Override
@@ -160,11 +159,11 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
             if (null != integer) {
                 switch (integer) {
                     case RegisterActivityViewModel.REGISTER_STATUS_SUCCESS:
-                        CommonUtils.getInstance().showToastView(R.string.account_register_success);
+                        CommonUtils.getInstance().showToastView(R.string.toast_account_register_success);
                         finish();
                         break;
                     case RegisterActivityViewModel.REGISTER_STATUS_FAILED:
-                        CommonUtils.getInstance().showToastView(R.string.account_register_failed);
+                        CommonUtils.getInstance().showToastView(R.string.toast_account_register_failed);
                         break;
                     default:
                         break;
@@ -173,7 +172,6 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
             }
         }
     }
-
 
     /************************************ private function ************************************/
     private void setBtnRegisterSubmitStatus(boolean status) {
@@ -193,27 +191,7 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
     }
 
 
-    /************************************ inner class *****************************************/
-    private class RegisterRunable implements Runnable {
-
-        @Override
-        public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    LogUtils.d(TAG, "run: ");
-                    String accountName = mEtRegisterUsername.getText().toString().trim();
-                    String accountPwd = mEtRegisterPwd.getText().toString().trim();
-                    boolean isAutoLogUtilsin = mCbProtocol.isChecked();
-                    if (!TextUtils.isEmpty(accountName) && !TextUtils.isEmpty(accountPwd) && accountPwd.length() >= 6) {
-                        mViewModel.registerClicked(accountName, accountPwd);
-                    }
-                }
-            });
-
-        }
-    }
-
+    /************************************ listener function *****************************************/
     private class EtTextChangeWatcher implements TextWatcher {
 
         @Override
@@ -280,6 +258,27 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
                 }
             }
             return false;
+        }
+    }
+
+    /************************************ inner class *****************************************/
+    private class RegisterRunable implements Runnable {
+
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    LogUtils.d(TAG, "run: ");
+                    String accountName = mEtRegisterUsername.getText().toString().trim();
+                    String accountPwd = mEtRegisterPwd.getText().toString().trim();
+                    boolean isAutoLogUtilsin = mCbProtocol.isChecked();
+                    if (!TextUtils.isEmpty(accountName) && !TextUtils.isEmpty(accountPwd) && accountPwd.length() >= 6) {
+                        mViewModel.registerClicked(accountName, accountPwd);
+                    }
+                }
+            });
+
         }
     }
 

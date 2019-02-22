@@ -17,20 +17,18 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     // static filed
     private static final String TAG = "MainActivityViewModel";
-
     // function related filed
     private Context mContext = null;
     private String[] mChannelNames = null;
     private String[] mChannelIds = null;
-
     // livedate filed
     private MutableLiveData<Integer> mChannelDataChange = new MutableLiveData<>();
+
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
         LogUtils.d(TAG, "MainActivityViewModel: ");
         mContext = application;
-        initialized();
     }
 
     @Override
@@ -72,6 +70,9 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     /***************************** public function *****************************************/
     public int getChannelCount() {
+        if (null == mChannelNames) {
+            initialized();
+        }
         if (null != mChannelNames) {
             return mChannelNames.length;
         }
@@ -79,7 +80,10 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
     public String getChannelName(int index) {
-        LogUtils.d(TAG, "getChannelName: index = " + index);
+        LogUtils.d(TAG, "getChannelName: index = " + index + ", mChannelNames[index] = " + mChannelNames[index]);
+        if (null == mChannelNames) {
+            initialized();
+        }
         if (null != mChannelNames && index < mChannelNames.length) {
             return mChannelNames[index];
         }

@@ -13,11 +13,12 @@ import com.jm.news.util.LogUtils;
 
 public class UserActivityViewModel extends AndroidViewModel {
 
+    // static filed
     private static final String TAG = "UserActivityViewModel";
-    private static final String DEFAULT_SHOW_TEXT = Common.getInstance().getResourcesString(R.string.user_empty_content);
+    public static final String DEFAULT_SHOW_TEXT = "-";
+    // function related filed
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEdit;
-
     private String[] mSexItems;
     private int mSexCheckedItemIndex = 0;
     private String[] mHobbyItems;
@@ -27,10 +28,7 @@ public class UserActivityViewModel extends AndroidViewModel {
     public UserActivityViewModel(@NonNull Application application) {
         super(application);
         LogUtils.d(TAG, "UserActivityViewModel: ");
-        String preName = Common.getInstance().getResourcesString(R.string.app_user_detail_prefences_filename);
-        mSexItems = Common.getInstance().getResourcesStringArray(R.array.user_sex_items);
-        mHobbyItems = Common.getInstance().getResourcesStringArray(R.array.user_hobby_items);
-
+        String preName = Common.getInstance().getResourcesString(R.string.app_user_detail_preferences_filename);
         if (!TextUtils.isEmpty(preName)) {
             mPreferences = Common.getInstance().getPreference(preName);
             mEdit = mPreferences.edit();
@@ -38,6 +36,12 @@ public class UserActivityViewModel extends AndroidViewModel {
     }
 
     /**************************************public function****************************************************/
+    public void initialized() {
+        Common common = Common.getInstance();
+        mSexItems = common.getResourcesStringArray(R.array.user_sex_items);
+        mHobbyItems = common.getResourcesStringArray(R.array.user_hobby_items);
+    }
+
     public String getPreferenceString(int key) {
         LogUtils.d(TAG, "getPreferenceString: key = " + key);
         if (null != mPreferences && Common.getInstance().hasUser()) {
@@ -51,7 +55,7 @@ public class UserActivityViewModel extends AndroidViewModel {
     public String getAccountName() {
         Common common = Common.getInstance();
         Resources resources = common.getResources();
-        SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_prefences_filename));
+        SharedPreferences preference = common.getPreference(resources.getString(R.string.app_account_preferences_filename));
         if (null != resources && null != preference) {
             String accountName = preference.getString(resources.getString(R.string.pre_key_account_name), null);
             if (!TextUtils.isEmpty(accountName)) {
@@ -63,6 +67,9 @@ public class UserActivityViewModel extends AndroidViewModel {
 
     public String getSexPreferenceString(int key) {
         LogUtils.d(TAG, "getSexPreferenceString: key = " + key);
+        if (null == mSexItems) {
+            initialized();
+        }
         if (null != mPreferences && Common.getInstance().hasUser()) {
             String userID = Common.getInstance().getUser();
             String string = mPreferences.getString(userID + key, DEFAULT_SHOW_TEXT);
@@ -79,6 +86,9 @@ public class UserActivityViewModel extends AndroidViewModel {
 
     public String getHobbyPreferenceString(int key) {
         LogUtils.d(TAG, "getHobbyPreferenceString: key = " + key);
+        if (null == mHobbyItems) {
+            initialized();
+        }
         if (null != mPreferences && Common.getInstance().hasUser()) {
             String userID = Common.getInstance().getUser();
             String string = mPreferences.getString(userID + key, DEFAULT_SHOW_TEXT);
@@ -103,7 +113,10 @@ public class UserActivityViewModel extends AndroidViewModel {
         return DEFAULT_SHOW_TEXT;
     }
 
-    public String[] getSexitems() {
+    public String[] getSexItems() {
+        if (null == mSexItems) {
+            initialized();
+        }
         return mSexItems;
     }
 
@@ -112,13 +125,15 @@ public class UserActivityViewModel extends AndroidViewModel {
     }
 
     public String[] getHobbyItems() {
+        if (null == mHobbyItems) {
+            initialized();
+        }
         return mHobbyItems;
     }
 
     public boolean[] getHobbyCheckedItemsFlag() {
         return mHobbyCheckedItemsFlag;
     }
-
 
     /**************************************operation function*********************************************/
     public void setSexChoiceItemIndex(int index) {
@@ -164,7 +179,6 @@ public class UserActivityViewModel extends AndroidViewModel {
             mEdit.apply();
         }
     }
-
 
     /**************************************inner class****************************************************/
     public class UserInfo {

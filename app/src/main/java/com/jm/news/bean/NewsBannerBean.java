@@ -3,6 +3,7 @@ package com.jm.news.bean;
 import java.util.List;
 
 public class NewsBannerBean {
+
     private List<String> bannerTitles;
     private List<String> bannerImages;
     private List<String> bannerUrls;

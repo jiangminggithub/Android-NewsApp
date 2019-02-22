@@ -1,6 +1,7 @@
 package com.jm.news.util;
 
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 /**
@@ -8,6 +9,7 @@ import android.util.Log;
  */
 public class LogUtils {
 
+    // static field
     private static final String TAG = "LogUtils";
     public static final int LOG_TYPE_NO = 0;
     public static final int LOG_TYPE_VERBOSE = 1;
@@ -17,7 +19,8 @@ public class LogUtils {
     public static final int LOG_TYPE_ERROR = 5;
     public static final int LOG_TYPE_ALL = 6;
 
-    private static int LOGLEVEL = LOG_TYPE_ALL;    // 输出的等级, 0：不输出; >=5: 全输出
+    // Log输出的等级, 0：不输出; >=5: 全输出
+    private static int LOG_LEVEL = LOG_TYPE_ALL;
 
     /**
      * 设置Log输出的等级
@@ -26,35 +29,40 @@ public class LogUtils {
      */
     public static synchronized void setLogPrintFlag(int logLevel) {
         Log.d(TAG, "setLogPrintFlag: logLevel = " + logLevel);
-        LOGLEVEL = logLevel;
+        LOG_LEVEL = logLevel;
     }
 
+    @SuppressLint("LongLogTag")
     public static void v(String tag, String msg) {
-        if (LOGLEVEL >= LOG_TYPE_VERBOSE) {
+        if (LOG_LEVEL >= LOG_TYPE_VERBOSE) {
             Log.v(tag, msg);
         }
     }
 
+    @SuppressLint("LongLogTag")
     public static void d(String tag, String msg) {
-        if (LOGLEVEL >= LOG_TYPE_DEBUG) {
+        if (LOG_LEVEL >= LOG_TYPE_DEBUG) {
             Log.d(tag, msg);
         }
     }
 
+    @SuppressLint("LongLogTag")
     public static void i(String tag, String msg) {
-        if (LOGLEVEL >= LOG_TYPE_INFO) {
+        if (LOG_LEVEL >= LOG_TYPE_INFO) {
             Log.i(tag, msg);
         }
     }
 
+    @SuppressLint("LongLogTag")
     public static void w(String tag, String msg) {
-        if (LOGLEVEL >= LOG_TYPE_WARMING) {
+        if (LOG_LEVEL >= LOG_TYPE_WARMING) {
             Log.w(tag, msg);
         }
     }
 
+    @SuppressLint("LongLogTag")
     public static void e(String tag, String msg) {
-        if (LOGLEVEL >= LOG_TYPE_ERROR) {
+        if (LOG_LEVEL >= LOG_TYPE_ERROR) {
             Log.e(tag, msg);
         }
     }

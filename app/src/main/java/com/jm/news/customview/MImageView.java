@@ -12,6 +12,7 @@ import android.view.View;
 import com.jm.news.R;
 
 public class MImageView extends AppCompatImageView {
+
     private int width;
     private int height;
     private int defaultRadius = 0;

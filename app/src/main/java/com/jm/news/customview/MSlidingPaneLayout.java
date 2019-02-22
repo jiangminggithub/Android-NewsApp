@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
 /**
- * custom SlidingPaneLayout for PagerEnabledSlidingPaneLayout
+ * 自定义 SlidingPaneLayout 继承自 PagerEnabledSlidingPaneLayout
  */
 public class MSlidingPaneLayout extends SlidingPaneLayout {
 

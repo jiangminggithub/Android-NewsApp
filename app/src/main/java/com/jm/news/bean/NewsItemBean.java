@@ -5,6 +5,7 @@ import com.jm.news.bean.NewsDataBean.ShowapiResBodyBean.PagebeanBean.Contentlist
 import java.util.List;
 
 public class NewsItemBean {
+
     private String pubDate;
     private String link;
     private String img;

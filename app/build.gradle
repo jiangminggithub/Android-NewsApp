@@ -22,6 +22,7 @@ android {
                     'src/main/res/layout/viewblock',
                     'src/main/res/layout/item',
                     'src/main/res/layout/fragment',
+                    'src/main/res/layout/activity',
                     'src/main/res/layout',
                     'src/main/res',
             ]

@@ -9,11 +9,16 @@ import java.util.HashMap;
  * created by jiangming on 19-01-14
  */
 public class NewsFragmentsContainer {
+
+    // static field
     private static final String TAG = "FragmentContainer";
     private static NewsFragmentsContainer mInstance = null;
+    // function field
     private HashMap<Integer, Fragment> fragments = new HashMap<>();
 
+
     private NewsFragmentsContainer() {
+
     }
 
     public static synchronized NewsFragmentsContainer Instance() {

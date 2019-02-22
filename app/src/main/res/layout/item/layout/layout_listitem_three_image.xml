@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:radius="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -16,9 +17,9 @@
         android:ellipsize="end"
         android:lineSpacingExtra="3dp"
         android:maxLines="1"
-        android:text="蔡英文元旦谈话拿猪瘟＂开刀＂:哪来的两岸一家亲"
         android:textColor="@color/news_title"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tool:text="蔡英文元旦谈话拿猪瘟＂开刀＂:哪来的两岸一家亲" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -71,18 +72,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="头条"
             android:textColor="@color/news_source"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tool:text="头条" />
 
         <TextView
             android:id="@+id/tv_news_item_three_data"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="2017-05-27 15:01:10"
             android:textColor="@color/news_source"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tool:text="2017-05-27 15:01:10" />
     </RelativeLayout>
 
     <View

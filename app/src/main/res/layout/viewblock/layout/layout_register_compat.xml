@@ -184,7 +184,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="@string/register_protocol"
-                    android:textColor="@color/swiperefresh_color4"
+                    android:textColor="@color/link_color"
                     android:textSize="14dp" />
             </LinearLayout>
 

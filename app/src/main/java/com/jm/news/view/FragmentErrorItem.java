@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.jm.news.R;
 
 public class FragmentErrorItem extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

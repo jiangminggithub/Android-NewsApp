@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager {
+
     // static field
     private static final String TAG = "DataManager";
     private static final String appKey = "Jiang&&Ming&&News";
@@ -32,8 +33,6 @@ public class DataManager {
     public final static int NEWS_TYPE_NEWS_BANNER = 3;
     public final static String REQUEST_DEFAULT_PAGE_INDEX = "0";
     public final static String REQUEST_DEFAULT_MAX_RESULT = "30";
-
-
     // function related field
     private Context mContext;
     private DataResponsetListener mDataResponsetListener;
@@ -42,7 +41,6 @@ public class DataManager {
     public DataManager(Context context) {
         this.mContext = context;
     }
-
 
     public void requestNewsNetworkData(@Nullable final int requestType, final String channelId, int pageIndex, int maxResult) {
         LogUtils.d(TAG, "requestNewsNetworkData: requestType = " + requestType + ", channelId = " + channelId + ", pageIndex = " + pageIndex + ", maxResult = " + maxResult);

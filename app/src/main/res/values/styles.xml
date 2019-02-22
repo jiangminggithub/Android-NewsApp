@@ -142,4 +142,23 @@
         <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
     </style>
 
+    <style name="about_title_style">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/app_text</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:textSize">16sp</item>
+
+    </style>
+
+    <style name="about_context_style">
+        <item name="android:textColor">@color/app_text</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

@@ -11,11 +11,13 @@ import com.jm.news.util.LogUtils;
 
 public class WelcomeActivity extends MActivityBase {
 
+    // static field
     private static final String TAG = "WelcomeActivity";
     private static final int PROGRESS_SUCCESS = 0;
     private static final long PROGRESS_TIME = 1800;
-
+    // control field
     private MProgressView mProgressView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

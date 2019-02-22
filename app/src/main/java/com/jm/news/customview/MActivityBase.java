@@ -7,6 +7,8 @@ import com.jm.news.common.Common;
 import com.jm.news.util.LogUtils;
 
 public class MActivityBase extends AppCompatActivity {
+
+    // static field
     private static final String TAG = "MActivityBase";
 
     @Override

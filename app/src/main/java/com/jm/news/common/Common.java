@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class Common {
+
     private static final String TAG = "Common";
     public static final int LOCALE_TYPE_DEFAULT = 0;
     public static final int LOCALE_TYPE_SIMPLIFIED_CHINESE = 1;
@@ -40,6 +41,7 @@ public class Common {
     }
 
     private Common() {
+
     }
 
     public void initialize(Context context) {
@@ -53,23 +55,27 @@ public class Common {
      * 初始化App的基本信息
      */
     private void initializedAppInfo() {
-        SharedPreferences settingPreference = getPreference(mResources.getString(R.string.app_setting_prefences_filename));
-        SharedPreferences accountPreference = getPreference(mResources.getString(R.string.app_account_prefences_filename));
+        SharedPreferences settingPreference = getPreference(mResources.getString(R.string.app_setting_preferences_filename));
+        SharedPreferences accountPreference = getPreference(mResources.getString(R.string.app_account_preferences_filename));
         if (null != mResources) {
             // locale and exitClearCache initialized
             String localeKey = mResources.getString(R.string.pre_key_setting_local);
             String exitClearCachekey = mResources.getString(R.string.pre_key_setting_app_out_clear);
-            if (null != settingPreference && !TextUtils.isEmpty(localeKey)) {
-                int localeIndex = settingPreference.getInt(localeKey, DEFAULT_LOCALE_INDEX);
-                if (localeIndex != Common.LOCALE_TYPE_DEFAULT) {
-                    setAppLocale(localeIndex);
+            if (null != settingPreference) {
+                if (!TextUtils.isEmpty(localeKey)) {
+                    int localeIndex = settingPreference.getInt(localeKey, DEFAULT_LOCALE_INDEX);
+                    if (localeIndex != Common.LOCALE_TYPE_DEFAULT) {
+                        setAppLocale(localeIndex);
+                    }
                 }
-                boolean isClearCache = settingPreference.getBoolean(exitClearCachekey, false);
-                if (isClearCache) {
-                    exitClearCache = isClearCache;
+
+                if (!TextUtils.isEmpty(exitClearCachekey)) {
+                    boolean isClearCache = settingPreference.getBoolean(exitClearCachekey, false);
+                    if (isClearCache) {
+                        exitClearCache = isClearCache;
+                    }
                 }
             }
-
             // account initialized
             if (null != accountPreference) {
                 boolean isAutoLogin = accountPreference.getBoolean(mResources.getString(R.string.pre_key_account_auto_login), false);
@@ -79,6 +85,13 @@ public class Common {
                 }
             }
         }
+    }
+
+    /**
+     * 更新App的基本信息
+     */
+    public void updateAppInfo() {
+        initializedAppInfo();
     }
 
     /**
@@ -98,15 +111,12 @@ public class Common {
                 mLocale = Locale.ENGLISH;
             } else {
                 mLocale = Locale.getDefault();
-                LogUtils.d(TAG, "setAppLocale: default------------------------------------- = " + mLocale);
+                LogUtils.d(TAG, "setAppLocale: default locale = " + mLocale);
             }
-
-            LogUtils.d(TAG, "setAppLocale: Build.Version = " + Build.VERSION.SDK_INT);
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 config.setLocale(mLocale);
                 config.setLocales(new LocaleList(mLocale));
-                mContext.createConfigurationContext(config);
+                mContext = mContext.createConfigurationContext(config);
                 LogUtils.d(TAG, "setAppLocale: Locale = " + mLocale);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 config.setLocale(mLocale);
@@ -118,13 +128,20 @@ public class Common {
         }
     }
 
+    /**
+     * 获取App当前的Locale
+     *
+     * @return App当前的Locale
+     */
     public Locale getLocale() {
-        LogUtils.d(TAG, "getLocale: " + mLocale);
         if (null != mLocale) {
+            LogUtils.d(TAG, "getLocale: " + mLocale);
             return mLocale;
         }
+        LogUtils.d(TAG, "getLocale: " + Locale.getDefault());
         return Locale.getDefault();
     }
+
 
     /**
      * 注销用户登录
@@ -133,7 +150,7 @@ public class Common {
      */
     public boolean logoutUser() {
         if (null != mResources) {
-            SharedPreferences preference = getPreference(mResources.getString(R.string.app_account_prefences_filename));
+            SharedPreferences preference = getPreference(mResources.getString(R.string.app_account_preferences_filename));
             if (null != preference) {
                 SharedPreferences.Editor edit = preference.edit();
                 boolean isCommit = edit.putBoolean(mResources.getString(R.string.pre_key_account_auto_login), false).commit();
@@ -149,8 +166,8 @@ public class Common {
      */
     public void changeAccount() {
         if (null != mResources) {
-            SharedPreferences accountPreference = getPreference(mResources.getString(R.string.app_account_prefences_filename));
-            SharedPreferences userDetailPreference = getPreference(mResources.getString(R.string.app_user_detail_prefences_filename));
+            SharedPreferences accountPreference = getPreference(mResources.getString(R.string.app_account_preferences_filename));
+            SharedPreferences userDetailPreference = getPreference(mResources.getString(R.string.app_user_detail_preferences_filename));
             if (null != accountPreference) {
                 accountPreference.edit().clear().commit();
             }
@@ -168,13 +185,15 @@ public class Common {
      * @return Context对象
      */
     public Context attachBaseContext(Context context) {
-        if (null != mLocale && null != context && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Configuration config = context.getResources().getConfiguration();
-            config.setLocale(mLocale);
-            config.setLocales(new LocaleList(mLocale));
-            Context newContext = mContext.createConfigurationContext(config);
-            LogUtils.d(TAG, "attachBaseContext: newContext = " + newContext);
-            return newContext;
+        if (null != mLocale && null != context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Configuration config = context.getResources().getConfiguration();
+                config.setLocale(mLocale);
+                config.setLocales(new LocaleList(mLocale));
+                Context newContext = mContext.createConfigurationContext(config);
+                LogUtils.d(TAG, "attachBaseContext: newContext = " + newContext);
+                return newContext;
+            }
         }
         return null;
     }
@@ -192,13 +211,11 @@ public class Common {
         if (TextUtils.isEmpty(mUser)) {
             return false;
         }
-
         return true;
     }
 
     public void addChannelID(int key, @NonNull String channelID) {
         LogUtils.d(TAG, "addChannelID: key=" + key + ", channelID=" + channelID);
-
         if (null != channelID && !"".equals(channelID)) {
             mChannelIDMap.put(key, channelID);
         }
@@ -239,6 +256,7 @@ public class Common {
     }
 
     public boolean isExitClearCache() {
+        initializedAppInfo();
         return exitClearCache;
     }
 }

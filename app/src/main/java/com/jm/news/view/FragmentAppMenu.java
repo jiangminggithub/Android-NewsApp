@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jm.news.R;
+import com.jm.news.activity.AboutActivity;
 import com.jm.news.activity.LoginActivity;
 import com.jm.news.activity.SettingActivity;
 import com.jm.news.activity.UserActivity;
@@ -32,7 +32,9 @@ import q.rorbin.badgeview.QBadgeView;
 
 public class FragmentAppMenu extends MFragmentBase {
 
+    // static field
     private static final String TAG = "FragmentAppMenu";
+    // control field
     private LinearLayout mLlUser;
     private MCircleImageView mIvIcon;
     private TextView mTvUserName;
@@ -46,13 +48,14 @@ public class FragmentAppMenu extends MFragmentBase {
     private LinearLayout mLlAbout;
     private LinearLayout mLlSetting;
     private LinearLayout mLlExit;
-
+    // function related field
     private MyClickListener mClickListener;
-
+    // viewmodel related field
     private FragmentAppMenuViewModel mViewModel;
 
-    public FragmentAppMenu() {
 
+    public FragmentAppMenu() {
+        super();
     }
 
     @Nullable
@@ -76,7 +79,6 @@ public class FragmentAppMenu extends MFragmentBase {
             mLlExit = view.findViewById(R.id.ll_app_menu_exit);
 
             mViewModel = ViewModelProviders.of(this).get(FragmentAppMenuViewModel.class);
-
             initview();
         }
         return view;
@@ -142,7 +144,7 @@ public class FragmentAppMenu extends MFragmentBase {
                     public void onDragStateChanged(int dragState, Badge badge, View targetView) {
                         LogUtils.d(TAG, "onDragStateChanged: dragState=" + dragState);
                         if (dragState == Badge.OnDragStateChangedListener.STATE_SUCCEED) {
-                            Toast.makeText(getContext(), "已取消查看", Toast.LENGTH_SHORT).show();
+                            // TODO number icon is remove
                         }
                     }
                 })
@@ -162,7 +164,7 @@ public class FragmentAppMenu extends MFragmentBase {
                     public void onDragStateChanged(int dragState, Badge badge, View targetView) {
                         LogUtils.d(TAG, "onDragStateChanged: dragState=" + dragState);
                         if (dragState == Badge.OnDragStateChangedListener.STATE_SUCCEED) {
-                            Toast.makeText(getContext(), "已取消查看", Toast.LENGTH_SHORT).show();
+                            // TODO number icon is remove
                         }
                     }
                 })
@@ -173,7 +175,7 @@ public class FragmentAppMenu extends MFragmentBase {
                 .bindTarget(mLlTheme);
     }
 
-
+    /***************************** private function *********************************/
     private void updateView() {
         LogUtils.d(TAG, "updateView: ");
         if (null != mViewModel) {
@@ -200,7 +202,7 @@ public class FragmentAppMenu extends MFragmentBase {
         }
     }
 
-
+    /***************************** listener function *********************************/
     private class MyClickListener implements View.OnClickListener {
 
         @Override
@@ -229,13 +231,14 @@ public class FragmentAppMenu extends MFragmentBase {
                 case R.id.ll_app_menu_location:
                     break;
                 case R.id.ll_app_menu_about:
+                    JumpUtils.jumpActivity(getContext(), AboutActivity.class);
                     break;
                 case R.id.ll_app_menu_setting:
                     JumpUtils.jumpActivity(getContext(), SettingActivity.class);
                     break;
                 case R.id.ll_app_menu_exit:
                     new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText(Common.getInstance().getResourcesString(R.string.app_menu_dialog_exit_title))
+                            .setTitleText(Common.getInstance().getResourcesString(R.string.dialog_app_menu_exit_title))
                             .setCancelText(Common.getInstance().getResourcesString(R.string.dialog_cancel))
                             .setConfirmText(Common.getInstance().getResourcesString(R.string.dialog_confirm))
                             .showCancelButton(true)

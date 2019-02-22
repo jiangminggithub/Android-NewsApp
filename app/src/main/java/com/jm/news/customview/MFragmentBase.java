@@ -11,9 +11,13 @@ import android.view.ViewGroup;
 import com.jm.news.util.LogUtils;
 
 public class MFragmentBase extends Fragment {
+
+    // static field
     private static final String TAG = "MFragmentBase";
+    // function related field
     private View mView = null;
     private boolean recreate = false;
+
 
     @Override
     public void onDestroy() {
@@ -21,6 +25,15 @@ public class MFragmentBase extends Fragment {
         super.onDestroy();
     }
 
+    /**
+     * 加载可重复使用的View
+     *
+     * @param resource           加载的resourceID
+     * @param inflater           inflater 对象
+     * @param container          container 对象
+     * @param savedInstanceState savedInstanceState 对象
+     * @return
+     */
     public View getInflaterView(@NonNull int resource, @NonNull LayoutInflater inflater, @NonNull ViewGroup container, @Nullable Bundle savedInstanceState) {
         LogUtils.d(TAG, "getInflaterView: ");
         if (null == mView) {
@@ -38,6 +51,11 @@ public class MFragmentBase extends Fragment {
         return mView;
     }
 
+    /**
+     * 是否是重新创建的View
+     *
+     * @return
+     */
     public boolean isRecreate() {
         return recreate;
     }

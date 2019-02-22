@@ -1,129 +1,168 @@
 <resources>
     <!--************************** app string ******************************-->
-    <string name="app_name" translatable="false">头条新闻</string>
+    <string name="app_icon_name" translatable="false">热点新闻</string>
+    <string name="app_name">Hot News</string>
 
     <string name="app_user_id_key" translatable="false">userID</string>
-    <string name="app_setting_prefences_filename" translatable="false">setting_prefences</string>
-    <string name="app_user_detail_prefences_filename" translatable="false">user_detail_prefences</string>
-    <string name="app_account_prefences_filename" translatable="false">account_prefences</string>
+    <string name="app_setting_preferences_filename" translatable="false">setting_preferences</string>
+    <string name="app_user_detail_preferences_filename" translatable="false">user_detail_preferences</string>
+    <string name="app_account_preferences_filename" translatable="false">account_preferences</string>
 
-    <string name="app_menu_message">我的消息</string>
-    <string name="app_menu_vip">会员中心</string>
-    <string name="app_menu_theme">个性装扮</string>
-    <string name="app_menu_collected">我的收藏</string>
-    <string name="app_menu_friends">我的好友</string>
-    <string name="app_menu_location">附近的人</string>
-    <string name="app_menu_about">关于</string>
-    <string name="app_menu_setting">设置</string>
-    <string name="app_menu_exit">退出</string>
+    <string name="app_menu_message">Message</string>
+    <string name="app_menu_vip">Member</string>
+    <string name="app_menu_theme">Theme</string>
+    <string name="app_menu_collected">Collection</string>
+    <string name="app_menu_friends">Friends</string>
+    <string name="app_menu_location">Location</string>
+    <string name="app_menu_about">On</string>
+    <string name="app_menu_setting">Set</string>
+    <string name="app_menu_exit">Exit</string>
 
-    <string name="app_menu_dialog_exit_title">确定退出 ?</string>
-    <string name="app_data_request_failed">数据获取失败，请检查网络连接或API使用余额</string>
-    <string name="app_data_request_no_more">没有更多数据了哦</string>
+    <string name="app_toolbar_back">Back</string>
+    <string name="app_toolbar_title_user">Personal Center</string>
+    <string name="app_toolbar_title_setting">Setting Center</string>
+    <string name="app_toolbar_title_webview_detail">News Detail</string>
 
-    <string name="app_toobar_back">返回</string>
-    <string name="app_toobar_title_user">个人中心</string>
-    <string name="app_toobar_title_setting">设置中心</string>
-    <string name="app_toobar_title_webview_detail">新闻详情</string>
-
-    <string name="webview_no_url">资源链接不存在</string>
-    <string name="webview_loading">加载数据中...</string>
+    <string name="app_error_info">Sorry, the application has an error, please restart the app!</string>
 
     <!-- **************************** notification string *************************************-->
-    <string name="toast_net_invisible">当前网络不可用，请检查网络状态</string>
-    <string name="tips_net_invisible">网络未连接,请检查网络连接后重试</string>
-    <string name="tips_request_failed">数据获取失败，请检查网络连接及API使用余额</string>
+    <string name="toast_net_invisible">Network is not connection !</string>
+    <string name="tips_net_invisible">The network is not connected. Please check the network connection and try again.</string>
+    <string name="tips_request_failed">Data acquisition failed, please check the network connection and API usage balance</string>
 
+    <string name="toast_webview_no_url">Resource link does not exist</string>
 
+    <string name="toast_app_data_request_failed">Data acquisition failed, please check network connection or Api usage balance</string>
+    <string name="toast_app_data_request_no_more">No more data</string>
+
+    <string name="toast_dialog_user_empty_content">Content cannot be empty</string>
+    <string name="toast_menu_webview_share_tips">Copy share link to clipboard</string>
+
+    <string name="toast_account_manager_logout_failed">Failed, please try again</string>
+    <string name="toast_account_register_success">Congratulations, registration is successful</string>
+    <string name="toast_account_register_failed">Registration failed, please try again</string>
+    <string name="toast_account_login_failed">Username or password is incorrect</string>
+    <string name="toast_account_user_no_exit">User does not exist, please register first</string>
+
+    <string name="toast_setting_local_set_failed">Failed, please try again...</string>
+    <string name="toast_setting_rating_tips">Submitted, thank you for your review!</string>
+    <string name="toast_setting_feedback_tips">Submitted, thank you for your feedback!</string>
+    <string name="toast_setting_feedback_empty">Content can\'t be empty</string>
+    <string name="toast_setting_share_success">Copied application share link to clipboard</string>
+    <string name="toast_setting_share_failed">Failed to get share link, please try again</string>
 
     <!-- **************************** user string *************************************-->
-    <string name="user_autograph">个性签名</string>
-    <string name="user_nickname">我的昵称</string>
-    <string name="user_sex">我的性别</string>
-    <string name="user_address">所在地点</string>
-    <string name="user_phone">联系电话</string>
-    <string name="user_hobby">我的爱好</string>
-    <string name="user_profile">个人说明</string>
-    <string name="user_more">更多设置</string>
-    <string name="user_account">帐号管理</string>
+    <string name="user_autograph">Autograph</string>
+    <string name="user_nickname">NickName</string>
+    <string name="user_sex">Gender</string>
+    <string name="user_address">Address</string>
+    <string name="user_phone">Telphone</string>
+    <string name="user_hobby">Hobby</string>
+    <string name="user_profile">Profile</string>
+    <string name="user_more">More</string>
+    <string name="user_account">Account Manager</string>
+    <string name="user_no_login">Sign In</string>
+    <string name="user_no_user">Sign In/Register</string>
+    <string name="user_empty_autograph">Setting signature :</string>
+    <string name="user_no_name">Set username</string>
 
-    <string name="user_dialog_name_title">用户名设置</string>
-    <string name="user_dialog_name_hint">最多20个字符</string>
-    <string name="user_dialog_autograph_title">个性签名设置</string>
-    <string name="user_dialog_autograph_hint">最多80个字符</string>
-    <string name="user_dialog_nickname_title">昵称设置</string>
-    <string name="user_dialog_nickname_hint">最多20个字符</string>
-    <string name="user_dialog_sex_title">性别设置</string>
-    <string name="user_dialog_address_title">地址设置</string>
-    <string name="user_dialog_address_hint">请输入所在地点，最多100个字符</string>
-    <string name="user_dialog_phone_title">电话设置</string>
-    <string name="user_dialog_phone_hint">请输入电话号码</string>
-    <string name="user_dialog_hobby_title">爱好设置</string>
-    <string name="user_dialog_hobby_hint">请简述一下你的爱好，最多120个字符</string>
-    <string name="user_dialog_profile_title">个人说明设置</string>
-    <string name="user_dialog_profile_hint">简单说明一下自己，最多120个字符</string>
-    <string name="user_dialog_empty_content">内容不能为空</string>
-    <string name="user_no_login">登录</string>
-    <string name="user_no_user">登录/注册</string>
-    <string name="user_no_name">设置用户名</string>
-    <string name="user_empty_content">-</string>
-    <string name="user_empty_autograph">设置个性签名:</string>
+    <string name="account_user_empty">Please sign in :</string>
+    <string name="account_logging">Logging...</string>
+    <string name="account_registering">Registering...</string>
+    <string name="account_login">Login</string>
+    <string name="account_login_username_hint">username</string>
+    <string name="hint_password">password</string>
+    <string name="account_register_username_hint">username</string>
+    <string name="account_login_auto_hint">Automatic log-in</string>
+    <string name="login_register">Register</string>
+    <string name="login_forget_hint">Forget password ?</string>
+    <string name="register_pwd_hint">least six digit</string>
+    <string name="register_reader_protocol">Read and agree to the protocol</string>
+    <string name="register_protocol">Protocol</string>
 
-    <string name="account_user_no_exit">用户不存在，请先注册</string>
-    <string name="account_user_empty">请登录 ：</string>
-    <string name="account_login_failed">用户名或密码不正确</string>
-    <string name="account_logging">登陆中...</string>
-    <string name="account_registering">正在注册...</string>
-    <string name="account_register_success">恭喜您，注册成功</string>
-    <string name="account_register_failed">注册失败，请重试</string>
-    <string name="account_login">登录</string>
-    <string name="account_login_username_hint">用户名</string>
-    <string name="hint_password">密码</string>
-    <string name="account_register_username_hint">用户名</string>
-    <string name="account_login_auto_hint">自动登录</string>
-    <string name="login_register">注册</string>
-    <string name="login_forget_hint">忘记密码？</string>
-    <string name="register_pwd_hint">请输入至少六位数密码</string>
-    <string name="register_reader_protocol">已阅读并同意服务条款</string>
-    <string name="register_protocol">服务条款</string>
+    <string name="account_manager_change">Switch account</string>
+    <string name="account_manager_logout">Logout</string>
+    <string name="account_manager_cancel">Cancel</string>
 
-    <string name="account_manager_change">切换用户</string>
-    <string name="account_manager_logout">注销登录</string>
-    <string name="account_manager_cancel">取消</string>
-    <string name="account_manager_logout_failed">操作失败，请重试</string>
+    <!-- **************************** about string *************************************-->
+    <string name="about_specifications_title">一、 Software instruction</string>
+    <string name="about_specifications_content">This software is for personal learning example software, not as a commercial use.The theme is a data display platform based on Internet services, and its main function is to view and share Internet news data.</string>
+    <string name="about_right_title">二、 Copyright Statement：</string>
+    <string name="about_right_content">JM (author) owns the copyright of this software, the copyright is the law of the People\'s Republic of China copyright law, the computer software protection ordinance and other Chinese laws and relevant international convention for the protection, any unauthorized and modify, copy, distribute, lease, reverse compile all or part of the program are belong to the infringement behavior, will retain the rights of its legal liability shall be pursued in accordance with the law.</string>
+    <string name="about_service_title">三、 Service statement</string>
+    <string name="about_service_content_one">1. The software provides you with the following services or functions, including but not limited to: acquiring, browsing and sharing network news data.Some of the services will be provided by default when you first install the software and update the software. You can set default Settings according to the usage habits, unless otherwise specified, any function based on the enhancement or enhancement of the current service is subject to this clause unconditionally.</string>
+    <string name="about_service_content_two">2. The use of this software includes access to network functions, will generate the corresponding traffic fees and the corresponding operators charge, in addition to no other fees.</string>
+    <string name="about_service_content_three">3. The software is free of charge, and you are responsible for using the software at your own risk. You must guarantee that you have the right to use the required operating system and related services to the maximum extent permitted by law.</string>
+    <string name="about_gratitude_title">四、 Thanks</string>
+    <string name="about_gratitude_content_one">1. Thanks to the API data support provided by wanwei yiyuan (www.showapi.com).</string>
+    <string name="about_gratitude_content_two">2. Thanks to the support of the original open source libraries (detailed in the GitHub source code agreement).</string>
+    <string name="about_gratitude_content_three">3. Some of the ICONS in this software are from the open Internet platform. Thanks to the original author.</string>
+    <string name="about_support_title">五、 Support and feedback</string>
+    <string name="about_support_content_one">1. Project source code has been synchronized in GitHub warehouse, please support more, welcome Star.</string>
+    <string name="about_support_content_two">2. Software download address: click here to download</string>
+    <string name="about_support_content_three">3. If you have any suggestion, please send email to: jiangmingyx@gmail.com</string>
+    <string name="about_copyright">Copyright© 2019 All JM Rights Reserved.</string>
+    <string name="about_title">About Software</string>
 
-    <!-- **************************** dialog string *************************************-->
-    <string name="menu_news_item_open_detail">查看新闻详情</string>
-    <string name="menu_news_item_open_other">其他应用打开</string>
-    <string name="menu_news_item_delete">删除此项</string>
+    <!-- **************************** menu string *************************************-->
+    <string name="menu_news_item_open_detail">News Detail</string>
+    <string name="menu_news_item_open_other">Open other</string>
+    <string name="menu_news_item_delete">Delete</string>
 
-    <string name="menu_webview_refresh">刷新</string>
-    <string name="menu_webview_share">分享</string>
-    <string name="menu_webview_open_other">浏览器中打开</string>
-    <string name="menu_webview_share_tips">已复制分享链接到剪切板</string>
-
+    <string name="menu_webview_refresh">Refresh</string>
+    <string name="menu_webview_share">Share</string>
+    <string name="menu_webview_open_other">Open other</string>
 
     <!-- **************************** dialog string *************************************-->
-    <string name="dialog_login">登录</string>
-    <string name="dialog_confirm">确定</string>
-    <string name="dialog_cancel">取消</string>
-    <string name="dialog_waring_tips">提示</string>
-    <string name="dialog_waring_content">此功能暂未开放,敬请期待哦!</string>
-    <string name="dialog_no_login">当前无用户,请先登录</string>
+    <string name="dialog_login">LOGIN</string>
+    <string name="dialog_confirm">OK</string>
+    <string name="dialog_cancel">CANCEL</string>
+    <string name="dialog_waring_tips">Tips</string>
+    <string name="dialog_waring_content">This function is not yet open, please look forward to it!</string>
+    <string name="dialog_no_login">Currently no users, please login first</string>
 
-    <string name="dialog_clear_cache_title">确定删除 ?</string>
-    <string name="dialog_clear_cache_confirm">删除</string>
-    <string name="dialog_clear_cache_content">永久删除缓存数据</string>
-    <string name="dialog_clear_cache_success_title">已删除</string>
-    <string name="dialog_clear_cache_success_content">MB 缓存数据</string>
-    <string name="dialog_clear_cache_failed_title">操作失败</string>
-    <string name="dialog_clear_cache_failed_content">请检查应用相关权限</string>
+    <string name="dialog_clear_cache_title">Delete ?</string>
+    <string name="dialog_clear_cache_confirm">Delete</string>
+    <string name="dialog_clear_cache_content">Permanently delete cached data</string>
+    <string name="dialog_clear_cache_success_title">Deleted</string>
+    <string name="dialog_clear_cache_success_content">MB Cache data</string>
+    <string name="dialog_clear_cache_failed_title">Failed</string>
+    <string name="dialog_clear_cache_failed_content">Please check the application permissions</string>
 
-    <string name="dialog_account_change_content">将会清除本地所有用户信息!</string>
-    <string name="dialog_account_logout_content">是否注销当前用户 ?</string>
+    <string name="dialog_account_change_content">Clear all user information !</string>
+    <string name="dialog_account_logout_content">Log out of the current user ?</string>
 
-    <string name="dialog_net_invisible_content">当前网络不可用，请检查网络连接!</string>
-    <string name="dialog_net_invisible_confirm">退出</string>
+    <string name="dialog_user_name_title">UserName Settings</string>
+    <string name="dialog_user_name_hint">Up to 20 characters</string>
+    <string name="dialog_user_autograph_title">Personal Signature Settings</string>
+    <string name="dialog_user_autograph_hint">Up to 80 characters</string>
+    <string name="dialog_user_nickname_title">Nickname settings</string>
+    <string name="dialog_user_nickname_hint">Up to 20 characters</string>
+    <string name="dialog_user_sex_title">Gender setting</string>
+    <string name="dialog_user_address_title">Address settings</string>
+    <string name="dialog_user_address_hint">Please enter the location, up to 100 characters</string>
+    <string name="dialog_user_phone_title">Telephone settings</string>
+    <string name="dialog_user_phone_hint">Please enter your telephone number</string>
+    <string name="dialog_user_hobby_title">Hobby setting</string>
+    <string name="dialog_user_hobby_hint">Please outline your hobbies, up to 120 characters</string>
+    <string name="dialog_user_profile_title">Personal Instructions Settings</string>
+    <string name="dialog_user_profile_hint">Description of yourself, up to 120 characters</string>
+
+    <string name="dialog_net_invisible_content">No network connection !</string>
+    <string name="dialog_app_menu_exit_title">Are you sure to exit ?</string>
+    <string name="dialog_webview_loading">Loading...</string>
+    <string name="dialog_setting_feedback_edit_hint">Your opinion, up to 120 characters</string>
+    <string name="dialog_setting_version_update_content">Checking for updates...</string>
+    <string name="dialog_setting_version_update_success">It is the latest version</string>
+
+    <string name="srl_header_failed">Refresh Failed</string>
+    <string name="srl_header_finish">Refresh Success</string>
+    <string name="srl_header_loading">Loading…</string>
+    <string name="srl_header_pulling">Pull Down To Refresh</string>
+    <string name="srl_header_refreshing">Wait For Loading…</string>
+    <string name="srl_header_release">Release To Refresh</string>
+    <string name="srl_header_secondary">Release To Second Floor</string>
+    <string name="srl_header_update">\'Last Update\' M-d HH:mm</string>
 
     <!-- **************************** setting string *************************************-->
     <string name="pre_key_account_name" translatable="false">account_name</string>
@@ -145,76 +184,65 @@
     <string name="pre_key_setting_screen_notify" translatable="false">screen_notify</string>
     <string name="pre_key_setting_is_create_channel" translatable="false">is_create_channel</string>
 
-    <string name="setting_basic">基本设置</string>
-    <string name="setting_senior">高级设置</string>
-    <string name="setting_encourage">评分</string>
-    <string name="setting_other">其它</string>
-    <string name="setting_basic_cache">清除缓存</string>
-    <string name="setting_basic_out_clear">退出时清除缓存</string>
-    <string name="setting_basic_notify">通知设置</string>
-    <string name="setting_senior_update">自动检查更新</string>
-    <string name="setting_auto_run_on">开</string>
-    <string name="setting_auto_run_off">关</string>
-    <string name="setting_auto_run">自启动</string>
-    <string name="setting_local_title">语言设置</string>
-    <string name="setting_local_set_failed">设置失败，请重试...</string>
-    <string name="setting_local_zh">简体中文</string>
-    <string name="setting_local_en">英语</string>
-    <string name="setting_senior_hid_benefits">隐藏福利</string>
-    <string name="setting_encourage_soure">给个好评 (^ω^)</string>
-    <string name="setting_encourage_share">分享给好友</string>
+    <string name="setting_basic">Basic</string>
+    <string name="setting_senior">Advanced</string>
+    <string name="setting_encourage">Rating</string>
+    <string name="setting_other">Other</string>
+    <string name="setting_basic_cache">Clear cache</string>
+    <string name="setting_basic_out_clear">Clear cache on exit</string>
+    <string name="setting_basic_notify">Notification</string>
+    <string name="setting_senior_update">Automatic check updates</string>
+    <string name="setting_auto_run_on">on</string>
+    <string name="setting_auto_run_off">off</string>
+    <string name="setting_auto_run">Auto run</string>
+    <string name="setting_local_title">Language settings</string>
+    <string name="setting_local_zh">Simplified Chinese</string>
+    <string name="setting_local_en">English</string>
+    <string name="setting_senior_hid_benefits">Hidden benefits</string>
+    <string name="setting_encourage_soure">Give me a good review</string>
+    <string name="setting_encourage_share">Share it with friends</string>
     <string name="setting_other_feedbakc">@string/feedback</string>
-    <string name="setting_app_wall">应用墙</string>
-    <string name="setting_desc_hid_benefits">是否开启隐藏福利</string>
-    <string name="setting_notify_is_open">开启通知</string>
-    <string name="version">版本更新</string>
-    <string name="feedback">意见反馈</string>
+    <string name="setting_app_wall">Application wall</string>
+    <string name="setting_desc_hid_benefits">Open hidden welfare</string>
+    <string name="setting_notify_is_open">Open notification</string>
+    <string name="version">Version update</string>
+    <string name="feedback">Feedback</string>
 
-    <string name="srl_header_failed">刷新失败</string>
-    <string name="srl_header_finish">刷新完成</string>
-    <string name="srl_header_loading">等待底部加载完成…</string>
-    <string name="srl_header_pulling">下拉可以刷新</string>
-    <string name="srl_header_refreshing">正在刷新…</string>
-    <string name="srl_header_release">释放立即刷新</string>
-    <string name="srl_header_secondary">释放进入二楼</string>
-    <string name="srl_header_update">上次更新 M-d HH:mm</string>
 
     <!--******************************* string array **************************************-->
     <string-array name="news_channel_names">
-        <item>头条</item>
-        <item>国际</item>
-        <item>社会</item>
-        <item>财经</item>
-        <item>科技</item>
-        <item>互联网</item>
-        <item>数码</item>
-        <item>房产</item>
-        <item>汽车</item>
-        <item>军事</item>
-        <item>体育</item>
-        <item>科普</item>
+        <item>Hot</item>
+        <item>International</item>
+        <item>Sociology</item>
+        <item>Finance</item>
+        <item>Technology</item>
+        <item>Internet</item>
+        <item>Digital</item>
+        <item>Estate</item>
+        <item>Car</item>
+        <item>Military</item>
+        <item>Sports</item>
+        <item>Science</item>
     </string-array>
 
     <string-array name="user_sex_items">
-        <item>男</item>
-        <item>女</item>
-        <item>保密</item>
+        <item>men</item>
+        <item>women</item>
+        <item>secrecy</item>
     </string-array>
 
     <string-array name="user_hobby_items">
-        <item>学习</item>
-        <item>游戏</item>
-        <item>K歌</item>
-        <item>跳舞</item>
-        <item>绘画</item>
-        <item>运动</item>
+        <item>Study</item>
+        <item>Game</item>
+        <item>KTV</item>
+        <item>Dance</item>
+        <item>Painting</item>
+        <item>Sports</item>
     </string-array>
 
     <string-array name="setting_locale">
-        <item>跟随系统</item>
-        <item>简体中文</item>
-        <item>英语</item>
+        <item>Follow system</item>
+        <item>Simplified Chinese</item>
+        <item>English</item>
     </string-array>
-
-
 </resources>

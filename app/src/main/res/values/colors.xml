@@ -33,7 +33,9 @@
     <color name="list_item_background_pressed">#FCFCFC</color>
 
     <!-- 下拉刷新时，颜色值 -->
-    <color name="swiperefresh_color4">#1480F5</color>
+    <!--<color name="swiperefresh_color4">#1480F5</color>-->
+    <color name="link_color">#1480F5</color>
+    <color name="web_link_color">#0970E4</color>
 
     <!--  created by  fei -->
     <color name="text_secondary_color">#9d9d9d</color>
