@@ -7,7 +7,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,6 +26,7 @@ import com.jm.news.customview.MClassicsHeaderView;
 import com.jm.news.customview.MFragmentBase;
 import com.jm.news.define.BaseViewClickListener;
 import com.jm.news.define.DataDef;
+import com.jm.news.entry.MLinearLayoutManager;
 import com.jm.news.entry.ViewHolderOneImage;
 import com.jm.news.entry.ViewHolderThreeImage;
 import com.jm.news.util.CommonUtils;
@@ -53,6 +53,7 @@ public class FragmentNewsMain extends MFragmentBase {
     // control field
     private Banner mBanner;
     private SmartRefreshLayout mSmartRefreshLayout;
+    private LinearLayout mLlRecycleViewLayout;
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter mViewAdapter;
     private LinearLayout mLlNewsContentView;
@@ -64,7 +65,7 @@ public class FragmentNewsMain extends MFragmentBase {
             .fallback(R.mipmap.load_error)          // url为空的时候,显示的图片
             .error(R.mipmap.load_error);            // 图片加载失败后，显示的图片
     // viewmodel related field
-    private FragmentNewsMainViewModel mViewModel = null;
+    private FragmentNewsMainViewModel mViewModel;
 
 
     public FragmentNewsMain() {
@@ -85,8 +86,9 @@ public class FragmentNewsMain extends MFragmentBase {
         mBanner = view.findViewById(R.id.banner_main_news);
         mSmartRefreshLayout = view.findViewById(R.id.sfl_viewblock);
         mRecyclerView = view.findViewById(R.id.rv_viewblock);
-        mLlNewsContentView = view.findViewById(R.id.ll_news_content);
+        mLlRecycleViewLayout = view.findViewById(R.id.ll_recycler_layout);
         mTvErrorTips = view.findViewById(R.id.tv_error_tips);
+        mLlNewsContentView = view.findViewById(R.id.ll_news_content);
         if (!isRecreate()) {
             initData();
             initView();
@@ -121,6 +123,7 @@ public class FragmentNewsMain extends MFragmentBase {
         mViewModel = null;
         mBanner = null;
         mSmartRefreshLayout = null;
+        mLlRecycleViewLayout = null;
         mRecyclerView = null;
         mGlideOptions = null;
         mLlNewsContentView = null;
@@ -143,13 +146,13 @@ public class FragmentNewsMain extends MFragmentBase {
 
         mViewAdapter = new MyRecyclerViewAdapter();
         mViewAdapter.setmOnItemClickListener(new MyItemClickListener());
-        mTvErrorTips.setOnClickListener(new MyOnClickListener());
+        MLinearLayoutManager layoutManager = new MLinearLayoutManager(getContext());
+        layoutManager.setRecyclerViewLayout(mLlRecycleViewLayout);
+        layoutManager.setOrientation(OrientationHelper.VERTICAL);
 
-        final LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        manager.setOrientation(OrientationHelper.VERTICAL);
-        mRecyclerView.setLayoutManager(manager);
+        mTvErrorTips.setOnClickListener(new MyOnClickListener());
         mRecyclerView.setAdapter(mViewAdapter);
-//        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(layoutManager);
 
         // bind observer
         NewsDataStatusObserver newsDataStatusObserver = new NewsDataStatusObserver();
@@ -357,7 +360,7 @@ public class FragmentNewsMain extends MFragmentBase {
 
         @Override
         public void displayImage(final Context context, Object path, final ImageView imageView) {
-            LogUtils.d(TAG, "displayImage: path" + (String) path);
+            LogUtils.d(TAG, "displayImage: path = " + (String) path);
             Glide.with(imageView).load((String) path).apply(mGlideOptions).into(imageView);
         }
     }

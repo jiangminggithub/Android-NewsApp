@@ -1,18 +1,6 @@
-*.iml
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
-/captures
-
-
-.DS_Store
-
-#built application files
-*.apk
-*.ap_
+# built application files
+# *.apk
+# *.ap_
 
 # files for the dex VM
 *.dex
@@ -40,13 +28,14 @@ Thumbs.db
 # Android Studio
 *.iml
 .idea
-#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+# .idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
 
-#NDK
+# NDK
 obj/
 
-
+# other
 *.swp
 *~
+/captures

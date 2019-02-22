@@ -1,5 +1,6 @@
 package com.jm.news.util;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 
 import com.jm.news.R;
 import com.jm.news.activity.MainActivity;
+import com.jm.news.activity.WelcomeActivity;
 import com.jm.news.common.Common;
 
 import java.lang.reflect.Field;
@@ -359,5 +364,31 @@ public class CommonUtils {
         }
     }
 
+    public void checkPermissions(Activity activity) {
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.INTERNET};
 
+        int writeStorageState = ContextCompat.checkSelfPermission(activity, permissions[0]);
+        int readStorageState = ContextCompat.checkSelfPermission(activity, permissions[1]);
+        int networkState = ContextCompat.checkSelfPermission(activity, permissions[2]);
+        int internetState = ContextCompat.checkSelfPermission(activity, permissions[3]);
+
+        Log.d(TAG, "checkPresion: readStorageState = " + readStorageState + " , writeStorageState = " + writeStorageState + ", networkState = " + networkState + ", internetState = " + internetState);
+
+//        if (readStorageState != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+//        }
+//        if (writeStorageState != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(activity, permissions, 1);
+//        }
+//        if (networkState != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, PERMISSION_REQUEST_CODE);
+//        }
+//        if (internetState != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{Manifest.permission.INTERNET}, PERMISSION_REQUEST_CODE);
+//        }
+
+    }
 }

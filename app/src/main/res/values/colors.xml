@@ -8,7 +8,6 @@
     <color name="news_title">#454545</color>
     <color name="news_source">#B4B4B4</color>
 
-
     <color name="border_clo">#ccc</color>
     <color name="border_clo_l">#ECECEC</color>
     <color name="text_clo">#333</color>
@@ -23,7 +22,6 @@
     <color name="dialog_confirm_pressed">#6BD505</color>
     <color name="dialog_cancel_normal">#FFF</color>
     <color name="dialog_cancel_pressed">#FDD6D6</color>
-
 
     <!-- 常用颜色值 -->
     <color name="white">#FFFFFF</color>
@@ -55,7 +53,6 @@
 
     <color name="bg_press">#ebebeb</color>
     <color name="bg_press_material">#d4d4d4</color>
-
 
     <color name="account_login_submit">@color/colorPrimary</color>
     <color name="account_login_submit_pressed">#F5ABAB</color>

@@ -17,13 +17,13 @@
 
     <declare-styleable name="circleProgress">
         <!-- 圆实心的颜色 -->
-        <attr name="circSolidColor" format="color"></attr>
+        <attr name="circSolidColor" format="color" />
         <!-- 圆边框的颜色 -->
-        <attr name="circFrameColor" format="color"></attr>
+        <attr name="circFrameColor" format="color" />
         <!-- 进度条的颜色 -->
-        <attr name="progressColor" format="color"></attr>
+        <attr name="progressColor" format="color" />
         <!-- 文字的颜色 -->
-        <attr name="textColor" format="color"></attr>
+        <attr name="textColor" format="color" />
 
     </declare-styleable>
 </resources>

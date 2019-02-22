@@ -44,7 +44,7 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
         mDataManager = new DataManager(application);
         mDataRequestListener = new MyDataResponseListener();
         mDataManager.setDataRequestListener(mDataRequestListener);
-        mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS_BANNER, DataDef.NewsChanelIDs.BANNER_ID, 1, 50);
+        mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS_BANNER, DataDef.NewsChanelIDs.BANNER_ID, DEFAULT_PAGE_INDEX, DEFAULT_REQUEST_COUNT);
     }
 
     @Override
@@ -169,7 +169,7 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
 
     public void requestBannerDate() {
         if (null != mDataManager) {
-            mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS_BANNER, DataDef.NewsChanelIDs.BANNER_ID, 1, 50);
+            mDataManager.requestNewsNetworkData(DataManager.NEWS_TYPE_NEWS_BANNER, DataDef.NewsChanelIDs.BANNER_ID, DEFAULT_PAGE_INDEX, DEFAULT_REQUEST_COUNT);
         }
     }
 

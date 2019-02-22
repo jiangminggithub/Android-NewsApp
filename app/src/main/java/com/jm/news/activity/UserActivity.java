@@ -499,7 +499,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismissWithAnimation();
+                        sweetAlertDialog.dismiss();
                         if (viewID == R.id.tv_popMenu_account_manager_change) {
                             common.changeAccount();
                         } else if (viewID == R.id.tv_popMenu_account_manager_logout) {
@@ -517,7 +517,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismissWithAnimation();
+                        sweetAlertDialog.dismiss();
                     }
                 })
                 .show();
