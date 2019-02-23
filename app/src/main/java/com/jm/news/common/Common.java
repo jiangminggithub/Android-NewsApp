@@ -17,14 +17,14 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class Common {
-
+    // static field
     private static final String TAG = "Common";
     public static final int LOCALE_TYPE_DEFAULT = 0;
     public static final int LOCALE_TYPE_SIMPLIFIED_CHINESE = 1;
     public static final int LOCALE_TYPE_ENGLISH = 2;
     private static final int DEFAULT_LOCALE_INDEX = 0;
-
     private static Common mInstance = null;
+    // function field
     private Context mContext = null;
     private Resources mResources = null;
     private HashMap<Integer, String> mChannelIDMap = null;

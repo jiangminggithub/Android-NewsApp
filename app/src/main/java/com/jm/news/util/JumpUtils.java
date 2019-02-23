@@ -1,5 +1,6 @@
 package com.jm.news.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -30,21 +31,21 @@ public class JumpUtils {
     /**
      * 跳转到WebViewActivity
      *
-     * @param context      当前Context
+     * @param activity     当前Context
      * @param newsLink     加载的URl
      * @param isJavaScript 是否启用JavaScript
      */
-    public static final void jumpWebView(@NonNull Context context, @NonNull String newsLink, boolean isJavaScript) {
+    public static final void jumpWebView(@NonNull Activity activity, @NonNull String newsLink, boolean isJavaScript) {
         LogUtils.d(TAG, "jumpWebView: newsLink = " + newsLink);
-        if (null != context) {
+        if (null != activity) {
             if (CommonUtils.getInstance().isNetworkAvailable()) {
-                Intent intent = new Intent(context, WebViewActivity.class);
+                Intent intent = new Intent(activity, WebViewActivity.class);
                 intent.putExtra(DataDef.WebViewKey.KEY_URL, newsLink);
                 intent.putExtra(DataDef.WebViewKey.KEY_OPEN_JAVASCRIPT, isJavaScript);
-                context.startActivity(intent);
+                activity.startActivity(intent);
             } else {
-                CommonUtils.getInstance().showNetInvisibleDialog(context);
-                LogUtils.d(TAG, "jumpWebView: context = " + context.toString());
+                CommonUtils.getInstance().showNetInvisibleDialog(activity);
+                LogUtils.d(TAG, "jumpWebView: context = " + activity.toString());
             }
         }
     }

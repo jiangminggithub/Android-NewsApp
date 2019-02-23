@@ -62,7 +62,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
 
         mIbMore.setVisibility(View.VISIBLE);
         mIbMore.setOnClickListener(this);
-        CommonUtils.getInstance().expandViewTouchDelegate(mIbMore, EXPAND_VIEW_TOUCH_DELEGATE, EXPAND_VIEW_TOUCH_DELEGATE, EXPAND_VIEW_TOUCH_DELEGATE, EXPAND_VIEW_TOUCH_DELEGATE);
+        CommonUtils.expandViewTouchDelegate(mIbMore, EXPAND_VIEW_TOUCH_DELEGATE, EXPAND_VIEW_TOUCH_DELEGATE, EXPAND_VIEW_TOUCH_DELEGATE, EXPAND_VIEW_TOUCH_DELEGATE);
 
         Intent intent = getIntent();
         mNewsUrl = intent.getStringExtra(DataDef.WebViewKey.KEY_URL);
@@ -97,12 +97,8 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
     }
 
     @Override
-    public void onBackPressed() {
-        this.finish();
-    }
-
-    @Override
     protected void onDestroy() {
+        LogUtils.d(TAG, "onDestroy: ");
         if (null != mWebView) {
             mWebView.clearCache(true);
         }
@@ -122,7 +118,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
                 this.finish();
                 break;
             case R.id.ib_head_more: {
-                PopupMenu popupMenu = CommonUtils.getInstance().getPopupMenu(this, v, R.menu.menu_popup_webview_more, false);
+                PopupMenu popupMenu = CommonUtils.getPopupMenu(this, v, R.menu.menu_popup_webview_more, false);
                 popupMenu.setOnMenuItemClickListener(new MyPopMenuClickListener());
                 popupMenu.show();
             }

@@ -274,7 +274,7 @@ public class FragmentNewsMain extends MFragmentBase {
 
         @Override
         public void onItemLongClick(View view, final int position) {
-            PopupMenu popupMenu = CommonUtils.getInstance().getPopupMenu(getActivity(), view, R.menu.menu_popup_news_item, false);
+            PopupMenu popupMenu = CommonUtils.getPopupMenu(getActivity(), view, R.menu.menu_popup_news_item, false);
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {

@@ -2,7 +2,6 @@ package com.jm.news;
 
 import android.app.Application;
 import android.content.res.Configuration;
-import android.util.Log;
 
 import com.jm.news.common.Common;
 import com.jm.news.util.CommonUtils;
@@ -29,7 +28,7 @@ public class NewsApp extends Application {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.d(TAG, "onConfigurationChanged: newConfig = " + newConfig.toString());
+        LogUtils.d(TAG, "onConfigurationChanged: newConfig = " + newConfig.toString());
         Common.getInstance().updateAppInfo();
     }
 }

@@ -27,8 +27,10 @@ import android.widget.TextView;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
+import com.jm.news.define.DataDef;
 import com.jm.news.util.CacheManager;
 import com.jm.news.util.CommonUtils;
+import com.jm.news.util.JumpUtils;
 import com.jm.news.util.LogUtils;
 import com.jm.news.viewmodel.FragmentSettingViewModel;
 
@@ -93,9 +95,11 @@ public class FragmentAppSetting extends PreferenceFragment {
             } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_HIDE_BENEFITS))) {
                 CheckBoxPreference pre = (CheckBoxPreference) preference;
                 mViewModel.putBoolean(key, pre.isChecked());
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_CHECK_UPDATE))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_AUTO_CHECK_UPDATE))) {
                 CheckBoxPreference pre = (CheckBoxPreference) preference;
                 mViewModel.putBoolean(key, pre.isChecked());
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_APP_WALL))) {
+                JumpUtils.jumpWebView(getActivity(), DataDef.AppInfo.APP_APP_WALL, true);
             } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_LOCALE))) {
                 showLocaleChoiceDialog(key);
             } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_REPUTATION))) {
@@ -127,7 +131,7 @@ public class FragmentAppSetting extends PreferenceFragment {
             String keyAutoRun = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_AUTO_RUN);
             String keyLocal = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_LOCALE);
             String keyHideBenefits = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_HIDE_BENEFITS);
-            String keyCheckUpdate = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_CHECK_UPDATE);
+            String keyCheckUpdate = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_AUTO_CHECK_UPDATE);
             String keyVersion = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_VERSION);
 
             Preference preCache = findPreference(keyClearCache);
@@ -336,6 +340,7 @@ public class FragmentAppSetting extends PreferenceFragment {
         etContent.setHint(R.string.dialog_setting_feedback_edit_hint);
         etContent.setMaxLines(FEEDBACK_EDIT_MAX_LINES);
         etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(FEEDBACK_EDIT_MAX_LENGTH)});
+        etContent.requestFocus();
         tvTitle.setText(R.string.feedback);
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {

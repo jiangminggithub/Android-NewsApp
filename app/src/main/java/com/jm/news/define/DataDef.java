@@ -6,9 +6,9 @@ package com.jm.news.define;
 public class DataDef {
 
     public static final class AppInfo {
-        public static final String APP_SHARE_LINK = "https://github.com/jiangminggithub/Android-NewsApp";
         public static final String APP_GITHUB_LINK = "https://github.com/jiangminggithub/Android-NewsApp";
-        public static final String APP_DOWNLOAD_LINK = "https://github.com/jiangminggithub/Android-NewsApp";
+        public static final String APP_DOWNLOAD_LINK = "https://github.com/jiangminggithub/Android-NewsApp/raw/master/release/news.apk";
+        public static final String APP_APP_WALL = "https://github.com/jiangminggithub/Android-NewsApp/tree/master/release";
     }
 
     public static final class ApiInfo {

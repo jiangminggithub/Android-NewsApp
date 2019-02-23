@@ -15,7 +15,7 @@
     <string name="app_toolbar_back">返回</string>
     <string name="app_toolbar_title_user">个人中心</string>
     <string name="app_toolbar_title_setting">设置中心</string>
-    <string name="app_toolbar_title_webview_detail">新闻详情</string>
+    <string name="app_toolbar_title_webview_detail">详情</string>
 
     <string name="app_error_info">对不起，应用发生错误，请重新启动应用！</string>
 
@@ -89,12 +89,12 @@
     <string name="about_service_content_three">3. 本软件为免费软件，使用本软件由您承担风险，您必须保证在法律允许的最大范围内，有权使用其运行所需的操作系统，及其相关服务。</string>
     <string name="about_gratitude_title">四、 鸣谢</string>
     <string name="about_gratitude_content_one">1. 感谢万维易源（www.showapi.com）提供的API数据支持。</string>
-    <string name="about_gratitude_content_two">2. 感谢各原创开源库的支持（在GitHub源码协议中有详细说明）。</string>
-    <string name="about_gratitude_content_three">3. 本软件内的部分图标来自互联网公开平台，在此感谢原创作者。</string>
+    <string name="about_gratitude_content_two">2. 感谢各原创开源库的支持（不在此展开，本项目的公开源码说明中有详细说明）。</string>
+    <string name="about_gratitude_content_three">3. 本软件内的部分图标来自互联网公开平台，在此感谢所有素材原创者。</string>
     <string name="about_support_title">五、 支持与反馈</string>
     <string name="about_support_content_one">1. 项目源码已同步在GitHub仓库，请多支持，欢迎Star。</string>
     <string name="about_support_content_two">2. 软件下载地址：点此下载</string>
-    <string name="about_support_content_three">3. 软件尚有疏漏之处，敬请谅解，如需沟通交流或意见反馈请发送邮件至：jiangmingyx@gmail.com</string>
+    <string name="about_support_content_three">3. 软件尚有疏漏之处，敬请谅解，如需沟通或意见反馈请发送邮件至：jiangmingyx@gmail.com</string>
     <string name="about_copyright">Copyright© 2019 JM 版权所有.</string>
     <string name="about_title">关于软件</string>
 
@@ -145,9 +145,15 @@
     <string name="dialog_net_invisible_content">网络不可用,请检查网络连接 !</string>
     <string name="dialog_app_menu_exit_title">确定退出 ?</string>
     <string name="dialog_webview_loading">加载数据中...</string>
+
     <string name="dialog_setting_feedback_edit_hint">请简述您的意见，最多120个字符</string>
     <string name="dialog_setting_version_update_content">检查更新中...</string>
     <string name="dialog_setting_version_update_success">当前已是最新版本</string>
+
+    <string name="dialog_permission_title">需要存储权限</string>
+    <string name="dialog_permission_content">请在-应用设置-权限-中，允许使用存储权限</string>
+    <string name="dialog_permission_cancel">退出</string>
+    <string name="dialog_permission_setting">去设置</string>
 
     <string name="srl_header_failed">刷新失败</string>
     <string name="srl_header_finish">刷新完成</string>

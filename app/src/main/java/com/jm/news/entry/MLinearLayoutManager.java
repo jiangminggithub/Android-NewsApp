@@ -20,7 +20,7 @@ public class MLinearLayoutManager extends LinearLayoutManager {
     private static final String TAG = "MLinearLayoutManager";
     private static final int RECYCLE_VIEW_FIRST_POSITION = 0;
     // function related field
-    private LinearLayout mRecyclerViewLayout; //实现固定recyclerview的父布局
+    private LinearLayout mRecyclerViewLayout; // 固定recyclerview的父布局
     private int[] mMeasuredDimension = new int[2];
 
 
@@ -34,8 +34,8 @@ public class MLinearLayoutManager extends LinearLayoutManager {
 
     @Override
     public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
-        int itemCount = state.getItemCount();
-        if (itemCount > 0) {
+        int layoutItemCount = state.getItemCount();
+        if (layoutItemCount > 0 && layoutItemCount >= getItemCount()) {
             final int widthMode = View.MeasureSpec.getMode(widthSpec);
             final int heightMode = View.MeasureSpec.getMode(heightSpec);
             final int widthSize = View.MeasureSpec.getSize(widthSpec);
@@ -43,11 +43,10 @@ public class MLinearLayoutManager extends LinearLayoutManager {
             int width = 0;
             int height = 0;
             for (int i = 0; i < getItemCount(); i++) {
-                measureScrapChild(recycler,
+                measureScrapChild(recycler, i,
                         View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
                         View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
                         mMeasuredDimension);
-
                 if (getOrientation() == HORIZONTAL) {
                     width = width + mMeasuredDimension[0];
                     if (i == RECYCLE_VIEW_FIRST_POSITION) {
@@ -76,9 +75,10 @@ public class MLinearLayoutManager extends LinearLayoutManager {
         super.onMeasure(recycler, state, widthSpec, heightSpec);
     }
 
-    private void measureScrapChild(RecyclerView.Recycler recycler, int widthSpec, int heightSpec, int[] measuredDimension) {
+    private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec, int heightSpec, int[] measuredDimension) {
+        LogUtils.d(TAG, "measureScrapChild: position = " + position);
         try {
-            View view = recycler.getViewForPosition(RECYCLE_VIEW_FIRST_POSITION);
+            View view = recycler.getViewForPosition(position);  // 可能有溢出的异常存在
             if (view != null) {
                 RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
                 int childWidthSpec = ViewGroup.getChildMeasureSpec(widthSpec, getPaddingLeft() + getPaddingRight(), p.width);

@@ -30,11 +30,12 @@ public class FragmentSettingViewModel extends AndroidViewModel {
     public static final int KEY_AUTO_RUN = 3;
     public static final int KEY_LOCALE = 4;
     public static final int KEY_HIDE_BENEFITS = 5;
-    public static final int KEY_CHECK_UPDATE = 6;
-    public static final int KEY_REPUTATION = 7;
-    public static final int KEY_SHARE = 8;
-    public static final int KEY_FEEDBACK = 9;
-    public static final int KEY_VERSION = 10;
+    public static final int KEY_AUTO_CHECK_UPDATE = 6;
+    public static final int KEY_APP_WALL = 7;
+    public static final int KEY_REPUTATION = 8;
+    public static final int KEY_SHARE = 9;
+    public static final int KEY_FEEDBACK = 10;
+    public static final int KEY_VERSION = 11;
     // function related filed
     private String[] mLocaleItems;
     private int mLocaleChoiceIndex = 0;
@@ -97,8 +98,11 @@ public class FragmentSettingViewModel extends AndroidViewModel {
                 case KEY_HIDE_BENEFITS:
                     key = mResources.getString(R.string.pre_key_setting_hide_benefits);
                     break;
-                case KEY_CHECK_UPDATE:
+                case KEY_AUTO_CHECK_UPDATE:
                     key = mResources.getString(R.string.pre_key_setting_auto_check_update);
+                    break;
+                case KEY_APP_WALL:
+                    key = mResources.getString(R.string.pre_key_setting_app_wall);
                     break;
                 case KEY_REPUTATION:
                     key = mResources.getString(R.string.pre_key_setting_reputation);
@@ -213,8 +217,8 @@ public class FragmentSettingViewModel extends AndroidViewModel {
     public boolean sharedApp() {
         if (null != mContext) {
             ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboardManager.setPrimaryClip(ClipData.newPlainText(null, DataDef.AppInfo.APP_SHARE_LINK));
-            LogUtils.d(TAG, "sharedApp: app share link = " + DataDef.AppInfo.APP_SHARE_LINK);
+            clipboardManager.setPrimaryClip(ClipData.newPlainText(null, DataDef.AppInfo.APP_DOWNLOAD_LINK));
+            LogUtils.d(TAG, "sharedApp: app share link = " + DataDef.AppInfo.APP_DOWNLOAD_LINK);
             return true;
         }
         return false;

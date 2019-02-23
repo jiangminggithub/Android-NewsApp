@@ -2,6 +2,8 @@ package com.jm.news.util;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -9,11 +11,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.Window;
@@ -23,11 +27,11 @@ import android.widget.Toast;
 
 import com.jm.news.R;
 import com.jm.news.activity.MainActivity;
-import com.jm.news.activity.WelcomeActivity;
 import com.jm.news.common.Common;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -60,63 +64,7 @@ public class CommonUtils {
         this.mContext = context;
     }
 
-    /**
-     * 增加View触摸区域大小，最小区域为View的默认大小
-     *
-     * @param view   target 目标View
-     * @param top    增加上部区域大小
-     * @param bottom 增加下部区域大小
-     * @param left   增加左部区域大小
-     * @param right  增加右部区域大小
-     */
-    public void expandViewTouchDelegate(@NonNull final View view, final int top, final int bottom, final int left, final int right) {
-        if (null != view) {
-            ((View) view.getParent()).post(new Runnable() {
-                @Override
-                public void run() {
-                    Rect bounds = new Rect();
-                    view.setEnabled(true);
-                    view.getHitRect(bounds);
-
-                    bounds.top -= top;
-                    bounds.bottom += bottom;
-                    bounds.left -= left;
-                    bounds.right += right;
-
-                    TouchDelegate touchDelegate = new TouchDelegate(bounds, view);
-
-                    if (View.class.isInstance(view.getParent())) {
-                        ((View) view.getParent()).setTouchDelegate(touchDelegate);
-                    }
-                }
-            });
-        }
-    }
-
-
-    /**
-     * 恢复view触摸区域大小
-     *
-     * @param view 目标View
-     */
-    public void restoreViewTouchDelegate(@NonNull final View view) {
-
-        if (null != view) {
-            ((View) view.getParent()).post(new Runnable() {
-                @Override
-                public void run() {
-                    Rect bounds = new Rect();
-                    bounds.setEmpty();
-                    TouchDelegate touchDelegate = new TouchDelegate(bounds, view);
-
-                    if (View.class.isInstance(view.getParent())) {
-                        ((View) view.getParent()).setTouchDelegate(touchDelegate);
-                    }
-                }
-            });
-        }
-    }
-
+    /************************************** public  method *************************************/
     /**
      * 通过text显示Toast
      *
@@ -149,70 +97,6 @@ public class CommonUtils {
         if (null != mContext) {
             Toast.makeText(mContext, text, time).show();
         }
-    }
-
-    /**
-     * 为指定View创建popupMenu
-     *
-     * @param context   目标的Context
-     * @param view      需要显示popupMenu的对象
-     * @param resMenuID 需要显示Menu的ResourceID
-     * @param hasIcon   标记可以带icon的选项，注意在不同系统中显示不可控，谨慎使用
-     * @return PopupMenu    PopupMenu 对象
-     */
-    public PopupMenu getPopupMenu(@NonNull Context context, @NonNull View view, int resMenuID, boolean hasIcon) {
-        if (null == context || null == view) {
-            return null;
-        }
-
-        PopupMenu popupMenu = new PopupMenu(context, view);
-        popupMenu.inflate(resMenuID);
-
-        if (hasIcon) {
-            // used reflex show menu icon
-            try {
-                Field field = popupMenu.getClass().getDeclaredField(REFLEX_DECLARED_FIELD);
-                field.setAccessible(true);
-                Object helper = field.get(popupMenu);
-                Method mSetForceShowIcon = helper.getClass().getDeclaredMethod(REFLEX_DECLARED_METHOD, boolean.class);
-                mSetForceShowIcon.invoke(helper, true);
-                field.setAccessible(false);
-            } catch (Exception e) {
-                e.printStackTrace();
-                LogUtils.e(TAG, "getPopupMenuIcon: class reflex failed ");
-            }
-        }
-
-        return popupMenu;
-    }
-
-    /**
-     * 解决部分虚拟键手机Menu键显示
-     *
-     * @param activity 目标activity
-     */
-    public void setNeedsMenuKey(@NonNull Activity activity) {
-        if (null == activity || Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            return;
-        }
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            try {
-                int flags = WindowManager.LayoutParams.class.getField("FLAG_NEEDS_MENU_KEY").getInt(null);
-                activity.getWindow().addFlags(flags);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                Method setNeedsMenuKey = Window.class.getDeclaredMethod("setNeedsMenuKey", int.class);
-                setNeedsMenuKey.setAccessible(true);
-                int value = WindowManager.LayoutParams.class.getField("NEEDS_MENU_SET_TRUE").getInt(null);
-                setNeedsMenuKey.invoke(activity.getWindow(), value);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
     /**
@@ -250,7 +134,7 @@ public class CommonUtils {
                 e.printStackTrace();
                 LogUtils.e(TAG, "getVersionName: --------- failed -----------");
             }
-            LogUtils.d("TAG", "版本名" + packInfo.versionName);
+            LogUtils.d("TAG", "getVersionName = " + packInfo.versionName);
             return packInfo.versionName;
         }
         return null;
@@ -266,14 +150,14 @@ public class CommonUtils {
             try {
                 packInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    LogUtils.e("TAG", "版本号" + packInfo.getLongVersionCode());
+                    LogUtils.e("TAG", "getVersionCode versionCode = " + packInfo.getLongVersionCode());
                     return packInfo.getLongVersionCode();
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
                 LogUtils.e(TAG, "getVersionCode: --------- failed -----------");
             }
-            LogUtils.d(TAG, "版本号" + packInfo.versionCode);
+            LogUtils.d(TAG, "getVersionCode  versionCode = " + packInfo.versionCode);
             return packInfo.versionCode;
         }
         return APP_VERSION_FAILED_GET;
@@ -304,27 +188,28 @@ public class CommonUtils {
     /**
      * 显示网络断开的提示框
      *
-     * @param context 目标的Activity context对象
+     * @param activity 目标的Activity对象
      */
-    public void showNetInvisibleDialog(Context context) {
-        if (null == context) {
+    public void showNetInvisibleDialog(Activity activity) {
+        if (null == activity) {
             return;
         }
         if (null == mNetInvisibleDialog) {
             Common common = Common.getInstance();
-            mNetInvisibleDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
+            mNetInvisibleDialog = new SweetAlertDialog(activity, SweetAlertDialog.ERROR_TYPE);
             mNetInvisibleDialog.setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
                     .setContentText(common.getResourcesString(R.string.dialog_net_invisible_content))
                     .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismissWithAnimation();
+                            sweetAlertDialog.dismiss();
                             mNetInvisibleDialog = null;
                         }
                     });
             mNetInvisibleDialog.setCancelable(false);
             mNetInvisibleDialog.show();
+            LogUtils.d(TAG, "showNetInvisibleDialog: show");
         } else if (!mNetInvisibleDialog.isShowing()) {
             mNetInvisibleDialog.show();
         } else {
@@ -339,18 +224,157 @@ public class CommonUtils {
         if (null != mNetInvisibleDialog && mNetInvisibleDialog.isShowing()) {
             mNetInvisibleDialog.dismiss();
             mNetInvisibleDialog = null;
+            LogUtils.d(TAG, "dismissNetInvisibleDialog: dismiss");
         }
+    }
+
+    /************************************** static method *************************************/
+    /**
+     * 增加View触摸区域大小，最小区域为View的默认大小
+     *
+     * @param view   target 目标View
+     * @param top    增加上部区域大小
+     * @param bottom 增加下部区域大小
+     * @param left   增加左部区域大小
+     * @param right  增加右部区域大小
+     */
+    public static void expandViewTouchDelegate(@NonNull final View view, final int top, final int bottom, final int left, final int right) {
+        if (null != view) {
+            ((View) view.getParent()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Rect bounds = new Rect();
+                    view.setEnabled(true);
+                    view.getHitRect(bounds);
+
+                    bounds.top -= top;
+                    bounds.bottom += bottom;
+                    bounds.left -= left;
+                    bounds.right += right;
+
+                    TouchDelegate touchDelegate = new TouchDelegate(bounds, view);
+
+                    if (View.class.isInstance(view.getParent())) {
+                        ((View) view.getParent()).setTouchDelegate(touchDelegate);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 恢复view触摸区域大小
+     *
+     * @param view 目标View
+     */
+    public static void restoreViewTouchDelegate(@NonNull final View view) {
+
+        if (null != view) {
+            ((View) view.getParent()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Rect bounds = new Rect();
+                    bounds.setEmpty();
+                    TouchDelegate touchDelegate = new TouchDelegate(bounds, view);
+
+                    if (View.class.isInstance(view.getParent())) {
+                        ((View) view.getParent()).setTouchDelegate(touchDelegate);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 为指定View创建popupMenu
+     *
+     * @param context   目标的Context
+     * @param view      需要显示popupMenu的对象
+     * @param resMenuID 需要显示Menu的ResourceID
+     * @param hasIcon   标记可以带icon的选项，注意在不同系统中显示不可控，谨慎使用
+     * @return PopupMenu    PopupMenu 对象
+     */
+    public static PopupMenu getPopupMenu(@NonNull Context context, @NonNull View view, int resMenuID, boolean hasIcon) {
+        if (null == context || null == view) {
+            return null;
+        }
+
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        popupMenu.inflate(resMenuID);
+
+        if (hasIcon) {
+            // used reflex show menu icon
+            try {
+                Field field = popupMenu.getClass().getDeclaredField(REFLEX_DECLARED_FIELD);
+                field.setAccessible(true);
+                Object helper = field.get(popupMenu);
+                Method mSetForceShowIcon = helper.getClass().getDeclaredMethod(REFLEX_DECLARED_METHOD, boolean.class);
+                mSetForceShowIcon.invoke(helper, true);
+                field.setAccessible(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtils.e(TAG, "getPopupMenuIcon: class reflex failed ");
+            }
+        }
+
+        return popupMenu;
+    }
+
+    /**
+     * 解决部分虚拟键手机Menu键显示
+     *
+     * @param activity 目标activity
+     */
+    public static void setNeedsMenuKey(@NonNull Activity activity) {
+        if (null == activity || Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            try {
+                int flags = WindowManager.LayoutParams.class.getField("FLAG_NEEDS_MENU_KEY").getInt(null);
+                activity.getWindow().addFlags(flags);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                Method setNeedsMenuKey = Window.class.getDeclaredMethod("setNeedsMenuKey", int.class);
+                setNeedsMenuKey.setAccessible(true);
+                int value = WindowManager.LayoutParams.class.getField("NEEDS_MENU_SET_TRUE").getInt(null);
+                setNeedsMenuKey.invoke(activity.getWindow(), value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    /**
+     * 判断某个界面是否在前台,返回true，为显示,否则不是
+     */
+    public static boolean isForeground(Activity activity) {
+
+        if (activity == null || TextUtils.isEmpty(activity.getClass().getName()))
+            return false;
+        ActivityManager am = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
+        if (list != null && list.size() > 0) {
+            ComponentName cpn = list.get(0).topActivity;
+            if (activity.getClass().getName().equals(cpn.getClassName()))
+                return true;
+        }
+        return false;
     }
 
     /**
      * 显示暂时未实现功能提示框
      *
-     * @param context context对象
+     * @param activity context对象
      */
-    public static void showFunctionNotOpenDialog(Context context) {
-        if (null != context) {
+    public static void showFunctionNotOpenDialog(Activity activity) {
+        if (null != activity) {
             Common common = Common.getInstance();
-            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+            new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
                     .setContentText(common.getResourcesString(R.string.dialog_waring_content))
                     .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
@@ -364,31 +388,59 @@ public class CommonUtils {
         }
     }
 
-    public void checkPermissions(Activity activity) {
-        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.INTERNET};
-
-        int writeStorageState = ContextCompat.checkSelfPermission(activity, permissions[0]);
-        int readStorageState = ContextCompat.checkSelfPermission(activity, permissions[1]);
-        int networkState = ContextCompat.checkSelfPermission(activity, permissions[2]);
-        int internetState = ContextCompat.checkSelfPermission(activity, permissions[3]);
-
-        Log.d(TAG, "checkPresion: readStorageState = " + readStorageState + " , writeStorageState = " + writeStorageState + ", networkState = " + networkState + ", internetState = " + internetState);
-
-//        if (readStorageState != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-//        }
-//        if (writeStorageState != PackageManager.PERMISSION_GRANTED) {
-        ActivityCompat.requestPermissions(activity, permissions, 1);
-//        }
-//        if (networkState != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, PERMISSION_REQUEST_CODE);
-//        }
-//        if (internetState != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{Manifest.permission.INTERNET}, PERMISSION_REQUEST_CODE);
-//        }
-
+    /**
+     * 检查应用权限
+     *
+     * @param activity activity对象
+     * @return 是否有权限true：具备,false:没有权限
+     */
+    public static boolean checkPermissions(Activity activity) {
+        if (null != activity) {
+            int writeStorageState = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            LogUtils.d(TAG, "checkPermissions:  writeStorageState = " + writeStorageState);
+            if (writeStorageState != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
+
+    /**
+     * 显示没有权限的提示框
+     *
+     * @param activity activity对象
+     */
+    public static void showNoPermission(final Activity activity) {
+        if (null != activity) {
+            Common common = Common.getInstance();
+            new SweetAlertDialog(activity, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(common.getResourcesString(R.string.dialog_permission_title))
+                    .setContentText(common.getResourcesString(R.string.dialog_permission_content))
+                    .setCancelText(common.getResourcesString(R.string.dialog_permission_cancel))
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismiss();
+                            activity.finish();
+                        }
+                    })
+                    .setConfirmText(common.getResourcesString(R.string.dialog_permission_setting))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            Intent intent = new Intent();
+                            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
+                            intent.setData(uri);
+                            activity.startActivity(intent);
+                            sDialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
+    }
+
 }

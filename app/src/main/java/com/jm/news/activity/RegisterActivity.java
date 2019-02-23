@@ -24,6 +24,7 @@ import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.util.CommonUtils;
+import com.jm.news.util.JumpUtils;
 import com.jm.news.util.LogUtils;
 import com.jm.news.viewmodel.RegisterActivityViewModel;
 
@@ -88,6 +89,7 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
         mIbNavigationBack.setOnClickListener(this);
         mIvRegisterUsernameDel.setOnClickListener(this);
         mIvRegisterPwdDel.setOnClickListener(this);
+        mTvProtocol.setOnClickListener(this);
         mBtnRegisterSubmit.setOnClickListener(this);
         mBtnRegisterSubmit.setOnTouchListener(mBtnOnTouchListener);
         mCbProtocol.setOnCheckedChangeListener(mCbCheckedListener);
@@ -131,6 +133,15 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
             case R.id.ib_navigation_back:
                 this.finish();
                 break;
+            case R.id.iv_register_username_del:
+                mEtRegisterUsername.setText(null);
+                break;
+            case R.id.iv_register_pwd_del:
+                mEtRegisterPwd.setText(null);
+                break;
+            case R.id.tv_protocol:
+                JumpUtils.jumpActivity(RegisterActivity.this, AboutActivity.class);
+                break;
             case R.id.bt_register_submit:
                 mDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
                 mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -138,12 +149,6 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
                 mDialog.setCancelable(false);
                 mDialog.show();
                 mHandler.postDelayed(new RegisterRunable(), 1000);
-                break;
-            case R.id.iv_register_username_del:
-                mEtRegisterUsername.setText(null);
-                break;
-            case R.id.iv_register_pwd_del:
-                mEtRegisterPwd.setText(null);
                 break;
             default:
                 break;

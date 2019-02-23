@@ -21,7 +21,7 @@
     <string name="app_toolbar_back">Back</string>
     <string name="app_toolbar_title_user">Personal Center</string>
     <string name="app_toolbar_title_setting">Setting Center</string>
-    <string name="app_toolbar_title_webview_detail">News Detail</string>
+    <string name="app_toolbar_title_webview_detail">Detail</string>
 
     <string name="app_error_info">Sorry, the application has an error, please restart the app!</string>
 
@@ -151,9 +151,15 @@
     <string name="dialog_net_invisible_content">No network connection !</string>
     <string name="dialog_app_menu_exit_title">Are you sure to exit ?</string>
     <string name="dialog_webview_loading">Loading...</string>
+
     <string name="dialog_setting_feedback_edit_hint">Your opinion, up to 120 characters</string>
     <string name="dialog_setting_version_update_content">Checking for updates...</string>
     <string name="dialog_setting_version_update_success">It is the latest version</string>
+
+    <string name="dialog_permission_title">No storage permissions</string>
+    <string name="dialog_permission_content">Please allow storage permissions in Application Settings of Permissions</string>
+    <string name="dialog_permission_cancel">Exit</string>
+    <string name="dialog_permission_setting">Setting</string>
 
     <string name="srl_header_failed">Refresh Failed</string>
     <string name="srl_header_finish">Refresh Success</string>

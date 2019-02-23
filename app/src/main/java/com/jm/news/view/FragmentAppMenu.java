@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +60,7 @@ public class FragmentAppMenu extends MFragmentBase {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
+        LogUtils.d(TAG, "onCreateView: ");
         View view = getInflaterView(R.layout.layout_fragment_app_menu, inflater, container, savedInstanceState);
         if (!isRecreate()) {
             mLlUser = view.findViewById(R.id.ll_app_menu_user);
@@ -86,7 +85,7 @@ public class FragmentAppMenu extends MFragmentBase {
 
     @Override
     public void onStart() {
-        Log.d(TAG, "onStart: ");
+        LogUtils.d(TAG, "onStart: ");
         super.onStart();
         updateView();
     }
@@ -98,7 +97,7 @@ public class FragmentAppMenu extends MFragmentBase {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy: ");
+        LogUtils.d(TAG, "onDestroy: ");
         mTvUserName = null;
         mTvAutograph = null;
         mIvIcon = null;
@@ -118,7 +117,7 @@ public class FragmentAppMenu extends MFragmentBase {
     }
 
     private void initview() {
-        Log.d(TAG, "initview: ");
+        LogUtils.d(TAG, "initview: ");
         mClickListener = new MyClickListener();
         mLlUser.setOnClickListener(mClickListener);
         mIvIcon.setOnClickListener(mClickListener);
@@ -250,8 +249,8 @@ public class FragmentAppMenu extends MFragmentBase {
                             })
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.dismiss();
                                     getActivity().finish();
                                 }
                             })
