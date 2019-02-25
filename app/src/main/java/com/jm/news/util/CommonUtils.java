@@ -3,8 +3,12 @@ package com.jm.news.util;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -42,6 +46,7 @@ public class CommonUtils {
     public static final int RESTART_TYPE_ALL_ACTIVITY = 0;
     public static final int RESTART_TYPE_APP = 1;
     public static final int APP_VERSION_FAILED_GET = -1;
+    private static final int SHARE_CHOOSE_COPY_LINK = 0;
     private static final String REFLEX_DECLARED_FIELD = "mPopup";
     private static final String REFLEX_DECLARED_METHOD = "setForceShowIcon";
     private static CommonUtils mInstance = null;
@@ -122,7 +127,7 @@ public class CommonUtils {
     }
 
     /*
-     * 获取当前程序的版本名
+     * 获取当前程序的版本号名
      */
     public String getVersionName() {
         if (null != mContext) {
@@ -141,7 +146,7 @@ public class CommonUtils {
     }
 
     /*
-     * 获取当前程序的版本名
+     * 获取当前程序的版本号
      */
     public long getVersionCode() {
         if (null != mContext) {
@@ -440,6 +445,42 @@ public class CommonUtils {
                         }
                     })
                     .show();
+        }
+    }
+
+    /**
+     * 打开分享选择框，分享的文本信息
+     *
+     * @param activity 目标activity对象
+     * @param content  分享的文本信息
+     */
+    public static void shareDialog(final Activity activity, final String content) {
+        LogUtils.d(TAG, "shareDialog: content = " + content);
+        if (null != activity && !TextUtils.isEmpty(content)) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle(R.string.share_choose);
+            builder.setItems(Common.getInstance().getResourcesStringArray(R.array.share_choose), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    LogUtils.d(TAG, "shareDialog onClick: which = " + which);
+                    // 选择复制分享链接
+                    if (which == SHARE_CHOOSE_COPY_LINK) {
+                        ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboardManager.setPrimaryClip(ClipData.newPlainText(null, content));
+                        CommonUtils.getInstance().showToastView(R.string.toast_setting_share_success);
+                    } else {
+                        // 系统选择框，分享到支持的应用
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_TEXT, content);
+                        activity.startActivity(Intent.createChooser(intent, activity.getString(R.string.share_title)));
+                    }
+                }
+            });
+            builder.setCancelable(true).create().show();
+        } else {
+            CommonUtils.getInstance().showToastView(R.string.toast_setting_share_failed);
         }
     }
 

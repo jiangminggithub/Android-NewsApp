@@ -49,7 +49,7 @@
     <string name="toast_setting_feedback_tips">Submitted, thank you for your feedback!</string>
     <string name="toast_setting_feedback_empty">Content can\'t be empty</string>
     <string name="toast_setting_share_success">Copied application share link to clipboard</string>
-    <string name="toast_setting_share_failed">Failed to get share link, please try again</string>
+    <string name="toast_setting_share_failed">Share failure, please try again</string>
 
     <!-- **************************** user string *************************************-->
     <string name="user_autograph">Autograph</string>
@@ -112,6 +112,12 @@
     <string name="menu_webview_refresh">Refresh</string>
     <string name="menu_webview_share">Share</string>
     <string name="menu_webview_open_other">Open other</string>
+
+    <!-- **************************** share string *************************************-->
+    <string name="share_title">Share to：</string>
+    <string name="share_choose">Share choose：</string>
+    <string name="share_news_detail_content">Hi, your friend recommended a news link to you, click here to see more details: </string>
+    <string name="share_app_content">Hi, your friend recommended a software to you, click here to download: </string>
 
     <!-- **************************** dialog string *************************************-->
     <string name="dialog_login">LOGIN</string>
@@ -251,4 +257,10 @@
         <item>Simplified Chinese</item>
         <item>English</item>
     </string-array>
+
+    <string-array name="share_choose">
+        <item>Copy share link</item>
+        <item>Shareable applications</item>
+    </string-array>
+
 </resources>

@@ -1,8 +1,5 @@
 package com.jm.news.activity;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.http.SslError;
@@ -130,6 +127,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
 
     /********************************** listener function ********************************************/
     private class MyPopMenuClickListener implements PopupMenu.OnMenuItemClickListener {
+
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
@@ -137,11 +135,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
                     mWebView.loadUrl(mNewsUrl);
                     break;
                 case R.id.menu_webview_share:
-                    if (!TextUtils.isEmpty(mNewsUrl)) {
-                        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                        cm.setPrimaryClip(ClipData.newPlainText(null, mNewsUrl));
-                        CommonUtils.getInstance().showToastView(R.string.toast_menu_webview_share_tips);
-                    }
+                    CommonUtils.shareDialog(WebViewActivity.this, getString(R.string.share_news_detail_content) + mNewsUrl);
                     break;
                 case R.id.menu_webview_open_other:
                     JumpUtils.jumpOtherApp(WebViewActivity.this, mNewsUrl);
@@ -155,6 +149,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
 
     /********************************** inner class ********************************************/
     private class MyWebViewClient extends WebViewClient {
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             try {
@@ -168,7 +163,6 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
             } catch (Exception e) {     //防止crash (如果手机上没有安装处理某个scheme开头的url的APP, 会导致crash)
                 return true;            //没有安装该app时，返回true，表示拦截自定义链接，但不跳转，避免弹出上面的错误页面
             }
-
             view.loadUrl(url);
             //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
             return true;
@@ -194,6 +188,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
     }
 
     private class MyWebChromeClient extends WebChromeClient {
+
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             LogUtils.d(TAG, "onProgressChanged: progress=" + newProgress);
@@ -206,5 +201,6 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
             }
         }
     }
+
 
 }

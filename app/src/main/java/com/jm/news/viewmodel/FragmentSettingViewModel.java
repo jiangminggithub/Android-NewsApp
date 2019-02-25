@@ -2,8 +2,6 @@ package com.jm.news.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -12,7 +10,6 @@ import android.text.TextUtils;
 
 import com.jm.news.R;
 import com.jm.news.common.Common;
-import com.jm.news.define.DataDef;
 import com.jm.news.util.CacheManager;
 import com.jm.news.util.LogUtils;
 
@@ -212,16 +209,6 @@ public class FragmentSettingViewModel extends AndroidViewModel {
             return CacheManager.clearAllCache(mContext);
         }
         return DEFAULT_CLEAR_CACHE_STATE;
-    }
-
-    public boolean sharedApp() {
-        if (null != mContext) {
-            ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboardManager.setPrimaryClip(ClipData.newPlainText(null, DataDef.AppInfo.APP_DOWNLOAD_LINK));
-            LogUtils.d(TAG, "sharedApp: app share link = " + DataDef.AppInfo.APP_DOWNLOAD_LINK);
-            return true;
-        }
-        return false;
     }
 
 }

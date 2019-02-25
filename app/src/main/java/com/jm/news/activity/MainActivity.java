@@ -61,7 +61,6 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
     private ViewPagerAdapter mViewPagerAdapter;
     private NetworkConnectReceiver mReceiver;
     private IntentFilter mFilter;
-
     // viewmodel related field
     private MainActivityViewModel mViewModel;
 

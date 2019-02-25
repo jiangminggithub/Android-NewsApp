@@ -369,11 +369,7 @@ public class FragmentAppSetting extends PreferenceFragment {
      * 分享应用
      */
     private void sharedApp() {
-        if (mViewModel.sharedApp()) {
-            CommonUtils.getInstance().showToastView(R.string.toast_setting_share_success);
-        } else {
-            CommonUtils.getInstance().showToastView(R.string.toast_setting_share_failed);
-        }
+        CommonUtils.shareDialog(getActivity(), Common.getInstance().getResourcesString(R.string.share_app_content) + DataDef.AppInfo.APP_DOWNLOAD_LINK);
     }
 
     /**
