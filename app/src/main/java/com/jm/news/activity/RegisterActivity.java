@@ -3,14 +3,12 @@ package com.jm.news.activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,8 +32,6 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
 
     // static field
     private static final String TAG = "RegisterActivity";
-    private static final boolean BUTTON_NORMAL = true;
-    private static final boolean BUTTON_LOCKED = false;
     private static final int INPUT_TEXT_MIN_SIZE = 6;
     // control field
     private ImageButton mIbNavigationBack;
@@ -52,7 +48,6 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
     private Handler mHandler;
     private EtTextChangeWatcher mEtTextChangeWatcher;
     private CbCheckedListener mCbCheckedListener;
-    private MyBtnOnTouchListener mBtnOnTouchListener;
     // viewmodel related field
     private RegisterActivityViewModel mViewModel;
     private RegisterObserve mRegisterObserve;
@@ -62,12 +57,8 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtils.d(TAG, "onCreate: ");
-        // 低版本兼容画面处理
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            setContentView(R.layout.activity_register);
-        } else {
-            setContentView(R.layout.layout_register_compat);
-        }
+        setContentView(R.layout.activity_register);
+
         mIbNavigationBack = findViewById(R.id.ib_navigation_back);
         mTvNavigationTitle = findViewById(R.id.tv_navigation_label);
         mEtRegisterUsername = findViewById(R.id.et_register_username);
@@ -83,7 +74,6 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
         mEtTextChangeWatcher = new EtTextChangeWatcher();
         mCbCheckedListener = new CbCheckedListener();
         mRegisterObserve = new RegisterObserve();
-        mBtnOnTouchListener = new MyBtnOnTouchListener();
 
         mTvNavigationTitle.setText(R.string.login_register);
         mIbNavigationBack.setOnClickListener(this);
@@ -91,7 +81,6 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
         mIvRegisterPwdDel.setOnClickListener(this);
         mTvProtocol.setOnClickListener(this);
         mBtnRegisterSubmit.setOnClickListener(this);
-        mBtnRegisterSubmit.setOnTouchListener(mBtnOnTouchListener);
         mCbProtocol.setOnCheckedChangeListener(mCbCheckedListener);
         mEtRegisterUsername.addTextChangedListener(mEtTextChangeWatcher);
         mEtRegisterPwd.addTextChangedListener(mEtTextChangeWatcher);
@@ -148,7 +137,7 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
                 mDialog.setContentText(Common.getInstance().getResourcesString(R.string.account_registering));
                 mDialog.setCancelable(false);
                 mDialog.show();
-                mHandler.postDelayed(new RegisterRunable(), 1000);
+                mHandler.postDelayed(new RegisterRunnable(), 1000);
                 break;
             default:
                 break;
@@ -177,24 +166,6 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
             }
         }
     }
-
-    /************************************ private function ************************************/
-    private void setBtnRegisterSubmitStatus(boolean status) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (status == BUTTON_NORMAL) {
-                mBtnRegisterSubmit.setBackgroundResource(R.drawable.bg_register_submit);
-            } else {
-                mBtnRegisterSubmit.setBackgroundResource(R.drawable.bg_register_submit_lock);
-            }
-        } else {
-            if (status == BUTTON_NORMAL) {
-                mBtnRegisterSubmit.setBackgroundColor(getResources().getColor(R.color.account_register_submit));
-            } else {
-                mBtnRegisterSubmit.setBackgroundColor(getResources().getColor(R.color.account_register_submit_lock));
-            }
-        }
-    }
-
 
     /************************************ listener function *****************************************/
     private class EtTextChangeWatcher implements TextWatcher {
@@ -228,11 +199,11 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
             }
 
             // 登录按钮是否可用
-            if (!TextUtils.isEmpty(pwd) && pwd.length() >= 6 && !TextUtils.isEmpty(username) && isAgreeProtocol) {
-                setBtnRegisterSubmitStatus(BUTTON_NORMAL);
+            if (!TextUtils.isEmpty(pwd) && pwd.length() >= INPUT_TEXT_MIN_SIZE && !TextUtils.isEmpty(username) && isAgreeProtocol) {
+                mBtnRegisterSubmit.setBackgroundResource(R.drawable.bg_register_submit);
                 mBtnRegisterSubmit.setEnabled(true);
             } else {
-                setBtnRegisterSubmitStatus(BUTTON_LOCKED);
+                mBtnRegisterSubmit.setBackgroundResource(R.drawable.bg_register_submit_lock);
                 mBtnRegisterSubmit.setEnabled(false);
             }
         }
@@ -247,27 +218,8 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
         }
     }
 
-    private class MyBtnOnTouchListener implements View.OnTouchListener {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            int id = v.getId();
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                if (id == R.id.bt_register_submit) {
-                    setBtnRegisterSubmitStatus(BUTTON_LOCKED);
-                }
-            }
-
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (id == R.id.bt_register_submit) {
-                    setBtnRegisterSubmitStatus(BUTTON_NORMAL);
-                }
-            }
-            return false;
-        }
-    }
-
     /************************************ inner class *****************************************/
-    private class RegisterRunable implements Runnable {
+    private class RegisterRunnable implements Runnable {
 
         @Override
         public void run() {
@@ -277,8 +229,8 @@ public class RegisterActivity extends MActivityBase implements View.OnClickListe
                     LogUtils.d(TAG, "run: ");
                     String accountName = mEtRegisterUsername.getText().toString().trim();
                     String accountPwd = mEtRegisterPwd.getText().toString().trim();
-                    boolean isAutoLogUtilsin = mCbProtocol.isChecked();
-                    if (!TextUtils.isEmpty(accountName) && !TextUtils.isEmpty(accountPwd) && accountPwd.length() >= 6) {
+                    LogUtils.d(TAG, "run: register: accountName = " + accountName + ", accountPwd = " + accountPwd);
+                    if (!TextUtils.isEmpty(accountName) && !TextUtils.isEmpty(accountPwd) && accountPwd.length() >= INPUT_TEXT_MIN_SIZE) {
                         mViewModel.registerClicked(accountName, accountPwd);
                     }
                 }

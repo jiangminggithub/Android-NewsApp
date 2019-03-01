@@ -103,6 +103,8 @@
     <string name="about_support_content_three">3. If you have any suggestion, please send email to: jiangmingyx@gmail.com</string>
     <string name="about_copyright">Copyright© 2019 All JM Rights Reserved.</string>
     <string name="about_title">About Software</string>
+    <string name="about_github_link">GitHub</string>
+    <string name="about_download_link">download</string>
 
     <!-- **************************** menu string *************************************-->
     <string name="menu_news_item_open_detail">News Detail</string>

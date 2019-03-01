@@ -1,6 +1,6 @@
 <resources>
     <!--************************** app string ******************************-->
-    <string name="app_name">热点新闻</string>
+    <string name="app_name">今日热点</string>
 
     <string name="app_menu_message">我的消息</string>
     <string name="app_menu_vip">会员中心</string>
@@ -97,6 +97,8 @@
     <string name="about_support_content_three">3. 软件尚有疏漏之处，敬请谅解，如需沟通或意见反馈请发送邮件至：jiangmingyx@gmail.com</string>
     <string name="about_copyright">Copyright© 2019 JM 版权所有.</string>
     <string name="about_title">关于软件</string>
+    <string name="about_github_link">GitHub</string>
+    <string name="about_download_link">点此下载</string>
 
     <!-- **************************** dialog string *************************************-->
     <string name="menu_news_item_open_detail">查看新闻详情</string>

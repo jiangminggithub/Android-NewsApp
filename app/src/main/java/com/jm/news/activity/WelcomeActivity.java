@@ -1,5 +1,6 @@
 package com.jm.news.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -49,6 +50,11 @@ public class WelcomeActivity extends MActivityBase {
         LogUtils.d(TAG, "onDestroy: ");
         mProgressView = null;
         super.onDestroy();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     @Override

@@ -24,8 +24,10 @@ public class SettingActivity extends MActivityBase implements View.OnClickListen
         super.onCreate(savedInstanceState);
         LogUtils.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_setting);
+
         mTvBack = findViewById(R.id.tv_head_back);
         mTvTitle = findViewById(R.id.tv_head_title);
+
         mTvBack.setOnClickListener(this);
         mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toolbar_title_setting));
         getFragmentManager().beginTransaction().replace(R.id.fl_app_setting_content, new FragmentAppSetting()).commit();

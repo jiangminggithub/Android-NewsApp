@@ -237,7 +237,6 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
             } else {
                 mTvNameInfo.setText(R.string.user_no_user);
             }
-
             mTvAutographInfo.setText(mViewModel.getPreferenceString(UserActivityViewModel.UserInfo.USER_AUTOGRAPH));
             mTvNickNameInfo.setText(mViewModel.getPreferenceString(UserActivityViewModel.UserInfo.USER_NICKNAME));
             mTvAddressInfo.setText(mViewModel.getPreferenceString(UserActivityViewModel.UserInfo.USER_ADDRESS));
@@ -445,7 +444,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         // popupWindow 设置大小及位置
         popupWindow.showAtLocation(parentView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
-        // 操作监听
+        // 事件监听
         AccountManagerClickListener clickListener = new AccountManagerClickListener(popupWindow);
         accountChange.setOnClickListener(clickListener);
         accountLogout.setOnClickListener(clickListener);

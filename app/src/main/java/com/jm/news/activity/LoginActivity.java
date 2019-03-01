@@ -3,14 +3,12 @@ package com.jm.news.activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -34,8 +32,6 @@ public class LoginActivity extends MActivityBase {
 
     // static field
     private static final String TAG = "LoginActivity";
-    private static final boolean BUTTON_NORMAL = true;
-    private static final boolean BUTTON_LOCKED = false;
     private static final int INPUT_TEXT_MIN_SIZE = 6;
     // control field
     private ImageButton mIbNavigationBack;
@@ -53,7 +49,6 @@ public class LoginActivity extends MActivityBase {
     private Handler mHandler;
     private EtTextChangeWatcher mEtTextChangeWatcher;
     private MyBtnOnClickListener mBtnOnClickListener;
-    private MyBtnOnTouchListener mBtnOnTouchListener;
     // viewmodel related field
     private LoginActivityViewModel mViewModel;
     private LoginObserve mLoginObserve;
@@ -64,12 +59,8 @@ public class LoginActivity extends MActivityBase {
         super.onCreate(savedInstanceState);
         LogUtils.d(TAG, "onCreate: ");
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        // 低版本兼容画面处理
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            setContentView(R.layout.activity_login);
-        } else {
-            setContentView(R.layout.layout_login_compat);
-        }
+        setContentView(R.layout.activity_login);
+
         mIbNavigationBack = findViewById(R.id.ib_navigation_back);
         mTvNavigationTitle = findViewById(R.id.tv_navigation_label);
         mEtLoginUsername = findViewById(R.id.et_login_username);
@@ -86,22 +77,18 @@ public class LoginActivity extends MActivityBase {
         mEtTextChangeWatcher = new EtTextChangeWatcher();
         mLoginObserve = new LoginObserve();
         mBtnOnClickListener = new MyBtnOnClickListener();
-        mBtnOnTouchListener = new MyBtnOnTouchListener();
 
         mTvNavigationTitle.setText(R.string.account_login);
         mIbNavigationBack.setOnClickListener(mBtnOnClickListener);
         mIvLoginUsernameDel.setOnClickListener(mBtnOnClickListener);
         mIvLoginPwdDel.setOnClickListener(mBtnOnClickListener);
         mBtnLoginSubmit.setOnClickListener(mBtnOnClickListener);
-        mBtnLoginSubmit.setOnTouchListener(mBtnOnTouchListener);
         mBtnLoginRegister.setOnClickListener(mBtnOnClickListener);
-        mBtnLoginRegister.setOnTouchListener(mBtnOnTouchListener);
         mTvForgetPwd.setOnClickListener(mBtnOnClickListener);
         mEtLoginUsername.addTextChangedListener(mEtTextChangeWatcher);
         mEtLoginPwd.addTextChangedListener(mEtTextChangeWatcher);
 
         mViewModel.getLoginStatus().observe(this, mLoginObserve);
-
     }
 
     @Override
@@ -164,39 +151,6 @@ public class LoginActivity extends MActivityBase {
     }
 
 
-    /************************************ private function *****************************************/
-    private void setBtnLoginSubmitStatus(boolean status) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (status == BUTTON_NORMAL) {
-                mBtnLoginSubmit.setBackgroundResource(R.drawable.bg_login_submit);
-            } else {
-                mBtnLoginSubmit.setBackgroundResource(R.drawable.bg_login_submit_lock);
-            }
-        } else {
-            if (status == BUTTON_NORMAL) {
-                mBtnLoginSubmit.setBackgroundColor(getResources().getColor(R.color.account_login_submit));
-            } else {
-                mBtnLoginSubmit.setBackgroundColor(getResources().getColor(R.color.account_login_submit_lock));
-            }
-        }
-    }
-
-    private void setBtnLoginRegisterStatus(boolean status) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (status == BUTTON_NORMAL) {
-                mBtnLoginRegister.setBackgroundResource(R.drawable.bg_login_register);
-            } else {
-                mBtnLoginRegister.setBackgroundResource(R.drawable.bg_login_register);
-            }
-        } else {
-            if (status == BUTTON_NORMAL) {
-                mBtnLoginRegister.setBackgroundColor(getResources().getColor(R.color.account_login_register_normal));
-            } else {
-                mBtnLoginRegister.setBackgroundColor(getResources().getColor(R.color.account_login_register_pressed));
-            }
-        }
-    }
-
     /************************************ listener function *****************************************/
     private class EtTextChangeWatcher implements TextWatcher {
         @Override
@@ -227,11 +181,11 @@ public class LoginActivity extends MActivityBase {
             }
 
             if (!TextUtils.isEmpty(pwd) && pwd.length() >= INPUT_TEXT_MIN_SIZE && !TextUtils.isEmpty(username)) {
-                setBtnLoginSubmitStatus(BUTTON_NORMAL);
+                mBtnLoginSubmit.setBackgroundResource(R.drawable.bg_login_submit);
                 mBtnLoginSubmit.setEnabled(true);
             } else {
+                mBtnLoginSubmit.setBackgroundResource(R.drawable.bg_login_submit_lock);
                 mBtnLoginSubmit.setEnabled(false);
-                setBtnLoginSubmitStatus(BUTTON_LOCKED);
             }
         }
     }
@@ -269,34 +223,6 @@ public class LoginActivity extends MActivityBase {
             }
         }
     }
-
-    private class MyBtnOnTouchListener implements View.OnTouchListener {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            int id = v.getId();
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                if (id == R.id.bt_login_submit) {
-                    setBtnLoginSubmitStatus(BUTTON_LOCKED);
-                } else if (id == R.id.bt_login_register) {
-                    setBtnLoginRegisterStatus(BUTTON_LOCKED);
-                } else {
-
-                }
-            }
-
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (id == R.id.bt_login_submit) {
-                    setBtnLoginSubmitStatus(BUTTON_NORMAL);
-                } else if (id == R.id.bt_login_register) {
-                    setBtnLoginRegisterStatus(BUTTON_NORMAL);
-                } else {
-
-                }
-            }
-            return false;
-        }
-    }
-
 
     /************************************ inner class *****************************************/
     private class LoginRunnable implements Runnable {

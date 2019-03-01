@@ -70,7 +70,7 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
         LogUtils.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // init layout
+
         mSplSlidingPane = findViewById(R.id.app_sliding_pane_layout);
         mFlLeftMenu = findViewById(R.id.fl_left_menu);
         mLlRightContent = findViewById(R.id.ll_right_content);
