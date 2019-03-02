@@ -25,6 +25,7 @@
                     android:id="@+id/ll_news_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    style="@style/app_splitEvents_base"
                     android:orientation="vertical">
 
                     <com.youth.banner.Banner
@@ -47,6 +48,7 @@
                             android:layout_marginTop="5dp"
                             android:background="#fff"
                             android:overScrollMode="never"
+                            style="@style/app_splitEvents_base"
                             android:paddingRight="1px"
                             android:scrollbars="none" />
 

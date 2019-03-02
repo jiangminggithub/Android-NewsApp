@@ -28,7 +28,7 @@ public class FragmentNewsItemViewModel extends AndroidViewModel {
     private int mAllPagesCount = 0;
     private int mRequestCount = DEFAULT_REQUEST_COUNT;
     private DataManager mDataManager = null;
-    private MyDataResponsetListener mDataRequestListener = null;
+    private MyDataResponseListener mDataRequestListener = null;
     private List<NewsItemBean> mNewsDataItemList = new ArrayList<>();
     // livedate filed
     private MutableLiveData<Integer> mNewsDataStatus = new MutableLiveData<>();
@@ -38,7 +38,7 @@ public class FragmentNewsItemViewModel extends AndroidViewModel {
     public FragmentNewsItemViewModel(@NonNull Application application) {
         super(application);
         mDataManager = new DataManager(application);
-        mDataRequestListener = new MyDataResponsetListener();
+        mDataRequestListener = new MyDataResponseListener();
         mDataManager.setDataRequestListener(mDataRequestListener);
     }
 
@@ -94,9 +94,9 @@ public class FragmentNewsItemViewModel extends AndroidViewModel {
     }
 
     public String getPubDate(int index) {
-//        if (null == mNewsDataItemList.get(index)) {
-//            return "";
-//        }
+        //        if (null == mNewsDataItemList.get(index)) {
+        //            return "";
+        //        }
 
         return "";
     }
@@ -118,10 +118,9 @@ public class FragmentNewsItemViewModel extends AndroidViewModel {
     }
 
     /***************************** operation function   **************************************/
-
     public void updatetChannelID(int Index) {
         mChannelID = Common.getInstance().getChannelID(Index);
-        LogUtils.d(TAG, "updatetChannelID: mChannelID=" + mChannelID);
+        LogUtils.d(TAG, "updateChannelID: mChannelID=" + mChannelID);
     }
 
 
@@ -135,7 +134,6 @@ public class FragmentNewsItemViewModel extends AndroidViewModel {
             mNewsDataStatus.postValue(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED);
             LogUtils.d(TAG, "requestRefreshData: Failed");
         }
-
     }
 
 
@@ -166,8 +164,7 @@ public class FragmentNewsItemViewModel extends AndroidViewModel {
     }
 
     /***************************** listener function *****************************************/
-
-    private class MyDataResponsetListener extends DataManager.DataResponsetListener {
+    private class MyDataResponseListener extends DataManager.DataResponseListener {
 
         @Override
         public void newsDataBeanChange(int requestStatus, int allPages, List<NewsItemBean> newsDataItemList) {

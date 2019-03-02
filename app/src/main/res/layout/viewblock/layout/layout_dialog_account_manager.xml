@@ -19,7 +19,7 @@
         style="@style/account_manager"
         android:text="@string/account_manager_logout" />
 
-    <View style="@style/bg_line_blod" />
+    <View style="@style/bg_line_bold" />
 
     <TextView
         android:id="@+id/tv_popMenu_account_manager_cancel"

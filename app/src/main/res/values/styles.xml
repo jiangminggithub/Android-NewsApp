@@ -1,16 +1,22 @@
 <resources>
 
+    <style name="app_splitEvents_base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
+    </style>
+
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme"  parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-
     <!-- 最外层样式 -->
-    <style name="wrap_layout">
+    <style name="wrap_layout" parent="app_splitEvents_base">
         <item name="android:orientation">vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -22,7 +28,7 @@
     </style>
 
     <!-- 共用层样式 -->
-    <style name="base_layout">
+    <style name="base_layout" parent="app_splitEvents_base">
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -56,7 +62,7 @@
     </style>
 
     <!-- textview样式 -->
-    <style name="user_text">
+    <style name="user_text" parent="app_splitEvents_base">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/text_clo</item>
         <item name="android:layout_width">90dp</item>
@@ -64,27 +70,31 @@
     </style>
 
     <!-- 文本右边箭头样式 -->
-    <style name="img_arrow">
+    <style name="img_arrow" parent="app_splitEvents_base">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:src">@mipmap/setting_arrow</item>
     </style>
 
     <!-- view分割线样式 -->
-    <style name="bg_line">
+    <style name="bg_line" parent="app_splitEvents_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
         <item name="android:background">@color/border_clo</item>
     </style>
 
-    <style name="bg_line_blod">
+    <!-- 无圆角样式 -->
+    <style name="news_item" parent="app_splitEvents_base">
+        <item name="android:background">@drawable/news_item_selector</item>
+    </style>
+
+    <style name="bg_line_bold" parent="app_splitEvents_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">3dp</item>
         <item name="android:background">@color/border_clo_l</item>
     </style>
 
-
-    <style name="app_menu_base_layout">
+    <style name="app_menu_base_layout" parent="app_splitEvents_base">
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -97,34 +107,32 @@
         <item name="android:clickable">true</item>
     </style>
 
-
     <style name="app_menu_item" parent="app_menu_base_layout">
         <item name="android:background">@drawable/mid_layout_selector</item>
     </style>
 
-    <style name="app_menu_text">
+    <style name="app_menu_text" parent="app_splitEvents_base">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/text_clo</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="app_menu_setting_text">
+    <style name="app_menu_setting_text" parent="app_splitEvents_base">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/text_clo</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-
     <!-- diag style -->
-    <style name="diag_in_out_style">
+    <style name="diag_in_out_style" parent="app_splitEvents_base">
         <item name="android:windowEnterAnimation">@anim/dialog_in_anim</item>
         <item name="android:windowExitAnimation">@anim/dialog_out_anim</item>
     </style>
 
     <!-- account manager -->
-    <style name="account_manager">
+    <style name="account_manager" parent="app_splitEvents_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">10dp</item>
@@ -142,7 +150,7 @@
         <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
     </style>
 
-    <style name="about_title_style">
+    <style name="about_title_style" parent="app_splitEvents_base">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/app_text</item>
         <item name="android:layout_marginTop">5dp</item>
@@ -151,7 +159,7 @@
 
     </style>
 
-    <style name="about_context_style">
+    <style name="about_context_style" parent="app_splitEvents_base">
         <item name="android:textColor">@color/app_text</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginBottom">5dp</item>

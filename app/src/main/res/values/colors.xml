@@ -8,11 +8,12 @@
     <color name="news_title">#454545</color>
     <color name="news_source">#B4B4B4</color>
 
+    <color name="news_item">#ECECEC</color>
     <color name="border_clo">#ccc</color>
     <color name="border_clo_l">#ECECEC</color>
     <color name="text_clo">#333</color>
     <color name="pressed">#FDD6D6</color>
-    <color name="toor_bar">@color/colorPrimary</color>
+    <color name="tool_bar">@color/colorPrimary</color>
     <color name="dialog_background">#FFFFFF</color>
     <color name="dialog_text">#232326</color>
     <color name="dialog_btn">#1E90FF</color>

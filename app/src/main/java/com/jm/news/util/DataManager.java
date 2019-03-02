@@ -25,17 +25,14 @@ public class DataManager {
     private static final String appKey = "Jiang&&Ming&&News";
     private static final Charset charset = Charset.forName("UTF-8");
     private static byte[] keyBytes = appKey.getBytes(charset);
-    private final static String NEWS_DATA_CHANNEL = "http://route.showapi.com/109-34";
-    private final static String NEWS_DATA_NEWS = "http://route.showapi.com/109-35";
-    private final static String IMG_IGNORE_FLAG = "http://static.ws.126.net/cnews/css13/img/end_news.png";
+    private final static String REQUEST_DEFAULT_PAGE_INDEX = "0";
+    private final static String REQUEST_DEFAULT_MAX_RESULT = "30";
     public final static int NEWS_TYPE_CHANNEL = 0;
     public final static int NEWS_TYPE_NEWS = 1;
     public final static int NEWS_TYPE_NEWS_BANNER = 3;
-    public final static String REQUEST_DEFAULT_PAGE_INDEX = "0";
-    public final static String REQUEST_DEFAULT_MAX_RESULT = "30";
     // function related field
     private Context mContext;
-    private DataResponsetListener mDataResponsetListener;
+    private DataResponseListener mDataResponsetListener;
 
 
     public DataManager(Context context) {
@@ -43,11 +40,14 @@ public class DataManager {
     }
 
     public void requestNewsNetworkData(@Nullable final int requestType, final String channelId, int pageIndex, int maxResult) {
-        LogUtils.d(TAG, "requestNewsNetworkData: requestType = " + requestType + ", channelId = " + channelId + ", pageIndex = " + pageIndex + ", maxResult = " + maxResult);
+        LogUtils.d(TAG, "requestNewsNetworkData: requestType = " + requestType
+                + ", channelId = " + channelId
+                + ", pageIndex = " + pageIndex
+                + ", maxResult = " + maxResult);
+
         if (!requestNetDataPreChecked()) {
             return;
         }
-
         if (null == channelId) {
             if (null != mDataResponsetListener) {
                 mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
@@ -57,7 +57,7 @@ public class DataManager {
             return;
         }
 
-        final String type = requestType == NEWS_TYPE_CHANNEL ? NEWS_DATA_CHANNEL : NEWS_DATA_NEWS;
+        final String type = requestType == NEWS_TYPE_CHANNEL ? DataDef.ApiInfo.NEWS_DATA_CHANNEL : DataDef.ApiInfo.NEWS_DATA_NEWS;
         final String page = pageIndex > 0 ? String.valueOf(pageIndex) : REQUEST_DEFAULT_PAGE_INDEX;
         final String maxCount = maxResult > 0 ? String.valueOf(maxResult) : REQUEST_DEFAULT_MAX_RESULT;
 
@@ -65,7 +65,7 @@ public class DataManager {
             @Override
             public void run() {
 
-                String result = null;
+                String result;
                 try {
                     result = new ShowApiRequest(type, decode(DataDef.ApiInfo.API_ID), decode(DataDef.ApiInfo.API_SECRET))
                             .addTextPara("channelId", channelId)
@@ -88,7 +88,7 @@ public class DataManager {
                         case NEWS_TYPE_NEWS:
                             NewsDataBean dataBean = gson.fromJson(result, NewsDataBean.class);
                             if (dataBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
-                                newsDataConver(dataBean);
+                                newsDataConversion(dataBean);
                             } else {
                                 mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
                             }
@@ -96,7 +96,7 @@ public class DataManager {
                         case NEWS_TYPE_NEWS_BANNER:
                             NewsBannerDataBean bannerBean = gson.fromJson(result, NewsBannerDataBean.class);
                             if (bannerBean.getShowapi_res_code() == DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK) {
-                                newsBannerDataConver(bannerBean);
+                                newsBannerDataConversion(bannerBean);
                             } else {
                                 mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
                             }
@@ -106,7 +106,7 @@ public class DataManager {
                     }
                 } catch (Exception e) {
                     LogUtils.d(TAG, "run: failed request ");
-                    requestFialdResponse(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED);
+                    requestFailedResponse(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED);
                     e.printStackTrace();
                 }
 
@@ -115,16 +115,16 @@ public class DataManager {
 
     }
 
-    private void newsDataConver(NewsDataBean dataBean) {
+    private void newsDataConversion(NewsDataBean dataBean) {
         if (null == dataBean) {
-            LogUtils.d(TAG, "newsDataConver: NewsDataBean is NULL");
+            LogUtils.d(TAG, "newsDataConversion: NewsDataBean is NULL");
             mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
             return;
         }
 
         List<NewsItemBean> DataList = new ArrayList<>();
-        NewsItemBean newDataItem = null;
-        List<ImageurlsBean> imageurlsBeanList = null;
+        NewsItemBean newDataItem;
+        List<ImageurlsBean> imageUrlsBeanList;
         try {
             for (ContentlistBean bean : dataBean.getShowapi_res_body().getPagebean().getContentlist()) {
                 int imgCount = 0;
@@ -134,32 +134,32 @@ public class DataManager {
                 newDataItem.setSource(bean.getSource());
                 newDataItem.setLink(bean.getLink());
                 newDataItem.setPubDate(bean.getPubDate());
-                imageurlsBeanList = new ArrayList<>();
+                imageUrlsBeanList = new ArrayList<>();
 
                 for (ImageurlsBean imgBean : bean.getImageurls()) {
-                    if (!IMG_IGNORE_FLAG.equals(imgBean.getUrl())) {
-                        imageurlsBeanList.add(imgBean);
+                    if (!DataDef.ApiInfo.IMG_IGNORE_FLAG_ONE.equals(imgBean.getUrl()) && !DataDef.ApiInfo.IMG_IGNORE_FLAG_TWO.equals(imgBean.getUrl())) {
+                        imageUrlsBeanList.add(imgBean);
                         ++imgCount;
                     }
                 }
 
-                newDataItem.setImageurls(imageurlsBeanList);
+                newDataItem.setImageurls(imageUrlsBeanList);
                 newDataItem.setPicCount(imgCount);
                 DataList.add(newDataItem);
             }
             int allPages = dataBean.getShowapi_res_body().getPagebean().getAllPages();
             mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK, allPages, DataList);
-            LogUtils.d(TAG, "newsDataConver: Conver is Ok");
+            LogUtils.d(TAG, "newsDataConversion: Conversion is Ok");
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.d(TAG, "newsDataConver: Conver is Failed");
+            LogUtils.d(TAG, "newsDataConversion: Conversion is Failed");
             mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
         }
     }
 
-    private void newsBannerDataConver(NewsBannerDataBean bannerBean) {
+    private void newsBannerDataConversion(NewsBannerDataBean bannerBean) {
         if (null == bannerBean) {
-            LogUtils.d(TAG, "newsBannerDataConver: NewsBannerDataBean is NULL");
+            LogUtils.d(TAG, "newsBannerDataConversion: NewsBannerDataBean is NULL");
             mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
             return;
         }
@@ -176,23 +176,29 @@ public class DataManager {
 
                 NewsBannerDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean item = contentlist.get(i);
                 if (null == item) {
-                    LogUtils.d(TAG, "newsBannerDataConver: nullitem");
+                    LogUtils.d(TAG, "newsBannerDataConversion: nullItem");
                     continue;
                 }
-                List<NewsBannerDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean.ImageurlsBean> imageurls = item.getImageurls();
-                if (null == imageurls || imageurls.size() < 1) {
-                    LogUtils.d(TAG, "newsBannerDataConver: null imageurls");
+
+                List<NewsBannerDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean.ImageurlsBean> imageUrls = item.getImageurls();
+                if (null == imageUrls || imageUrls.size() < 1) {
+                    LogUtils.d(TAG, "newsBannerDataConversion: null imageUrls");
                     continue;
                 }
+
                 String title = item.getTitle();
-                String imgUrl = imageurls.get(0).getUrl();
+                String imgUrl = imageUrls.get(0).getUrl();
                 String url = item.getLink();
 
-                if (IMG_IGNORE_FLAG.equals(imgUrl) || "".equals(title) || "".equals(imgUrl) || "".equals(url)) {
+                if (DataDef.ApiInfo.IMG_IGNORE_FLAG_ONE.equals(imgUrl)
+                        || DataDef.ApiInfo.IMG_IGNORE_FLAG_TWO.equals(imgUrl)
+                        || "".equals(title)
+                        || "".equals(imgUrl)
+                        || "".equals(url)) {
                     continue;
                 }
 
-                LogUtils.d(TAG, "newsBannerDataConver: imgUrl=" + imgUrl);
+                LogUtils.d(TAG, "newsBannerDataConversion: imgUrl=" + imgUrl);
                 bannerTitles.add(title);
                 bannerImages.add(imgUrl);
                 bannerUrls.add(url);
@@ -209,15 +215,13 @@ public class DataManager {
 
             if (titleSize > 0 && imgUrlsSize > 0 && urlSize > 0) {
                 mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK, bannerDataBean);
-                LogUtils.d(TAG, "newsBannerDataConver: Conver is OK");
+                LogUtils.d(TAG, "newsBannerDataConversion: Conver is OK");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.d(TAG, "newsBannerDataConver: Conver is Failed");
+            LogUtils.d(TAG, "newsBannerDataConversion: Conver is Failed");
             mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
         }
-
-
     }
 
     public void RequestNativeData() {
@@ -229,18 +233,17 @@ public class DataManager {
      *
      * @return Boolean 是否可以访问
      */
-    public boolean requestNetDataPreChecked() {
+    private boolean requestNetDataPreChecked() {
         if (null != mDataResponsetListener) {
             // 判断网络是否可用
             LogUtils.d(TAG, "requestDataChecked: isNetworkAvailable " + CommonUtils.getInstance().isNetworkAvailable());
             if (!CommonUtils.getInstance().isNetworkAvailable()) {
-                requestFialdResponse(DataDef.RequestStatusType.DATA_STATUS_NETWORK_DISCONNECTED);
+                requestFailedResponse(DataDef.RequestStatusType.DATA_STATUS_NETWORK_DISCONNECTED);
                 return false;
             } else {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -249,18 +252,18 @@ public class DataManager {
      *
      * @param requestStatus 需要响应的状态
      */
-    private void requestFialdResponse(int requestStatus) {
+    private void requestFailedResponse(int requestStatus) {
         if (null != mDataResponsetListener) {
             mDataResponsetListener.newsBannerDataBeanChange(requestStatus, null);
             mDataResponsetListener.newsDataBeanChange(requestStatus, 0, null);
             mDataResponsetListener.newsChanelDataBeanChange(requestStatus, null);
-            LogUtils.d(TAG, "requestFialdResponse: ");
+            LogUtils.d(TAG, "requestFailedResponse: ");
         }
     }
 
 
-    public void setDataRequestListener(DataResponsetListener dataResponsetListener) {
-        this.mDataResponsetListener = dataResponsetListener;
+    public void setDataRequestListener(DataResponseListener dataResponseListener) {
+        this.mDataResponsetListener = dataResponseListener;
     }
 
     public void removeDataRequestListener() {
@@ -292,10 +295,9 @@ public class DataManager {
      */
     private static String decode(String dec) {
         byte[] e = dec.getBytes(charset);
-        byte[] dee = e;
         for (int i = 0, size = e.length; i < size; i++) {
-            for (byte keyBytes0 : keyBytes) {
-                e[i] = (byte) (dee[i] ^ keyBytes0);
+            for (byte keyByte : keyBytes) {
+                e[i] = (byte) (e[i] ^ keyByte);
             }
         }
         return new String(e);
@@ -306,7 +308,7 @@ public class DataManager {
     /**
      * Data Response Listener Define
      */
-    public static abstract class DataResponsetListener {
+    public static abstract class DataResponseListener {
         public void newsDataBeanChange(int requestStatus, int allPages, List<NewsItemBean> newsDataItemList) {
         }
 
@@ -314,7 +316,6 @@ public class DataManager {
         }
 
         public void newsBannerDataBeanChange(int requestStatus, NewsBannerBean newsBannerBean) {
-
         }
     }
 }

@@ -198,7 +198,7 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
             LogUtils.d(TAG, "onPanelOpened");
             FragmentNewsMain fragment = (FragmentNewsMain) NewsFragmentsContainer.Instance().getFragmentHashMap().get(MAIN_FRAGMENT_INDEX);
             if (null != fragment) {
-                fragment.setBannerAutoPaly(false);
+                fragment.setBannerAutoPlay(false);
             }
         }
 
@@ -207,7 +207,7 @@ public class MainActivity extends MActivityBase implements View.OnClickListener 
             LogUtils.d(TAG, "onPanelClosed");
             FragmentNewsMain fragment = (FragmentNewsMain) NewsFragmentsContainer.Instance().getFragmentHashMap().get(MAIN_FRAGMENT_INDEX);
             if (null != fragment) {
-                fragment.setBannerAutoPaly(true);
+                fragment.setBannerAutoPlay(true);
             }
         }
     }

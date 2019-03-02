@@ -10,7 +10,7 @@ import com.jm.news.bean.NewsItemBean;
 import com.jm.news.common.Common;
 import com.jm.news.define.DataDef;
 import com.jm.news.util.DataManager;
-import com.jm.news.util.DataManager.DataResponsetListener;
+import com.jm.news.util.DataManager.DataResponseListener;
 import com.jm.news.util.LogUtils;
 
 import java.util.ArrayList;
@@ -126,9 +126,9 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
     }
 
     public String getPubDate(int index) {
-//        if (null == mNewsDataItemList.get(index)) {
-//            return "";
-//        }
+        //        if (null == mNewsDataItemList.get(index)) {
+        //            return "";
+        //        }
 
         return "";
     }
@@ -149,9 +149,9 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
     }
 
     /***************************** operation function   **************************************/
-    public void updatetChannelID(int Index) {
+    public void updateChannelID(int Index) {
         mChannelID = Common.getInstance().getChannelID(Index);
-        LogUtils.d(TAG, "updatetChannelID: mChannelID=" + mChannelID);
+        LogUtils.d(TAG, "updateChannelID: mChannelID=" + mChannelID);
     }
 
     public void requestRefreshData() {
@@ -164,7 +164,7 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
             mNewsDataStatus.postValue(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED);
             LogUtils.d(TAG, "requestRefreshData: Failed");
         }
-//        requestBannerDate();
+        //        requestBannerDate();
     }
 
     public void requestBannerDate() {
@@ -200,7 +200,7 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
     }
 
     /***************************** listener function *****************************************/
-    private class MyDataResponseListener extends DataResponsetListener {
+    private class MyDataResponseListener extends DataResponseListener {
 
         @Override
         public void newsDataBeanChange(int requestStatus, int allPages, List<NewsItemBean> newsDataItemList) {

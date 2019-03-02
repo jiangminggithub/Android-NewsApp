@@ -14,6 +14,10 @@ public class DataDef {
     public static final class ApiInfo {
         public static final String API_ID = "q}~{q";
         public static final String API_SECRET = "+**}*||\u007F~z(~}{,|+/x|x+q-*~}p{+({";
+        public final static String NEWS_DATA_CHANNEL = "http://route.showapi.com/109-34";
+        public final static String NEWS_DATA_NEWS = "http://route.showapi.com/109-35";
+        public final static String IMG_IGNORE_FLAG_ONE = "http://static.ws.126.net/cnews/css13/img/end_news.png";
+        public final static String IMG_IGNORE_FLAG_TWO = "http://img1.cache.netease.com/cnews/css13/img/end_news.png";
     }
 
     public static final class RequestStatusType {
@@ -22,6 +26,7 @@ public class DataDef {
         public static final int DATA_STATUS_NETWORK_DISCONNECTED = 2;
         public static final int DATA_STATUS_NO_MORE_DATA = 3;
     }
+
 
     public static final class NewsChanelIDs {
         public static final String[] CHANEL_IDS = {

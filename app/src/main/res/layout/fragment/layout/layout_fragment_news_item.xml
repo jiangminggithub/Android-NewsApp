@@ -22,6 +22,7 @@
                 android:background="#fff"
                 android:overScrollMode="never"
                 android:paddingRight="1dp"
+                style="@style/app_splitEvents_base"
                 android:scrollbars="vertical" />
 
 

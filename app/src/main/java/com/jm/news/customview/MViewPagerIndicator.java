@@ -26,7 +26,7 @@ import android.widget.TextView;
  */
 public class MViewPagerIndicator extends HorizontalScrollView {
 
-//配置属性 START-------------------------------------------------------------------------------------
+    //配置属性 START-------------------------------------------------------------------------------------
 
     /*
      * true:每个tab宽度为平分父控件剩余空间
@@ -79,7 +79,7 @@ public class MViewPagerIndicator extends HorizontalScrollView {
      */
     private int scrollOffset = 100;
 
-//配置属性 End---------------------------------------------------------------------------------------
+    //配置属性 End---------------------------------------------------------------------------------------
 
     private LinearLayout.LayoutParams wrapTabLayoutParams;
     private LinearLayout.LayoutParams expandTabLayoutParams;
@@ -122,7 +122,7 @@ public class MViewPagerIndicator extends HorizontalScrollView {
             throw new IllegalStateException("ViewPager does not have adapter instance.");
         }
 
-//        viewPager.setOnPageChangeListener(pageListener);
+        //        viewPager.setOnPageChangeListener(pageListener);
         viewPager.addOnPageChangeListener(pageListener);
 
         init();
@@ -275,7 +275,8 @@ public class MViewPagerIndicator extends HorizontalScrollView {
      * 因此，当普通文字字号（tabTextSize）与被选中的文字字号（selectedTabTextSize）相差过大时，应避免使tab宽度包裹内容（expand = false）。
      */
     private void scrollToChild(int position, int offset) {
-        if (tabCount == 0) return;
+        if (tabCount == 0)
+            return;
 
         //getLeft():tab相对于父控件，即tabsContainer的left
         int newScrollX = tabsContainer.getChildAt(position).getLeft() + offset;
@@ -300,7 +301,8 @@ public class MViewPagerIndicator extends HorizontalScrollView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (isInEditMode() || tabCount == 0) return;
+        if (isInEditMode() || tabCount == 0)
+            return;
 
         final int height = getHeight();
 
@@ -415,7 +417,7 @@ public class MViewPagerIndicator extends HorizontalScrollView {
         }
     }
 
-//setter--------------------------------------------------------------------------------------------
+    //setter--------------------------------------------------------------------------------------------
 
     public MViewPagerIndicator setExpand(boolean expand) {
         this.expand = expand;

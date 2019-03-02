@@ -100,7 +100,7 @@ public class FragmentNewsMain extends MFragmentBase {
     public void onStart() {
         LogUtils.d(TAG, "onStart: ");
         super.onStart();
-        setBannerAutoPaly(true);
+        setBannerAutoPlay(true);
         if (mTvErrorTips.getVisibility() == View.VISIBLE && CommonUtils.getInstance().isNetworkAvailable()) {
             updateStatus(true);
         }
@@ -109,7 +109,7 @@ public class FragmentNewsMain extends MFragmentBase {
     @Override
     public void onStop() {
         LogUtils.d(TAG, "onStop: ");
-        setBannerAutoPaly(false);
+        setBannerAutoPlay(false);
         super.onStop();
     }
 
@@ -135,7 +135,7 @@ public class FragmentNewsMain extends MFragmentBase {
     private void initData() {
         LogUtils.d(TAG, "initData: ");
         mViewModel = ViewModelProviders.of(this).get(FragmentNewsMainViewModel.class);
-        mViewModel.updatetChannelID(mFragmentID);
+        mViewModel.updateChannelID(mFragmentID);
     }
 
     private void initView() {
@@ -250,8 +250,8 @@ public class FragmentNewsMain extends MFragmentBase {
     }
 
     /*************************************** public function *******************************************/
-    public void setBannerAutoPaly(boolean isAutoPlay) {
-        LogUtils.d(TAG, "setBannerAutoPaly: isAutoPlay = " + isAutoPlay);
+    public void setBannerAutoPlay(boolean isAutoPlay) {
+        LogUtils.d(TAG, "setBannerAutoPlay: isAutoPlay = " + isAutoPlay);
         if (null != mBanner) {
             if (isAutoPlay) {
                 mBanner.startAutoPlay();
