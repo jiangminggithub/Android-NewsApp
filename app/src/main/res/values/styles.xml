@@ -98,8 +98,8 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingRight">12dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -111,6 +111,15 @@
         <item name="android:background">@drawable/mid_layout_selector</item>
     </style>
 
+    <style name="app_menu_item_bottom" parent="app_menu_base_layout">
+        <item name="android:background">@drawable/mid_layout_selector</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
     <style name="app_menu_text" parent="app_splitEvents_base">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/text_clo</item>
@@ -119,7 +128,8 @@
     </style>
 
     <style name="app_menu_setting_text" parent="app_splitEvents_base">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:paddingTop">2dp</item>
         <item name="android:textColor">@color/text_clo</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

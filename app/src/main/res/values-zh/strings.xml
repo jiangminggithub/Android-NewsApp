@@ -113,7 +113,8 @@
     <string name="share_title">分享到：</string>
     <string name="share_choose">分享选择：</string>
     <string name="share_news_detail_content">Hi，您的好友向您推荐了一个新闻链接，点此查看详情：</string>
-    <string name="share_app_content">Hi，您的好友向您推荐了一款软件，点此开始下载：</string>
+    <string name="share_app_content_one">Hi，您的好友向您推荐了一款软件：</string>
+    <string name="share_app_content_two">，点击链接，选择浏览器打开；或者复制链接到浏览器打开（微信机制原因，部分微信用户请复制并去除链接.1后缀后打开）。</string>
 
     <!-- **************************** dialog string *************************************-->
     <string name="dialog_login">登录</string>

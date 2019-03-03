@@ -189,42 +189,28 @@ public class FragmentAppSetting extends PreferenceFragment {
         final double totalCacheSize = mViewModel.getTotalCacheSize();
         if (totalCacheSize > 0) {
             final Common common = Common.getInstance();
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(common.getResourcesString(R.string.dialog_clear_cache_title))
-                    .setContentText(common.getResourcesString(R.string.dialog_clear_cache_content))
-                    .setConfirmText(common.getResourcesString(R.string.dialog_clear_cache_confirm))
-                    .setCancelText(common.getResourcesString(R.string.dialog_cancel))
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(final SweetAlertDialog sDialog) {
-                            if (CacheManager.CLEAR_CACHE_FAILED != mViewModel.clearAllCache()) {
-                                sDialog.setTitleText(common.getResourcesString(R.string.dialog_clear_cache_success_title))
-                                        .setContentText(common.getResourcesString(R.string.dialog_clear_cache_success_title) + " " + totalCacheSize + common.getResourcesString(R.string.dialog_clear_cache_success_content))
-                                        .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
-                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                sweetAlertDialog.dismiss();
-                                                updateView();
-                                            }
-                                        })
-                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                            } else {
-                                sDialog.setTitleText(common.getResourcesString(R.string.dialog_clear_cache_failed_title))
-                                        .setContentText(common.getResourcesString(R.string.dialog_clear_cache_failed_content))
-                                        .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
-                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                sweetAlertDialog.dismiss();
-                                            }
-                                        })
-                                        .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE).setTitleText(common.getResourcesString(R.string.dialog_clear_cache_title)).setContentText(common.getResourcesString(R.string.dialog_clear_cache_content)).setConfirmText(common.getResourcesString(R.string.dialog_clear_cache_confirm)).setCancelText(common.getResourcesString(R.string.dialog_cancel)).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(final SweetAlertDialog sDialog) {
+                    if (CacheManager.CLEAR_CACHE_FAILED != mViewModel.clearAllCache()) {
+                        sDialog.setTitleText(common.getResourcesString(R.string.dialog_clear_cache_success_title)).setContentText(common.getResourcesString(R.string.dialog_clear_cache_success_title) + " " + totalCacheSize + common.getResourcesString(R.string.dialog_clear_cache_success_content)).setConfirmText(common.getResourcesString(R.string.dialog_confirm)).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                                updateView();
                             }
-                            sDialog.getButton(SweetAlertDialog.BUTTON_CANCEL).setVisibility(View.GONE);
-                        }
-                    })
-                    .show();
+                        }).changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                    } else {
+                        sDialog.setTitleText(common.getResourcesString(R.string.dialog_clear_cache_failed_title)).setContentText(common.getResourcesString(R.string.dialog_clear_cache_failed_content)).setConfirmText(common.getResourcesString(R.string.dialog_confirm)).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        }).changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                    }
+                    sDialog.getButton(SweetAlertDialog.BUTTON_CANCEL).setVisibility(View.GONE);
+                }
+            }).show();
         }
     }
 
@@ -369,7 +355,8 @@ public class FragmentAppSetting extends PreferenceFragment {
      * 分享应用
      */
     private void sharedApp() {
-        CommonUtils.shareDialog(getActivity(), Common.getInstance().getResourcesString(R.string.share_app_content) + DataDef.AppInfo.APP_DOWNLOAD_LINK);
+        String content = getString(R.string.share_app_content_one) + DataDef.AppInfo.APP_DOWNLOAD_LINK + getString(R.string.share_app_content_two);
+        CommonUtils.shareDialog(getActivity(), content);
     }
 
     /**
@@ -385,15 +372,12 @@ public class FragmentAppSetting extends PreferenceFragment {
             @Override
             public void run() {
                 if (null != pDialog) {
-                    pDialog.setTitleText(getActivity().getString(R.string.dialog_waring_tips))
-                            .setContentText(getActivity().getString(R.string.dialog_setting_version_update_success))
-                            .setConfirmText(getActivity().getString(R.string.dialog_confirm))
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    sweetAlertDialog.dismiss();
-                                }
-                            });
+                    pDialog.setTitleText(getActivity().getString(R.string.dialog_waring_tips)).setContentText(getActivity().getString(R.string.dialog_setting_version_update_success)).setConfirmText(getActivity().getString(R.string.dialog_confirm)).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                        }
+                    });
                     pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                 }
             }

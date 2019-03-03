@@ -14,8 +14,8 @@
     <string name="app_menu_collected">Collection</string>
     <string name="app_menu_friends">Friends</string>
     <string name="app_menu_location">Location</string>
-    <string name="app_menu_about">On</string>
-    <string name="app_menu_setting">Set</string>
+    <string name="app_menu_about">About</string>
+    <string name="app_menu_setting">Setting</string>
     <string name="app_menu_exit">Exit</string>
 
     <string name="app_toolbar_back">Back</string>
@@ -119,7 +119,8 @@
     <string name="share_title">Share to：</string>
     <string name="share_choose">Share choose：</string>
     <string name="share_news_detail_content">Hi, your friend recommended a news link to you, click here to see more details: </string>
-    <string name="share_app_content">Hi, your friend recommended a software to you, click here to download: </string>
+    <string name="share_app_content_one">Hi, your friend recommended a software to you : </string>
+    <string name="share_app_content_two">, Click the link, select the browser to open; or copy the link to the browser to open (the WeChat mechanism reasons, some WeChat users please copy and remove the link. 1 suffix and open).</string>
 
     <!-- **************************** dialog string *************************************-->
     <string name="dialog_login">LOGIN</string>

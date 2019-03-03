@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/app_splitEvents_base"
     android:layout_width="280dp"
     android:layout_height="match_parent"
-    style="@style/app_splitEvents_base"
     android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/ll_app_menu_head"
+        style="@style/app_splitEvents_base"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:background="@mipmap/biz_pc_main_bg"
         android:gravity="center_vertical"
-        style="@style/app_splitEvents_base"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/ll_app_menu_user"
+            style="@style/app_splitEvents_base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            style="@style/app_splitEvents_base"
             android:padding="10dp">
 
             <com.jm.news.customview.MCircleImageView
@@ -68,12 +68,12 @@
         android:overScrollMode="never">
 
         <LinearLayout
+            style="@style/app_splitEvents_base"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="12dp"
             android:background="@color/white"
-            style="@style/app_splitEvents_base"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="12dp">
 
             <LinearLayout
                 android:id="@+id/ll_app_menu_message"
@@ -192,17 +192,19 @@
         <View style="@style/bg_line" />
 
         <LinearLayout
+            style="@style/app_splitEvents_base"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="@style/app_splitEvents_base"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/ll_app_menu_about"
-                style="@style/app_menu_item"
+                style="@style/app_menu_item_bottom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -213,16 +215,18 @@
                     style="@style/app_menu_setting_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
                     android:text="@string/app_menu_about" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_app_menu_setting"
-                style="@style/app_menu_item"
+                style="@style/app_menu_item_bottom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -233,19 +237,19 @@
                     style="@style/app_menu_setting_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
                     android:text="@string/app_menu_setting" />
             </LinearLayout>
 
 
             <LinearLayout
                 android:id="@+id/ll_app_menu_exit"
-                style="@style/app_menu_item"
+                style="@style/app_menu_item_bottom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
-                android:paddingRight="14dp">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -256,7 +260,7 @@
                     style="@style/app_menu_setting_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
                     android:text="@string/app_menu_exit" />
             </LinearLayout>
         </LinearLayout>
