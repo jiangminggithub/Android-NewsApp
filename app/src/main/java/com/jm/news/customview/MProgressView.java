@@ -22,45 +22,30 @@ public class MProgressView extends AppCompatTextView {
 
     // 圆实心的颜色
     private int circSolidColor;
-
     // 圆边框的颜色
     private int circFrameColor;
-
     // 圆边框的宽度
     private int circFrameWidth = 4;
-
     // 圆的半径
     private int circRadius;
-
     // 进度条的颜色
     private int progressColor;
-
     // 进度条的宽度
     private int progressWidth = 4;
-
     // 文字的颜色
     private int textColor;
-
-
     private Rect mBounds;
     private Paint mPaint;
     private RectF mArcRectF;
-
     private int mCenterX;
     private int mCenterY;
-
-    private String mText = "跳过";
-
-
+    private String mText;
     // 进度倒计时时间
     private long timeMillis = 3000;
-
     // 进度条通知
     private OnProgressListener mProgressListener;
-
     // 进度默认100
     private int progress = 100;
-
     // 进度条类型
     private ProgressType mProgressType = ProgressType.COUNT_BACK;
 
@@ -177,8 +162,8 @@ public class MProgressView extends AppCompatTextView {
         mPaint = new Paint();
         mBounds = new Rect();
         mArcRectF = new RectF();
+        mText = getContext().getString(R.string.app_welcome_skip);
     }
-
 
     /**
      * 重写测量方法
@@ -223,7 +208,6 @@ public class MProgressView extends AppCompatTextView {
         mPaint.setColor(circSolidColor);
         canvas.drawCircle(mBounds.centerX(), mBounds.centerY(), circRadius, mPaint);
 
-
         // 画外边框(空心圆,即园边框)
         mPaint.setAntiAlias(true);//设置抗锯齿
         mPaint.setStyle(Paint.Style.STROKE);//空心style
@@ -239,7 +223,6 @@ public class MProgressView extends AppCompatTextView {
         float textY = mCenterY - (text_paint.descent() + text_paint.ascent()) / 2;
         canvas.drawText(mText, mCenterX, textY, text_paint);
 
-
         // 画进度条
         mPaint.setColor(progressColor);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -247,8 +230,6 @@ public class MProgressView extends AppCompatTextView {
         mPaint.setStrokeCap(Paint.Cap.ROUND);  //当画笔样式为STROKE或FILL_OR_STROKE时，设置笔刷的图形样式，如圆形样式  Cap.ROUND,或方形样式Cap.SQUARE
         mArcRectF.set(mBounds.left + progressWidth, mBounds.top + progressWidth, mBounds.right - progressWidth, mBounds.bottom - progressWidth);
         canvas.drawArc(mArcRectF, -90, 360 * progress / 100, false, mPaint); //这里的-90.是方向，大家可以改成0，90，180，-90等就可以看到效果区别
-
-
     }
 
 
@@ -329,7 +310,6 @@ public class MProgressView extends AppCompatTextView {
         return progress;
     }
 
-
     /**
      * 设置文字，默认为"跳过"
      *
@@ -358,7 +338,6 @@ public class MProgressView extends AppCompatTextView {
     public void setProgressListener(OnProgressListener mProgressListener) {
         this.mProgressListener = mProgressListener;
     }
-
 
     /**
      * 注意：由于我们是继承的textview，而textview本身就有setOnClickListener方法，所以可以直接在activity监听点击事件即可

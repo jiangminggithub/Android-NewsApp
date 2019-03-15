@@ -204,7 +204,8 @@ public class FragmentNewsMainViewModel extends AndroidViewModel {
 
         @Override
         public void newsDataBeanChange(int requestStatus, int allPages, List<NewsItemBean> newsDataItemList) {
-            LogUtils.d(TAG, "newsDataBeanChange: requestStatus=" + requestStatus + " , allPages=" + allPages);
+            LogUtils.d(TAG, "newsDataBeanChange: requestStatus = " + requestStatus
+                    + " , allPages = " + allPages);
             switch (requestStatus) {
                 case DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK:
                     if (null != newsDataItemList) {

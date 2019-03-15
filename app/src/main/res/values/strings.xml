@@ -17,6 +17,7 @@
     <string name="app_menu_about">About</string>
     <string name="app_menu_setting">Setting</string>
     <string name="app_menu_exit">Exit</string>
+    <string name="app_welcome_skip">Skip</string>
 
     <string name="app_toolbar_back">Back</string>
     <string name="app_toolbar_title_user">Personal Center</string>
@@ -164,6 +165,16 @@
     <string name="dialog_setting_feedback_edit_hint">Your opinion, up to 120 characters</string>
     <string name="dialog_setting_version_update_content">Checking for updates...</string>
     <string name="dialog_setting_version_update_success">It is the latest version</string>
+    <string name="dialog_setting_download_is"> Download the update ?</string>
+    <string name="dialog_setting_download_install">INSTALL</string>
+    <string name="dialog_setting_download_update">UPDATE</string>
+    <string name="dialog_setting_download_latest">It is the latest version</string>
+    <string name="dialog_setting_downloading">Downloading：</string>
+    <string name="dialog_setting_downloading_prepare">Preparing for downloading...</string>
+    <string name="dialog_setting_download_success_title">Download successful</string>
+    <string name="dialog_setting_download_success_content">Are updates installed ?</string>
+    <string name="dialog_setting_download_failed_title">Download failed</string>
+    <string name="dialog_setting_download_failed_content">Please try agin...</string>
 
     <string name="dialog_permission_title">No storage permissions</string>
     <string name="dialog_permission_content">Please allow storage permissions in Application Settings of Permissions</string>

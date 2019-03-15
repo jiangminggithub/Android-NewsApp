@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jm.news.R;
-import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.util.LogUtils;
 import com.jm.news.view.FragmentAppSetting;
@@ -29,7 +28,7 @@ public class SettingActivity extends MActivityBase implements View.OnClickListen
         mTvTitle = findViewById(R.id.tv_head_title);
 
         mTvBack.setOnClickListener(this);
-        mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toolbar_title_setting));
+        mTvTitle.setText(getString(R.string.app_toolbar_title_setting));
         getFragmentManager().beginTransaction().replace(R.id.fl_app_setting_content, new FragmentAppSetting()).commit();
     }
 

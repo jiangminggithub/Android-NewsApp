@@ -202,9 +202,9 @@ public class CommonUtils {
         if (null == mNetInvisibleDialog) {
             Common common = Common.getInstance();
             mNetInvisibleDialog = new SweetAlertDialog(activity, SweetAlertDialog.ERROR_TYPE);
-            mNetInvisibleDialog.setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
-                    .setContentText(common.getResourcesString(R.string.dialog_net_invisible_content))
-                    .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
+            mNetInvisibleDialog.setTitleText(activity.getString(R.string.dialog_waring_tips))
+                    .setContentText(activity.getString(R.string.dialog_net_invisible_content))
+                    .setConfirmText(activity.getString(R.string.dialog_confirm))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -380,9 +380,9 @@ public class CommonUtils {
         if (null != activity) {
             Common common = Common.getInstance();
             new SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
-                    .setContentText(common.getResourcesString(R.string.dialog_waring_content))
-                    .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
+                    .setTitleText(activity.getString(R.string.dialog_waring_tips))
+                    .setContentText(activity.getString(R.string.dialog_waring_content))
+                    .setConfirmText(activity.getString(R.string.dialog_confirm))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
@@ -422,9 +422,9 @@ public class CommonUtils {
         if (null != activity) {
             Common common = Common.getInstance();
             new SweetAlertDialog(activity, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText(common.getResourcesString(R.string.dialog_permission_title))
-                    .setContentText(common.getResourcesString(R.string.dialog_permission_content))
-                    .setCancelText(common.getResourcesString(R.string.dialog_permission_cancel))
+                    .setTitleText(activity.getString(R.string.dialog_permission_title))
+                    .setContentText(activity.getString(R.string.dialog_permission_content))
+                    .setCancelText(activity.getString(R.string.dialog_permission_cancel))
                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
@@ -432,7 +432,7 @@ public class CommonUtils {
                             activity.finish();
                         }
                     })
-                    .setConfirmText(common.getResourcesString(R.string.dialog_permission_setting))
+                    .setConfirmText(activity.getString(R.string.dialog_permission_setting))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {

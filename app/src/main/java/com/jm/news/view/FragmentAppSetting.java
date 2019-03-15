@@ -2,15 +2,20 @@ package com.jm.news.view;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -25,6 +30,7 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.jm.news.BuildConfig;
 import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.define.DataDef;
@@ -32,7 +38,9 @@ import com.jm.news.util.CacheManager;
 import com.jm.news.util.CommonUtils;
 import com.jm.news.util.JumpUtils;
 import com.jm.news.util.LogUtils;
-import com.jm.news.viewmodel.FragmentSettingViewModel;
+import com.jm.news.viewmodel.FragmentAppSettingViewModel;
+
+import java.io.File;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -47,12 +55,83 @@ public class FragmentAppSetting extends PreferenceFragment {
     private static final int LOCALE_CHOICE_TITLE_SIZE = 20;
     private static final int FEEDBACK_EDIT_MAX_LINES = 5;
     private static final int FEEDBACK_EDIT_MAX_LENGTH = 120;
+    private static final String INSTALL_AUTHORITY = BuildConfig.APPLICATION_ID + ".fileProvider";
+    private static final String INSTALL_DATA_TYPE = "application/vnd.android.package-archive";
+    // function related filed
+    private SweetAlertDialog mCheckoutUpdateDialog;
+    private Handler mHandler;
     // viewmodel related field
-    private FragmentSettingViewModel mViewModel;
+    private FragmentAppSettingViewModel mViewModel;
 
 
     public FragmentAppSetting() {
         super();
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                LogUtils.d(TAG, "handleMessage: msg.what = " + msg.what);
+                if (null == mCheckoutUpdateDialog || !mCheckoutUpdateDialog.isShowing()) {
+                    LogUtils.d(TAG, "handleMessage: --- operation is cancel! ---");
+                    return;
+                }
+                String result = null;
+                if (null != msg.obj) {
+                    result = msg.obj.toString();
+                }
+                switch (msg.what) {
+                    case FragmentAppSettingViewModel.IS_LATEST:
+                        if (null != msg.obj) {
+                            boolean isLatest = (boolean) msg.obj;
+                            changeDownloadDialog(isLatest);
+                        } else {
+                            mCheckoutUpdateDialog.dismiss();
+                        }
+                        break;
+                    case FragmentAppSettingViewModel.DOWNLOAD_PROGRESS_NO:
+                        LogUtils.d(TAG, "handleMessage: downloadSize = " + result);
+                        mCheckoutUpdateDialog.setContentText(getString(R.string.dialog_setting_downloading) + result);
+                        break;
+                    case FragmentAppSettingViewModel.DOWNLOAD_PROGRESS_VALUE:
+                        LogUtils.d(TAG, "handleMessage: downloadProgress = " + result);
+                        mCheckoutUpdateDialog.setContentText(getString(R.string.dialog_setting_downloading) + result);
+                        break;
+                    case FragmentAppSettingViewModel.DOWNLOAD_PROGRESS_SUCCESS:
+                        LogUtils.d(TAG, "handleMessage: success file path = " + result);
+                        final String filePath = result;
+                        mCheckoutUpdateDialog.setTitleText(getString(R.string.dialog_setting_download_success_title))
+                                .setContentText(getString(R.string.dialog_setting_download_success_content))
+                                .setCancelButton(R.string.dialog_cancel, new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismiss();
+                                    }
+                                })
+                                .setConfirmButton(R.string.dialog_setting_download_install, new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismiss();
+                                        installAPK(filePath);
+
+                                    }
+                                })
+                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        break;
+                    case FragmentAppSettingViewModel.DOWNLOAD_PROGRESS_FAILED:
+                        mCheckoutUpdateDialog.setTitleText(getString(R.string.dialog_setting_download_failed_title))
+                                .setContentText(getString(R.string.dialog_setting_download_failed_content))
+                                .setConfirmButton(R.string.dialog_confirm, new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismiss();
+                                    }
+                                })
+                                .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
     }
 
     @Override
@@ -60,7 +139,7 @@ public class FragmentAppSetting extends PreferenceFragment {
         LogUtils.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference_fragment_setting);
-        mViewModel = ViewModelProviders.of((FragmentActivity) getActivity()).get(FragmentSettingViewModel.class);
+        mViewModel = ViewModelProviders.of((FragmentActivity) getActivity()).get(FragmentAppSettingViewModel.class);
         mViewModel.initialized();
     }
 
@@ -75,6 +154,8 @@ public class FragmentAppSetting extends PreferenceFragment {
     public void onDestroy() {
         LogUtils.d(TAG, "onDestroy: ");
         mViewModel = null;
+        mCheckoutUpdateDialog = null;
+        mHandler = null;
         super.onDestroy();
     }
 
@@ -83,32 +164,32 @@ public class FragmentAppSetting extends PreferenceFragment {
         String key = preference.getKey();
         LogUtils.d(TAG, "onPreferenceTreeClick: key=" + key + ", preference=" + preference);
         if (null != key && null != mViewModel) {
-            if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_CLEAR_CACHE))) {
+            if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_CLEAR_CACHE))) {
                 clearCache();
             }
-            if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_OUT_CLEAR_CACHE))) {
+            if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_OUT_CLEAR_CACHE))) {
                 CheckBoxPreference pre = (CheckBoxPreference) preference;
                 mViewModel.putBoolean(key, pre.isChecked());
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_OPEN_NOTIFY))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_OPEN_NOTIFY))) {
                 CheckBoxPreference pre = (CheckBoxPreference) preference;
                 mViewModel.putBoolean(key, pre.isChecked());
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_HIDE_BENEFITS))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_HIDE_BENEFITS))) {
                 CheckBoxPreference pre = (CheckBoxPreference) preference;
                 mViewModel.putBoolean(key, pre.isChecked());
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_AUTO_CHECK_UPDATE))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_AUTO_CHECK_UPDATE))) {
                 CheckBoxPreference pre = (CheckBoxPreference) preference;
                 mViewModel.putBoolean(key, pre.isChecked());
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_APP_WALL))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_APP_WALL))) {
                 JumpUtils.jumpWebView(getActivity(), DataDef.AppInfo.APP_APP_WALL, true);
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_LOCALE))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_LOCALE))) {
                 showLocaleChoiceDialog(key);
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_REPUTATION))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_REPUTATION))) {
                 showRatingDialog();
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_FEEDBACK))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_FEEDBACK))) {
                 showFeedbackDialog();
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_SHARE))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_SHARE))) {
                 sharedApp();
-            } else if (key.equals(mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_VERSION))) {
+            } else if (key.equals(mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_VERSION))) {
                 versionUpdate();
             } else {
                 // nothing to do
@@ -125,14 +206,14 @@ public class FragmentAppSetting extends PreferenceFragment {
             return;
         }
         try {
-            String keyClearCache = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_CLEAR_CACHE);
-            String keyAppOutClear = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_OUT_CLEAR_CACHE);
-            String keyOpenNotify = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_OPEN_NOTIFY);
-            String keyAutoRun = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_AUTO_RUN);
-            String keyLocal = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_LOCALE);
-            String keyHideBenefits = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_HIDE_BENEFITS);
-            String keyCheckUpdate = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_AUTO_CHECK_UPDATE);
-            String keyVersion = mViewModel.getPreferenceKey(FragmentSettingViewModel.KEY_VERSION);
+            String keyClearCache = mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_CLEAR_CACHE);
+            String keyAppOutClear = mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_OUT_CLEAR_CACHE);
+            String keyOpenNotify = mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_OPEN_NOTIFY);
+            String keyAutoRun = mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_AUTO_RUN);
+            String keyLocal = mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_LOCALE);
+            String keyHideBenefits = mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_HIDE_BENEFITS);
+            String keyCheckUpdate = mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_AUTO_CHECK_UPDATE);
+            String keyVersion = mViewModel.getPreferenceKey(FragmentAppSettingViewModel.KEY_VERSION);
 
             Preference preCache = findPreference(keyClearCache);
             CheckBoxPreference preOutClear = (CheckBoxPreference) findPreference(keyAppOutClear);
@@ -188,29 +269,41 @@ public class FragmentAppSetting extends PreferenceFragment {
         }
         final double totalCacheSize = mViewModel.getTotalCacheSize();
         if (totalCacheSize > 0) {
-            final Common common = Common.getInstance();
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE).setTitleText(common.getResourcesString(R.string.dialog_clear_cache_title)).setContentText(common.getResourcesString(R.string.dialog_clear_cache_content)).setConfirmText(common.getResourcesString(R.string.dialog_clear_cache_confirm)).setCancelText(common.getResourcesString(R.string.dialog_cancel)).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(final SweetAlertDialog sDialog) {
-                    if (CacheManager.CLEAR_CACHE_FAILED != mViewModel.clearAllCache()) {
-                        sDialog.setTitleText(common.getResourcesString(R.string.dialog_clear_cache_success_title)).setContentText(common.getResourcesString(R.string.dialog_clear_cache_success_title) + " " + totalCacheSize + common.getResourcesString(R.string.dialog_clear_cache_success_content)).setConfirmText(common.getResourcesString(R.string.dialog_confirm)).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                                updateView();
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getString(R.string.dialog_clear_cache_title))
+                    .setContentText(getString(R.string.dialog_clear_cache_content))
+                    .setConfirmText(getString(R.string.dialog_clear_cache_confirm))
+                    .setCancelText(getString(R.string.dialog_cancel))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(final SweetAlertDialog sDialog) {
+                            if (CacheManager.CLEAR_CACHE_FAILED != mViewModel.clearAllCache()) {
+                                sDialog.setTitleText(getString(R.string.dialog_clear_cache_success_title))
+                                        .setContentText(getString(R.string.dialog_clear_cache_success_title) + " " + totalCacheSize + getString(R.string.dialog_clear_cache_success_content))
+                                        .setConfirmText(getString(R.string.dialog_confirm))
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.dismiss();
+                                                updateView();
+                                            }
+                                        })
+                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                            } else {
+                                sDialog.setTitleText(getString(R.string.dialog_clear_cache_failed_title))
+                                        .setContentText(getString(R.string.dialog_clear_cache_failed_content))
+                                        .setConfirmText(getString(R.string.dialog_confirm))
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.dismiss();
+                                            }
+                                        })
+                                        .changeAlertType(SweetAlertDialog.ERROR_TYPE);
                             }
-                        }).changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                    } else {
-                        sDialog.setTitleText(common.getResourcesString(R.string.dialog_clear_cache_failed_title)).setContentText(common.getResourcesString(R.string.dialog_clear_cache_failed_content)).setConfirmText(common.getResourcesString(R.string.dialog_confirm)).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                            }
-                        }).changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                    }
-                    sDialog.getButton(SweetAlertDialog.BUTTON_CANCEL).setVisibility(View.GONE);
-                }
-            }).show();
+                            sDialog.getButton(SweetAlertDialog.BUTTON_CANCEL).setVisibility(View.GONE);
+                        }
+                    }).show();
         }
     }
 
@@ -363,25 +456,100 @@ public class FragmentAppSetting extends PreferenceFragment {
      * 版本更新
      */
     private void versionUpdate() {
-        final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setContentText(Common.getInstance().getResourcesString(R.string.dialog_setting_version_update_content));
-        pDialog.setCancelable(false);
-        pDialog.show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (null != pDialog) {
-                    pDialog.setTitleText(getActivity().getString(R.string.dialog_waring_tips)).setContentText(getActivity().getString(R.string.dialog_setting_version_update_success)).setConfirmText(getActivity().getString(R.string.dialog_confirm)).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-                        }
-                    });
-                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                }
+        if (CommonUtils.getInstance().isNetworkAvailable()) {
+            if (null != mHandler) {
+                mCheckoutUpdateDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+                mCheckoutUpdateDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                mCheckoutUpdateDialog.setContentText(getString(R.string.dialog_setting_version_update_content));
+                mCheckoutUpdateDialog.setCancelable(false);
+                mCheckoutUpdateDialog.show();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mViewModel.checkoutUpdate(mHandler);
+                    }
+                }, 1200);
             }
-        }, 1200);
+        } else {
+            CommonUtils.getInstance().showNetInvisibleDialog(getActivity());
+        }
+    }
+
+    /**
+     * 下载提示框切换
+     */
+    private void changeDownloadDialog(boolean isLatest) {
+        if (null != mCheckoutUpdateDialog) {
+            if (isLatest) {
+                mCheckoutUpdateDialog
+                        .setTitleText(getString(R.string.dialog_waring_tips))
+                        .setContentText(getString(R.string.dialog_setting_version_update_success))
+                        .setConfirmText(getString(R.string.dialog_confirm))
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+            } else {
+                mCheckoutUpdateDialog.setCancelable(false);
+                mCheckoutUpdateDialog.setTitleText(getString(R.string.dialog_waring_tips))
+                        .setContentText(getString(R.string.dialog_setting_download_is))
+                        .setCancelButton(R.string.dialog_cancel, new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .setConfirmButton(R.string.dialog_setting_download_update, new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                mCheckoutUpdateDialog
+                                        .setTitleText("")
+                                        .setContentText(getString(R.string.dialog_setting_downloading_prepare))
+                                        .showCancelButton(false)
+                                        .setCancelButton(R.string.dialog_cancel, new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                mViewModel.setCancelDownload(true);
+                                                sweetAlertDialog.dismiss();
+                                            }
+                                        })
+                                        .changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
+                                mViewModel.setCancelDownload(false);
+                                mViewModel.downloadApp(mHandler);
+                            }
+                        })
+                        .changeAlertType(SweetAlertDialog.WARNING_TYPE);
+            }
+        }
+    }
+
+    /**
+     * 启动应用安装
+     *
+     * @param filePath 安装路径
+     */
+    private void installAPK(String filePath) {
+        LogUtils.d(TAG, "installAPK: filePath = " + filePath);
+        if (TextUtils.isEmpty(filePath)) {
+            return;
+        }
+        File apkFile = new File(filePath);
+        if (apkFile.exists()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            // 判断是否是Android N 以及更高的版本
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                Uri contentUri = FileProvider.getUriForFile(getContext(), INSTALL_AUTHORITY, apkFile);
+                intent.setDataAndType(contentUri, INSTALL_DATA_TYPE);
+            } else {
+                intent.setDataAndType(Uri.fromFile(apkFile), INSTALL_DATA_TYPE);
+            }
+            startActivity(intent);
+        }
     }
 
 }

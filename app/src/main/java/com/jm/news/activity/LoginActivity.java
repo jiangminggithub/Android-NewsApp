@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jm.news.R;
-import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.util.CommonUtils;
 import com.jm.news.util.JumpUtils;
@@ -201,7 +200,7 @@ public class LoginActivity extends MActivityBase {
                 case R.id.bt_login_submit:
                     mDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
                     mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                    mDialog.setContentText(Common.getInstance().getResourcesString(R.string.account_logging));
+                    mDialog.setContentText(getString(R.string.account_logging));
                     mDialog.setCancelable(false);
                     mDialog.show();
                     mHandler.postDelayed(new LoginRunnable(), 1000);

@@ -145,14 +145,14 @@ public class FragmentNewsMain extends MFragmentBase {
         mSmartRefreshLayout.setOnLoadMoreListener(new MyLoadMoreListener());
 
         mViewAdapter = new MyRecyclerViewAdapter();
-        mViewAdapter.setmOnItemClickListener(new MyItemClickListener());
+        mViewAdapter.setOnItemClickListener(new MyItemClickListener());
         MLinearLayoutManager layoutManager = new MLinearLayoutManager(getContext());
         layoutManager.setRecyclerViewLayout(mLlRecycleViewLayout);
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
 
         mTvErrorTips.setOnClickListener(new MyOnClickListener());
-        mRecyclerView.setAdapter(mViewAdapter);
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mViewAdapter);
 
         // bind observer
         NewsDataStatusObserver newsDataStatusObserver = new NewsDataStatusObserver();
@@ -341,7 +341,6 @@ public class FragmentNewsMain extends MFragmentBase {
         }
     }
 
-    /***************************** listener function **********************************/
     private class MyOnClickListener implements View.OnClickListener {
 
         @Override
@@ -370,7 +369,7 @@ public class FragmentNewsMain extends MFragmentBase {
         private LayoutInflater inflater = LayoutInflater.from(getContext());
         private BaseViewClickListener mItemClickListener;
 
-        public void setmOnItemClickListener(BaseViewClickListener mItemClickListener) {
+        public void setOnItemClickListener(BaseViewClickListener mItemClickListener) {
             this.mItemClickListener = mItemClickListener;
         }
 
@@ -429,12 +428,13 @@ public class FragmentNewsMain extends MFragmentBase {
         @Override
         public int getItemViewType(int position) {
             int itemImgCount = mViewModel.getItemImgCount(position);
-            LogUtils.d(TAG, "getItemViewType: count=" + itemImgCount);
+            LogUtils.d(TAG, "getItemViewType: imageCountType = " + itemImgCount);
             return itemImgCount;
         }
 
         @Override
         public int getItemCount() {
+            LogUtils.d(TAG, "getItemCount: mViewModel.getListCount() = " + mViewModel.getListCount());
             return mViewModel.getListCount();
         }
 

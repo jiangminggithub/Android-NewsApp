@@ -20,7 +20,7 @@ public class MLinearLayoutManager extends LinearLayoutManager {
     private static final String TAG = "MLinearLayoutManager";
     private static final int RECYCLE_VIEW_FIRST_POSITION = 0;
     // function related field
-    private LinearLayout mRecyclerViewLayout; // 固定recyclerview的父布局
+    private LinearLayout mRecyclerViewLayout; // 固定recyclerView的父布局
     private int[] mMeasuredDimension = new int[2];
 
 
@@ -34,6 +34,7 @@ public class MLinearLayoutManager extends LinearLayoutManager {
 
     @Override
     public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
+        LogUtils.d(TAG, "onMeasure: ");
         int layoutItemCount = state.getItemCount();
         if (layoutItemCount > 0 && layoutItemCount >= getItemCount()) {
             final int widthMode = View.MeasureSpec.getMode(widthSpec);
@@ -67,7 +68,7 @@ public class MLinearLayoutManager extends LinearLayoutManager {
             }
             LogUtils.d(TAG, "onMeasure: width = " + width + ", height = " + height);
             setMeasuredDimension(width, height);
-            // 设置recyclerview的父布局的高度值
+            // 设置recyclerView的父布局的高度值
             LinearLayout.LayoutParams parmas = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
             mRecyclerViewLayout.setLayoutParams(parmas);
 
@@ -102,7 +103,7 @@ public class MLinearLayoutManager extends LinearLayoutManager {
         mRecyclerViewLayout = recyclerViewLayout;
     }
 
-    // 禁止recyclerview滑动
+    // 禁止recyclerView滑动
     @Override
     public boolean canScrollVertically() {
         //Similarly you can customize "canScrollHorizontally()" for managing horizontal scroll

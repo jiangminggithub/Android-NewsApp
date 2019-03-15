@@ -237,9 +237,9 @@ public class FragmentAppMenu extends MFragmentBase {
                     break;
                 case R.id.ll_app_menu_exit:
                     new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText(Common.getInstance().getResourcesString(R.string.dialog_app_menu_exit_title))
-                            .setCancelText(Common.getInstance().getResourcesString(R.string.dialog_cancel))
-                            .setConfirmText(Common.getInstance().getResourcesString(R.string.dialog_confirm))
+                            .setTitleText(getString(R.string.dialog_app_menu_exit_title))
+                            .setCancelText(getString(R.string.dialog_cancel))
+                            .setConfirmText(getString(R.string.dialog_confirm))
                             .showCancelButton(true)
                             .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override

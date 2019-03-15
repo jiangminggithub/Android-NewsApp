@@ -18,7 +18,6 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.jm.news.R;
-import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.define.DataDef;
 import com.jm.news.util.CommonUtils;
@@ -55,7 +54,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
         mIbMore = findViewById(R.id.ib_head_more);
 
         mTvBack.setOnClickListener(this);
-        mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toolbar_title_webview_detail));
+        mTvTitle.setText(getString(R.string.app_toolbar_title_webview_detail));
 
         mIbMore.setVisibility(View.VISIBLE);
         mIbMore.setOnClickListener(this);
@@ -68,7 +67,7 @@ public class WebViewActivity extends MActivityBase implements View.OnClickListen
 
         mDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         mDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        mDialog.setContentText(Common.getInstance().getResourcesString(R.string.dialog_webview_loading));
+        mDialog.setContentText(getString(R.string.dialog_webview_loading));
         mDialog.setCancelable(true);
         mDialog.show();
 

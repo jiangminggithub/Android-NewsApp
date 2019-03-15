@@ -146,8 +146,8 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         LogUtils.d(TAG, "onClick: userID = " + Common.getInstance().getUser());
         if (v.getId() != R.id.tv_head_back && v.getId() != R.id.ll_user_header && !Common.getInstance().hasUser()) {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                    .setContentText(Common.getInstance().getResourcesString(R.string.dialog_no_login))
-                    .setConfirmText(Common.getInstance().getResourcesString(R.string.dialog_login))
+                    .setContentText(getString(R.string.dialog_no_login))
+                    .setConfirmText(getString(R.string.dialog_login))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
@@ -155,7 +155,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
                             jumpLoginActivity();
                         }
                     })
-                    .setCancelText(Common.getInstance().getResourcesString(R.string.dialog_cancel))
+                    .setCancelText(getString(R.string.dialog_cancel))
                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -221,7 +221,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         mLlUserProfile.setOnClickListener(this);
         mLlUserMore.setOnClickListener(this);
         mLlUserAccount.setOnClickListener(this);
-        mTvTitle.setText(Common.getInstance().getResourcesString(R.string.app_toolbar_title_user));
+        mTvTitle.setText(getString(R.string.app_toolbar_title_user));
     }
 
     private void updateView() {
@@ -488,13 +488,13 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
     private void showAccountManagerConfirmDialog(final int viewID) {
         final Common common = Common.getInstance();
         String contentText = viewID == R.id.tv_popMenu_account_manager_change ?
-                common.getResourcesString(R.string.dialog_account_change_content) :
-                common.getResourcesString(R.string.dialog_account_logout_content);
+                getString(R.string.dialog_account_change_content) :
+                getString(R.string.dialog_account_logout_content);
 
         new SweetAlertDialog(UserActivity.this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText(common.getResourcesString(R.string.dialog_waring_tips))
+                .setTitleText(getString(R.string.dialog_waring_tips))
                 .setContentText(contentText)
-                .setConfirmText(common.getResourcesString(R.string.dialog_confirm))
+                .setConfirmText(getString(R.string.dialog_confirm))
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -512,7 +512,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
                         jumpLoginActivity();
                     }
                 })
-                .setCancelText(common.getResourcesString(R.string.dialog_cancel))
+                .setCancelText(getString(R.string.dialog_cancel))
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {

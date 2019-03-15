@@ -11,6 +11,7 @@
     <string name="app_menu_about">关于</string>
     <string name="app_menu_setting">设置</string>
     <string name="app_menu_exit">退出</string>
+    <string name="app_welcome_skip">跳过</string>
 
     <string name="app_toolbar_back">返回</string>
     <string name="app_toolbar_title_user">个人中心</string>
@@ -158,6 +159,16 @@
     <string name="dialog_setting_feedback_edit_hint">请简述您的意见，最多120个字符</string>
     <string name="dialog_setting_version_update_content">检查更新中...</string>
     <string name="dialog_setting_version_update_success">当前已是最新版本</string>
+    <string name="dialog_setting_download_is">是否下载更新 ？</string>
+    <string name="dialog_setting_download_install">安装</string>
+    <string name="dialog_setting_download_update">更新</string>
+    <string name="dialog_setting_download_latest">当前已是最新版本</string>
+    <string name="dialog_setting_downloading">下载中：</string>
+    <string name="dialog_setting_downloading_prepare">正在准备下载...</string>
+    <string name="dialog_setting_download_success_title">下载成功</string>
+    <string name="dialog_setting_download_success_content">是否安装更新 ？</string>
+    <string name="dialog_setting_download_failed_title">下载失败</string>
+    <string name="dialog_setting_download_failed_content">请检查网络后重试...</string>
 
     <string name="dialog_permission_title">需要存储权限</string>
     <string name="dialog_permission_content">请在-应用设置-权限-中，允许使用存储权限</string>
@@ -219,7 +230,7 @@
 
     <!--******************************* string array **************************************-->
     <string-array name="news_channel_names">
-        <item>头条</item>
+        <item>热点</item>
         <item>国际</item>
         <item>社会</item>
         <item>财经</item>
