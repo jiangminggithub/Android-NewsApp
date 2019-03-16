@@ -7,7 +7,8 @@ public class DataDef {
 
     public static final class AppInfo {
         public static final String APP_GITHUB_LINK = "https://github.com/jiangminggithub/Android-NewsApp";
-        public static final String APP_DOWNLOAD_LINK = "https://github.com/jiangminggithub/Android-NewsApp/raw/master/release/news.apk";
+        public static final String APP_DOWNLOAD_LINK = "https://raw.githubusercontent.com/jiangminggithub/Android-NewsApp/master/release/news.apk";
+        public static final String APP_CHECK_UPDATE_LINK = "https://raw.githubusercontent.com/jiangminggithub/Android-NewsApp/master/release/release.json";
         public static final String APP_APP_WALL = "https://github.com/jiangminggithub/Android-NewsApp/tree/master/release";
     }
 

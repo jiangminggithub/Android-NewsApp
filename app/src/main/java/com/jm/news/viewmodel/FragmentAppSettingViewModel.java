@@ -11,8 +11,11 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.jm.news.R;
+import com.jm.news.bean.AppVersionBean;
 import com.jm.news.common.Common;
+import com.jm.news.define.DataDef;
 import com.jm.news.util.CacheManager;
 import com.jm.news.util.CommonUtils;
 import com.jm.news.util.LogUtils;
@@ -23,12 +26,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 public class FragmentAppSettingViewModel extends AndroidViewModel {
 
     // static filed
     private static final String TAG = "FragmentAppSettingViewModel";
     private static final String DEFAULT_LOCALE_TEXT = "-";
+    private static final String TEMP_FILE_SUFFIX = ".tmp";
     private static final int DEFAULT_LOCALE_INDEX = 0;
     private static final int DEFAULT_CLEAR_CACHE_STATE = -1;
     private static final int DEFAULT_TOTAL_CACHE_SIZE = 0;
@@ -52,6 +57,7 @@ public class FragmentAppSettingViewModel extends AndroidViewModel {
     public static final int DOWNLOAD_PROGRESS_VALUE = 101;
     public static final int DOWNLOAD_PROGRESS_FAILED = -100;
     public static final int DOWNLOAD_PROGRESS_SUCCESS = 100;
+    public static final int CHECK_UPDATE_FAILED = -101;
     public static final int IS_LATEST = 1000;
     // function related filed
     private String[] mLocaleItems;
@@ -61,7 +67,7 @@ public class FragmentAppSettingViewModel extends AndroidViewModel {
     private SharedPreferences mSettingPreferences;
     private SharedPreferences.Editor mPreEditor;
     private boolean isDownloadCancel = false;
-    private boolean isDownloadLock = false;
+    private boolean isOperationLock = false;
 
 
     public FragmentAppSettingViewModel(@NonNull Application application) {
@@ -75,7 +81,6 @@ public class FragmentAppSettingViewModel extends AndroidViewModel {
             mPreEditor = mSettingPreferences.edit();
         }
     }
-
 
     @Override
     protected void onCleared() {
@@ -237,13 +242,89 @@ public class FragmentAppSettingViewModel extends AndroidViewModel {
         this.isDownloadCancel = is;
     }
 
-    public void checkoutUpdate(Handler handler) {
-        LogUtils.d(TAG, "checkoutUpdate: handler = " + handler);
-        if (null != handler) {
-            // TODO checkoutUpdate for version
-            Message msg = handler.obtainMessage(IS_LATEST);
-            msg.obj = false;
+    public void checkUpdate(final Handler handler) {
+        LogUtils.d(TAG, "checkUpdate: handler = " + handler);
+        if (null == handler) {
+            Message msg = handler.obtainMessage(CHECK_UPDATE_FAILED);
             handler.sendMessage(msg);
+            LogUtils.d(TAG, "checkUpdate: handler is null!");
+            return;
+        }
+        // 防抖动操作
+        if (!isOperationLock) {
+            isOperationLock = true;
+            LogUtils.d(TAG, "checkUpdate: operationLock is Lock");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    InputStream inputStream = null;
+                    HttpURLConnection connection = null;
+                    try {
+                        final URL url = new URL(DataDef.AppInfo.APP_CHECK_UPDATE_LINK);
+                        connection = (HttpURLConnection) url.openConnection();
+                        connection.setConnectTimeout(DOWNLOAD_TIMEOUT);
+                        connection.setReadTimeout(DOWNLOAD_READ_TIMEOUT);
+                        connection.connect();
+
+                        int responseCode = connection.getResponseCode();
+                        LogUtils.d(TAG, "checkUpdate run: ResponseCode() = " + responseCode);
+                        // 网络响应码检查
+                        if (responseCode == HttpURLConnection.HTTP_OK) {
+                            inputStream = connection.getInputStream();
+                            StringBuffer sb = new StringBuffer();
+                            int readLength = 0;
+                            byte[] buff = new byte[DOWNLOAD_BUFFER_SIZE];
+                            while ((readLength = inputStream.read(buff)) != DOWNLOAD_NO_READ) {
+                                sb.append(new String(buff, 0, readLength, Charset.forName("UTF-8")));
+                            }
+
+                            String result = sb.toString();
+                            LogUtils.d(TAG, "checkUpdate: result = " + result);
+                            if (TextUtils.isEmpty(result)) {
+                                Message msg = handler.obtainMessage(CHECK_UPDATE_FAILED);
+                                handler.sendMessage(msg);
+                                LogUtils.d(TAG, "checkUpdate run: latest info is null");
+                                return;
+                            } else {
+                                Gson gson = new Gson();
+                                AppVersionBean appVersionBean = gson.fromJson(result, AppVersionBean.class);
+                                long latestVersionCode = appVersionBean.getApkInfo().getVersionCode();
+                                long versionCode = CommonUtils.getInstance().getVersionCode();
+                                LogUtils.d(TAG, "checkUpdate: latestVersionCode = " + latestVersionCode + ", versionCode = " + versionCode);
+                                Message msg = handler.obtainMessage(IS_LATEST);
+                                if (versionCode >= latestVersionCode) {
+                                    msg.obj = true;
+                                } else {
+                                    msg.obj = false;
+                                }
+                                handler.sendMessage(msg);
+                            }
+                        } else {
+                            Message msg = handler.obtainMessage(CHECK_UPDATE_FAILED);
+                            handler.sendMessage(msg);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Message msg = handler.obtainMessage(CHECK_UPDATE_FAILED);
+                        handler.sendMessage(msg);
+                        LogUtils.d(TAG, "checkUpdate run: operation is error, message = " + e.getMessage());
+                    } finally {
+                        try {
+                            if (null != inputStream) {
+                                inputStream.close();
+                            }
+                            if (null != connection) {
+                                connection.disconnect();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            isOperationLock = false;
+                            LogUtils.d(TAG, "checkUpdate: operationLock is UnLock");
+                        }
+                    }
+                }
+            }).start();
         }
     }
 
@@ -255,8 +336,10 @@ public class FragmentAppSettingViewModel extends AndroidViewModel {
             LogUtils.d(TAG, "downloadApp: NetworkAvailable is disconnect or handler is null!");
             return;
         }
-        if (!isDownloadLock) {
-            isDownloadLock = true;
+        // 防抖动操作
+        if (!isOperationLock) {
+            isOperationLock = true;
+            LogUtils.d(TAG, "downloadApp: operationLock is Lock");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -264,15 +347,27 @@ public class FragmentAppSettingViewModel extends AndroidViewModel {
                     InputStream inputStream = null;
                     OutputStream outputStream = null;
                     try {
-//            URL url = new URL("https://raw.githubusercontent.com/jiangminggithub/Android-NewsApp/master/release/news.apk");
-//                        URL url = new URL("https://www.jianshu.com/p/0cd258eecf60");
-                        URL url = new URL("https://github.com/jiangminggithub/Android-NewsApp/blob/master/app/src/main/java/com/jm/news/activity/UserActivity.java");
+                        URL url = new URL(DataDef.AppInfo.APP_DOWNLOAD_LINK);
+                        String fileName = url.toString().substring(url.toString().lastIndexOf(File.separatorChar));
                         File downloadFile = null;
-                        LogUtils.d(TAG, "downloadApp run: Environment.getExternalStorageState() = " + Environment.getExternalStorageState());
+                        File tempFile = null;
+                        LogUtils.d(TAG, "downloadApp run: ExternalStorageState() = " + Environment.getExternalStorageState());
+
                         // 检查存储设备的状态
                         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//                            downloadFile = new File(mContext.getExternalCacheDir(), url.toString().substring(url.toString().lastIndexOf("/")));
-                            downloadFile = new File(mContext.getExternalCacheDir(), "demo.apk");
+                            // 文件合法性检查
+                            if (TextUtils.isEmpty(fileName)) {
+                                Message msg = handler.obtainMessage(DOWNLOAD_PROGRESS_FAILED);
+                                handler.sendMessage(msg);
+                                LogUtils.d(TAG, "downloadApp run: download fileName is null ");
+                                return;
+                            } else {
+                                tempFile = new File(mContext.getExternalCacheDir(), fileName + TEMP_FILE_SUFFIX);
+                                downloadFile = new File(mContext.getExternalCacheDir(), fileName);
+                            }
+                            if (tempFile.exists()) {
+                                tempFile.delete();
+                            }
                             if (downloadFile.exists()) {
                                 downloadFile.delete();
                             }
@@ -283,30 +378,33 @@ public class FragmentAppSettingViewModel extends AndroidViewModel {
                             LogUtils.d(TAG, "downloadApp run: StorageState is not mounted !");
                             return;
                         }
+
                         connection = (HttpURLConnection) url.openConnection();
                         connection.setRequestProperty("Accept-Encoding", "identity");
                         connection.setConnectTimeout(DOWNLOAD_TIMEOUT);
                         connection.setReadTimeout(DOWNLOAD_READ_TIMEOUT);
                         connection.connect();
+
                         int responseCode = connection.getResponseCode();
                         LogUtils.d(TAG, "downloadApp run: ResponseCode() = " + responseCode);
                         // 网络响应码检查
                         if (responseCode == HttpURLConnection.HTTP_OK) {
                             inputStream = connection.getInputStream();
-                            outputStream = new FileOutputStream(downloadFile);
+                            outputStream = new FileOutputStream(tempFile);
                             int contentLength = connection.getContentLength();
                             LogUtils.d(TAG, "downloadApp run: contentLength = " + contentLength);
                             long downTotal = 0;
                             int readLength = 0;
                             int progress = 0;
                             Message msg;
-//                            byte[] buff = new byte[DOWNLOAD_BUFFER_SIZE];
-                            byte[] buff = new byte[10];
+
+                            byte[] buff = new byte[DOWNLOAD_BUFFER_SIZE];
                             while ((readLength = inputStream.read(buff)) != DOWNLOAD_NO_READ) {
                                 if (isDownloadCancel) {
                                     LogUtils.d(TAG, "downloadApp run: --- operation is cancel! ---");
                                     return;
                                 }
+                                outputStream.write(buff, 0, readLength);
                                 downTotal += readLength;
                                 progress = (int) ((downTotal * 100) / contentLength);
                                 if (contentLength != DOWNLOAD_PROGRESS_NO) {
@@ -319,13 +417,17 @@ public class FragmentAppSettingViewModel extends AndroidViewModel {
                                     LogUtils.d(TAG, "downloadApp run: downTotal = " + downTotal);
                                 }
                                 handler.sendMessage(msg);
-                                outputStream.write(buff, 0, readLength);
                             }
+
+                            tempFile.renameTo(downloadFile);
                             msg = handler.obtainMessage(DOWNLOAD_PROGRESS_SUCCESS);
                             msg.obj = downloadFile.getAbsolutePath();
                             handler.sendMessage(msg);
                             inputStream.close();
                             outputStream.close();
+                        } else {
+                            Message msg = handler.obtainMessage(DOWNLOAD_PROGRESS_FAILED);
+                            handler.sendMessage(msg);
                         }
                     } catch (Exception e) {
                         LogUtils.e(TAG, "downloadApp run: APP download failed : " + e.getMessage());
@@ -347,7 +449,8 @@ public class FragmentAppSettingViewModel extends AndroidViewModel {
                             LogUtils.e(TAG, "downloadApp run: close resource failed : " + e.getMessage());
                             e.printStackTrace();
                         } finally {
-                            isDownloadLock = false;
+                            isOperationLock = false;
+                            LogUtils.d(TAG, "downloadApp: operationLock is UnLock");
                         }
                     }
                 }

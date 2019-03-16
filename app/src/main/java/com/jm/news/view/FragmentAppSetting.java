@@ -1,5 +1,6 @@
 package com.jm.news.view;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -58,19 +59,20 @@ public class FragmentAppSetting extends PreferenceFragment {
     private static final String INSTALL_AUTHORITY = BuildConfig.APPLICATION_ID + ".fileProvider";
     private static final String INSTALL_DATA_TYPE = "application/vnd.android.package-archive";
     // function related filed
-    private SweetAlertDialog mCheckoutUpdateDialog;
+    private SweetAlertDialog mCheckUpdateDialog;
     private Handler mHandler;
     // viewmodel related field
     private FragmentAppSettingViewModel mViewModel;
 
 
+    @SuppressLint("HandlerLeak")
     public FragmentAppSetting() {
         super();
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 LogUtils.d(TAG, "handleMessage: msg.what = " + msg.what);
-                if (null == mCheckoutUpdateDialog || !mCheckoutUpdateDialog.isShowing()) {
+                if (null == mCheckUpdateDialog || !mCheckUpdateDialog.isShowing()) {
                     LogUtils.d(TAG, "handleMessage: --- operation is cancel! ---");
                     return;
                 }
@@ -84,21 +86,21 @@ public class FragmentAppSetting extends PreferenceFragment {
                             boolean isLatest = (boolean) msg.obj;
                             changeDownloadDialog(isLatest);
                         } else {
-                            mCheckoutUpdateDialog.dismiss();
+                            mCheckUpdateDialog.dismiss();
                         }
                         break;
                     case FragmentAppSettingViewModel.DOWNLOAD_PROGRESS_NO:
                         LogUtils.d(TAG, "handleMessage: downloadSize = " + result);
-                        mCheckoutUpdateDialog.setContentText(getString(R.string.dialog_setting_downloading) + result);
+                        mCheckUpdateDialog.setContentText(getString(R.string.dialog_setting_downloading) + result);
                         break;
                     case FragmentAppSettingViewModel.DOWNLOAD_PROGRESS_VALUE:
                         LogUtils.d(TAG, "handleMessage: downloadProgress = " + result);
-                        mCheckoutUpdateDialog.setContentText(getString(R.string.dialog_setting_downloading) + result);
+                        mCheckUpdateDialog.setContentText(getString(R.string.dialog_setting_downloading) + result);
                         break;
                     case FragmentAppSettingViewModel.DOWNLOAD_PROGRESS_SUCCESS:
                         LogUtils.d(TAG, "handleMessage: success file path = " + result);
                         final String filePath = result;
-                        mCheckoutUpdateDialog.setTitleText(getString(R.string.dialog_setting_download_success_title))
+                        mCheckUpdateDialog.setTitleText(getString(R.string.dialog_setting_download_success_title))
                                 .setContentText(getString(R.string.dialog_setting_download_success_content))
                                 .setCancelButton(R.string.dialog_cancel, new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
@@ -117,7 +119,18 @@ public class FragmentAppSetting extends PreferenceFragment {
                                 .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                         break;
                     case FragmentAppSettingViewModel.DOWNLOAD_PROGRESS_FAILED:
-                        mCheckoutUpdateDialog.setTitleText(getString(R.string.dialog_setting_download_failed_title))
+                        mCheckUpdateDialog.setTitleText(getString(R.string.dialog_setting_download_failed_title))
+                                .setContentText(getString(R.string.dialog_setting_download_failed_content))
+                                .setConfirmButton(R.string.dialog_confirm, new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismiss();
+                                    }
+                                })
+                                .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                        break;
+                    case FragmentAppSettingViewModel.CHECK_UPDATE_FAILED:
+                        mCheckUpdateDialog.setTitleText("")
                                 .setContentText(getString(R.string.dialog_setting_download_failed_content))
                                 .setConfirmButton(R.string.dialog_confirm, new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
@@ -154,7 +167,7 @@ public class FragmentAppSetting extends PreferenceFragment {
     public void onDestroy() {
         LogUtils.d(TAG, "onDestroy: ");
         mViewModel = null;
-        mCheckoutUpdateDialog = null;
+        mCheckUpdateDialog = null;
         mHandler = null;
         super.onDestroy();
     }
@@ -458,17 +471,12 @@ public class FragmentAppSetting extends PreferenceFragment {
     private void versionUpdate() {
         if (CommonUtils.getInstance().isNetworkAvailable()) {
             if (null != mHandler) {
-                mCheckoutUpdateDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-                mCheckoutUpdateDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                mCheckoutUpdateDialog.setContentText(getString(R.string.dialog_setting_version_update_content));
-                mCheckoutUpdateDialog.setCancelable(false);
-                mCheckoutUpdateDialog.show();
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mViewModel.checkoutUpdate(mHandler);
-                    }
-                }, 1200);
+                mCheckUpdateDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+                mCheckUpdateDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                mCheckUpdateDialog.setContentText(getString(R.string.dialog_setting_version_update_content));
+                mCheckUpdateDialog.setCancelable(true);
+                mCheckUpdateDialog.show();
+                mViewModel.checkUpdate(mHandler);
             }
         } else {
             CommonUtils.getInstance().showNetInvisibleDialog(getActivity());
@@ -479,9 +487,9 @@ public class FragmentAppSetting extends PreferenceFragment {
      * 下载提示框切换
      */
     private void changeDownloadDialog(boolean isLatest) {
-        if (null != mCheckoutUpdateDialog) {
+        if (null != mCheckUpdateDialog) {
             if (isLatest) {
-                mCheckoutUpdateDialog
+                mCheckUpdateDialog
                         .setTitleText(getString(R.string.dialog_waring_tips))
                         .setContentText(getString(R.string.dialog_setting_version_update_success))
                         .setConfirmText(getString(R.string.dialog_confirm))
@@ -493,8 +501,8 @@ public class FragmentAppSetting extends PreferenceFragment {
                         })
                         .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
             } else {
-                mCheckoutUpdateDialog.setCancelable(false);
-                mCheckoutUpdateDialog.setTitleText(getString(R.string.dialog_waring_tips))
+                mCheckUpdateDialog.setCancelable(false);
+                mCheckUpdateDialog.setTitleText(getString(R.string.dialog_waring_tips))
                         .setContentText(getString(R.string.dialog_setting_download_is))
                         .setCancelButton(R.string.dialog_cancel, new SweetAlertDialog.OnSweetClickListener() {
                             @Override
@@ -505,7 +513,7 @@ public class FragmentAppSetting extends PreferenceFragment {
                         .setConfirmButton(R.string.dialog_setting_download_update, new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                mCheckoutUpdateDialog
+                                mCheckUpdateDialog
                                         .setTitleText("")
                                         .setContentText(getString(R.string.dialog_setting_downloading_prepare))
                                         .showCancelButton(false)
@@ -540,7 +548,7 @@ public class FragmentAppSetting extends PreferenceFragment {
         if (apkFile.exists()) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            // 判断是否是Android N 以及更高的版本
+            // 判断是否是 Android N 以及更高的版本
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 Uri contentUri = FileProvider.getUriForFile(getContext(), INSTALL_AUTHORITY, apkFile);
