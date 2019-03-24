@@ -9,6 +9,7 @@ import android.view.View;
 import com.jm.news.R;
 import com.jm.news.customview.MActivityBase;
 import com.jm.news.customview.MProgressView;
+import com.jm.news.util.CommonUtils;
 import com.jm.news.util.JumpUtils;
 import com.jm.news.util.LogUtils;
 
@@ -26,6 +27,8 @@ public class WelcomeActivity extends MActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtils.d(TAG, "onCreate: ");
+        // Android P 异型屏全屏显示
+        CommonUtils.setFullScreenWindowLayout(getWindow());
         setContentView(R.layout.activity_welcome);
         mProgressView = findViewById(R.id.mpv_progress);
 
@@ -61,7 +64,7 @@ public class WelcomeActivity extends MActivityBase {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         LogUtils.d(TAG, "onRequestPermissionsResult: requestCode = " + requestCode);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
+        if (requestCode == CommonUtils.PERMISSION_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mProgressView.start();
             }

@@ -2,15 +2,14 @@ package com.jm.news.util;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -35,7 +34,6 @@ import com.jm.news.common.Common;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -46,6 +44,7 @@ public class CommonUtils {
     public static final int RESTART_TYPE_ALL_ACTIVITY = 0;
     public static final int RESTART_TYPE_APP = 1;
     public static final int APP_VERSION_FAILED_GET = -1;
+    public static final int PERMISSION_REQUEST_CODE = 1;
     private static final int SHARE_CHOOSE_COPY_LINK = 0;
     private static final String REFLEX_DECLARED_FIELD = "mPopup";
     private static final String REFLEX_DECLARED_METHOD = "setForceShowIcon";
@@ -355,20 +354,21 @@ public class CommonUtils {
     }
 
     /**
-     * 判断某个界面是否在前台,返回true，为显示,否则不是
+     * Android P 异型屏全屏页面显示
+     *
+     * @param window Activity的window对象
      */
-    public static boolean isForeground(Activity activity) {
-
-        if (activity == null || TextUtils.isEmpty(activity.getClass().getName()))
-            return false;
-        ActivityManager am = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
-        if (list != null && list.size() > 0) {
-            ComponentName cpn = list.get(0).topActivity;
-            if (activity.getClass().getName().equals(cpn.getClassName()))
-                return true;
+    public static void setFullScreenWindowLayout(Window window) {
+        if (null != window && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            //设置页面全屏显示
+            WindowManager.LayoutParams lp = window.getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            //设置页面延伸到刘海区显示
+            window.setAttributes(lp);
         }
-        return false;
     }
 
     /**
@@ -404,7 +404,7 @@ public class CommonUtils {
             int writeStorageState = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             LogUtils.d(TAG, "checkPermissions:  writeStorageState = " + writeStorageState);
             if (writeStorageState != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
                 return false;
             } else {
                 return true;

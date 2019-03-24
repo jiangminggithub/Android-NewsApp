@@ -15,7 +15,6 @@ public class MActivityBase extends AppCompatActivity {
 
     // static field
     private static final String TAG = "MActivityBase";
-    protected static final int PERMISSION_REQUEST_CODE = 1;
     // function field
     private boolean mHasPermission = false; // 是否拥有相关操作权限
 
@@ -41,7 +40,7 @@ public class MActivityBase extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         LogUtils.d(TAG, "onRequestPermissionsResult: requestCode = " + requestCode);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
+        if (requestCode == CommonUtils.PERMISSION_REQUEST_CODE) {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 CommonUtils.showNoPermission(MActivityBase.this);
             }

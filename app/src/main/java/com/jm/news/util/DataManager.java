@@ -105,7 +105,7 @@ public class DataManager {
                             break;
                     }
                 } catch (Exception e) {
-                    LogUtils.d(TAG, "run: failed request ");
+                    LogUtils.e(TAG, "run: failed request ");
                     requestFailedResponse(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED);
                     e.printStackTrace();
                 }
@@ -137,7 +137,7 @@ public class DataManager {
                 imageUrlsBeanList = new ArrayList<>();
 
                 for (ImageurlsBean imgBean : bean.getImageurls()) {
-                    if (!DataDef.ApiInfo.IMG_IGNORE_FLAG_ONE.equals(imgBean.getUrl()) && !DataDef.ApiInfo.IMG_IGNORE_FLAG_TWO.equals(imgBean.getUrl())) {
+                    if (!imgBean.getUrl().endsWith(DataDef.ApiInfo.IMG_IGNORE_SUFFIX)) {
                         imageUrlsBeanList.add(imgBean);
                         ++imgCount;
                     }
@@ -152,7 +152,7 @@ public class DataManager {
             LogUtils.d(TAG, "newsDataConversion: Conversion is Ok");
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.d(TAG, "newsDataConversion: Conversion is Failed");
+            LogUtils.e(TAG, "newsDataConversion: Conversion is Failed");
             mDataResponsetListener.newsDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, 0, null);
         }
     }
@@ -168,13 +168,13 @@ public class DataManager {
         List<String> bannerImages = new ArrayList<>();
         List<String> bannerUrls = new ArrayList<>();
         try {
-            List<NewsBannerDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean> contentlist = bannerBean.getShowapi_res_body().getPagebean().getContentlist();
-            for (int i = 0; i < contentlist.size(); i++) {
+            List<NewsBannerDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean> contentList = bannerBean.getShowapi_res_body().getPagebean().getContentlist();
+            for (int i = 0; i < contentList.size(); i++) {
                 if (bannerTitles.size() >= 10) {
                     break;
                 }
 
-                NewsBannerDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean item = contentlist.get(i);
+                NewsBannerDataBean.ShowapiResBodyBean.PagebeanBean.ContentlistBean item = contentList.get(i);
                 if (null == item) {
                     LogUtils.d(TAG, "newsBannerDataConversion: nullItem");
                     continue;
@@ -190,8 +190,7 @@ public class DataManager {
                 String imgUrl = imageUrls.get(0).getUrl();
                 String url = item.getLink();
 
-                if (DataDef.ApiInfo.IMG_IGNORE_FLAG_ONE.equals(imgUrl)
-                        || DataDef.ApiInfo.IMG_IGNORE_FLAG_TWO.equals(imgUrl)
+                if (imgUrl.endsWith(DataDef.ApiInfo.IMG_IGNORE_SUFFIX)
                         || "".equals(title)
                         || "".equals(imgUrl)
                         || "".equals(url)) {
@@ -215,11 +214,11 @@ public class DataManager {
 
             if (titleSize > 0 && imgUrlsSize > 0 && urlSize > 0) {
                 mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_OK, bannerDataBean);
-                LogUtils.d(TAG, "newsBannerDataConversion: Conver is OK");
+                LogUtils.d(TAG, "newsBannerDataConversion: Conversion is OK");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.d(TAG, "newsBannerDataConversion: Conver is Failed");
+            LogUtils.e(TAG, "newsBannerDataConversion: Conversion is Failed");
             mDataResponsetListener.newsBannerDataBeanChange(DataDef.RequestStatusType.DATA_STATUS_REQUEST_FAILED, null);
         }
     }
