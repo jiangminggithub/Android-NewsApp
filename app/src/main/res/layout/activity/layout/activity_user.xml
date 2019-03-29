@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:radius="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_user_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F3F6"
     android:clipToPadding="false"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:id="@+id/ll_user_layout"
     tools:ignore="MissingDefaultResource">
 
     <include layout="@layout/layout_head" />
@@ -19,9 +19,9 @@
         android:overScrollMode="never">
 
         <LinearLayout
+            style="@style/app_splitEvents_base"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="@style/app_splitEvents_base"
             android:orientation="vertical">
 
             <LinearLayout style="@style/wrap_layout">
@@ -38,7 +38,7 @@
 
                     <TextView
                         android:id="@+id/tv_user_name"
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="30dp"
@@ -46,7 +46,7 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="日新月异" />
+                        tools:text="userName" />
 
                     <com.jm.news.customview.MImageView
                         android:id="@+id/miv_user_qrcode"
@@ -63,202 +63,144 @@
 
             <LinearLayout style="@style/wrap_layout">
 
-                <!-- 上圆角 -->
-
                 <LinearLayout
                     android:id="@+id/ll_user_autograph"
                     style="@style/top_layout">
 
                     <TextView
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:text="@string/user_autograph" />
 
                     <TextView
                         android:id="@+id/tv_user_autograph"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="18dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="不必仰望别人，自己亦是风景！"
-                        android:textColor="#B7B7B7" />
+                        style="@style/user_text_info"
+                        tools:text="user autograph" />
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>
 
-                <!-- 分割线 -->
-
                 <View style="@style/bg_line" />
-                <!-- 无圆角 -->
 
                 <LinearLayout
                     android:id="@+id/ll_user_nickname"
                     style="@style/mid_layout">
 
                     <TextView
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:text="@string/user_nickname" />
 
                     <TextView
                         android:id="@+id/tv_user_nickname"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="18dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="奋斗的小熊"
-                        android:textColor="#B7B7B7" />
+                        style="@style/user_text_info"
+                        tools:text="User nickname" />
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>
 
-
-                <!-- 分割线 -->
-
                 <View style="@style/bg_line" />
-                <!-- 无圆角 -->
 
                 <LinearLayout
                     android:id="@+id/ll_user_sex"
                     style="@style/mid_layout">
 
                     <TextView
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:text="@string/user_sex" />
 
                     <TextView
                         android:id="@+id/tv_user_sex"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="18dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="男"
-                        android:textColor="#B7B7B7" />
+                        style="@style/user_text_info"
+                        tools:text="men" />
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>
 
                 <View style="@style/bg_line" />
-                <!-- 无圆角 -->
 
                 <LinearLayout
                     android:id="@+id/ll_user_address"
                     style="@style/mid_layout">
 
                     <TextView
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:text="@string/user_address" />
 
                     <TextView
                         android:id="@+id/tv_user_address"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="18dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="上海"
-                        android:textColor="#B7B7B7" />
+                        style="@style/user_text_info"
+                        tools:text="shanghai" />
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>
 
                 <View style="@style/bg_line" />
-                <!-- 无圆角 -->
 
                 <LinearLayout
                     android:id="@+id/ll_user_phone"
                     style="@style/mid_layout">
 
                     <TextView
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:text="@string/user_phone" />
 
                     <TextView
                         android:id="@+id/tv_user_Phone"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="18dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="18895361267"
-                        android:textColor="#B7B7B7" />
+                        style="@style/user_text_info"
+                        tools:text="18895361267" />
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>
 
                 <View style="@style/bg_line" />
-                <!-- 无圆角 -->
 
                 <LinearLayout
                     android:id="@+id/ll_user_hobby"
                     style="@style/mid_layout">
 
                     <TextView
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:text="@string/user_hobby" />
 
                     <TextView
-                        android:id="@+id/tv_user_hoppy"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="18dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="听歌，打球，跳舞……"
-                        android:textColor="#B7B7B7" />
+                        android:id="@+id/tv_user_hobby"
+                        style="@style/user_text_info"
+                        tools:text="User hobby" />
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>
 
                 <View style="@style/bg_line" />
-                <!-- 下圆角 -->
 
                 <LinearLayout
                     android:id="@+id/ll_user_profile"
                     style="@style/mid_layout">
 
                     <TextView
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:text="@string/user_profile" />
 
                     <TextView
                         android:id="@+id/tv_user_profile"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="18dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="介绍一下自己吧"
-                        android:textColor="#B7B7B7" />
+                        style="@style/user_text_info"
+                        tools:text="user profile" />
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>
 
                 <View style="@style/bg_line" />
-                <!-- 下圆角 -->
 
                 <LinearLayout
                     android:id="@+id/ll_user_more"
                     style="@style/bottom_layout">
 
                     <TextView
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:layout_weight="1"
                         android:text="@string/user_more" />
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>
             </LinearLayout>
-
-            <!-- 全圆角 -->
 
             <LinearLayout
                 style="@style/wrap_layout"
@@ -269,19 +211,9 @@
                     style="@style/single_layout">
 
                     <TextView
-                        style="@style/user_text"
+                        style="@style/user_text_category"
                         android:layout_weight="1"
                         android:text="@string/user_account" />
-
-                    <!--<TextView-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="18dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:ellipsize="end"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:text="Ming—News™"-->
-                    <!--android:textColor="#0000FF" />-->
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>

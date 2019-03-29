@@ -99,7 +99,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         mTvSexInfo = findViewById(R.id.tv_user_sex);
         mTvAddressInfo = findViewById(R.id.tv_user_address);
         mTvPhoneInfo = findViewById(R.id.tv_user_Phone);
-        mTvHobbyInfo = findViewById(R.id.tv_user_hoppy);
+        mTvHobbyInfo = findViewById(R.id.tv_user_hobby);
         mTvProfileInfo = findViewById(R.id.tv_user_profile);
 
         mViewModel = ViewModelProviders.of(this).get(UserActivityViewModel.class);
