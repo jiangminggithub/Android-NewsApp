@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.jm.news.R;
 import com.jm.news.activity.AboutActivity;
 import com.jm.news.activity.LoginActivity;
@@ -49,6 +51,10 @@ public class FragmentAppMenu extends MFragmentBase {
     private LinearLayout mLlExit;
     // function related field
     private MyClickListener mClickListener;
+    private RequestOptions mGlideOptions = new RequestOptions()
+            .placeholder(R.mipmap.loading_static)   // 图片加载出来前，显示的图片
+            .fallback(R.mipmap.icon_user)          // url为空的时候,显示的图片
+            .error(R.mipmap.icon_user);
     // viewmodel related field
     private FragmentAppMenuViewModel mViewModel;
 
@@ -113,6 +119,7 @@ public class FragmentAppMenu extends MFragmentBase {
         mLlVip = null;
         mClickListener = null;
         mViewModel = null;
+        mGlideOptions = null;
         super.onDestroy();
     }
 
@@ -180,7 +187,11 @@ public class FragmentAppMenu extends MFragmentBase {
         if (null != mViewModel) {
             String userName = mViewModel.getAccountInfo(FragmentAppMenuViewModel.ACCOUNT_TYPE_NAME);
             String userAutograph = mViewModel.getAccountInfo(FragmentAppMenuViewModel.ACCOUNT_TYPE_AUTOGRAPH);
-            LogUtils.d(TAG, "updateView: name = " + userName + ", userAutograph = " + userAutograph);
+            String userIconUrl = mViewModel.getAccountInfo(FragmentAppMenuViewModel.ACCOUNT_TYPE_ICON);
+            LogUtils.d(TAG, "updateView: name = " + userName
+                    + ", userAutograph = " + userAutograph
+                    + ", userIconUrl = " + userIconUrl);
+
             if (!TextUtils.isEmpty(userName)) {
                 if ("-".equals(userName)) {
                     mTvUserName.setText(R.string.user_no_login);
@@ -198,6 +209,8 @@ public class FragmentAppMenu extends MFragmentBase {
                     mTvAutograph.setText(userAutograph);
                 }
             }
+
+            Glide.with(this).load(userIconUrl).apply(mGlideOptions).into(mIvIcon);
         }
     }
 

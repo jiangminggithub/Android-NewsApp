@@ -2,8 +2,10 @@ package com.jm.news.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -11,11 +13,19 @@ import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.util.LogUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class UserActivityViewModel extends AndroidViewModel {
 
     // static filed
     private static final String TAG = "UserActivityViewModel";
+    private static final int BUFF_SIZE = 1024 * 8;
+    private static final int NO_READ = -1;
     public static final String DEFAULT_SHOW_TEXT = "-";
+    private static final String DIRECTORY_IMAGES = "HotNews";
     // function related filed
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEdit;
@@ -23,6 +33,8 @@ public class UserActivityViewModel extends AndroidViewModel {
     private int mSexCheckedItemIndex = 0;
     private String[] mHobbyItems;
     private boolean[] mHobbyCheckedItemsFlag = {false, false, false, false, false, false};
+    // livedate function
+    private MutableLiveData<Boolean> mUserIconStatus = new MutableLiveData<>();
 
 
     public UserActivityViewModel(@NonNull Application application) {
@@ -35,7 +47,21 @@ public class UserActivityViewModel extends AndroidViewModel {
         }
     }
 
-    /**************************************public function****************************************************/
+    @Override
+    protected void onCleared() {
+        LogUtils.d(TAG, "onCleared: ");
+        mUserIconStatus = null;
+        mPreferences = null;
+        mEdit = null;
+        super.onCleared();
+    }
+
+    /***************************** ******** livedata function *****************************************/
+    public MutableLiveData<Boolean> getUserIconUpdateStatus() {
+        return mUserIconStatus;
+    }
+
+    /************************************** public function *******************************************/
     public void initialized() {
         Common common = Common.getInstance();
         mSexItems = common.getResourcesStringArray(R.array.user_sex_items);
@@ -146,6 +172,61 @@ public class UserActivityViewModel extends AndroidViewModel {
         LogUtils.d(TAG, "setHobbyChoiceItemsFlag: which = " + which + ", isChecked = " + isChecked);
         if (which >= 0) {
             mHobbyCheckedItemsFlag[which] = isChecked;
+        }
+    }
+
+    public void setUserIconImage(final String sourceUrl) {
+        LogUtils.d(TAG, "setUserIconImage: sourceUrl = " + sourceUrl);
+        if (!TextUtils.isEmpty(sourceUrl)) {
+            // 当外置存储设备可用时，文件设置到指定位置，否则默认文件位置
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                String fileName = sourceUrl.substring(sourceUrl.lastIndexOf(File.separatorChar) + 1);
+                File targetDirectory = new File(Environment.getExternalStorageDirectory().toString() + File.separatorChar + DIRECTORY_IMAGES);
+                if (!targetDirectory.exists()) {
+                    targetDirectory.mkdirs();
+                }
+                final File targetFile = new File(targetDirectory, fileName);
+                LogUtils.d(TAG, "setUserIconImage: targetFile = " + targetFile);
+                if (targetFile.exists()) {
+                    targetFile.delete();
+                }
+                new Thread() {
+                    @Override
+                    public void run() {
+                        FileInputStream inputStream = null;
+                        FileOutputStream outputStream = null;
+                        try {
+                            inputStream = new FileInputStream(sourceUrl);
+                            outputStream = new FileOutputStream(targetFile);
+                            byte buff[] = new byte[BUFF_SIZE];
+                            int readLength = 0;
+                            while ((readLength = inputStream.read(buff)) != NO_READ) {
+                                outputStream.write(buff, 0, readLength);
+                            }
+                            putPreferenceString(UserActivityViewModel.UserInfo.USER_ICON, targetFile.toString());
+                            mUserIconStatus.postValue(Boolean.TRUE);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                if (null != inputStream) {
+                                    inputStream.close();
+                                }
+                                if (null != outputStream) {
+                                    outputStream.close();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                LogUtils.e(TAG, "run: failed = " + e.getMessage());
+                                mUserIconStatus.postValue(Boolean.FALSE);
+                            }
+                        }
+                    }
+                }.start();
+            } else {
+                putPreferenceString(UserActivityViewModel.UserInfo.USER_ICON, sourceUrl);
+                mUserIconStatus.postValue(Boolean.TRUE);
+            }
         }
     }
 

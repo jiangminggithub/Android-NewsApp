@@ -59,7 +59,7 @@ public class FragmentNewsMain extends MFragmentBase {
     private LinearLayout mLlNewsContentView;
     private TextView mTvErrorTips;
     // function related field
-    public RequestOptions mGlideOptions = new RequestOptions()
+    private RequestOptions mGlideOptions = new RequestOptions()
 //            .skipMemoryCache(true)                // 设备配置较低的可以关闭内存缓存
             .placeholder(R.mipmap.loading_static)   // 图片加载出来前，显示的图片
             .fallback(R.mipmap.load_error)          // url为空的时候,显示的图片

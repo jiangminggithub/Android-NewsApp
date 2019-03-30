@@ -1,11 +1,17 @@
 package com.jm.news.activity;
 
+import android.app.Activity;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -23,12 +29,16 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.jm.news.R;
 import com.jm.news.common.Common;
 import com.jm.news.customview.MActivityBase;
+import com.jm.news.customview.MCircleImageView;
 import com.jm.news.util.CommonUtils;
 import com.jm.news.util.JumpUtils;
 import com.jm.news.util.LogUtils;
+import com.jm.news.util.RealPathFromUriUtils;
 import com.jm.news.viewmodel.UserActivityViewModel;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -37,6 +47,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
 
     // static field
     private static final String TAG = "UserActivity";
+    private static final int REQUEST_IMAGE_CODE = 0;
     private static final int DIALOG_TITLE_SIZE = 20;
     private static final int DIALOG_TITLE_PADDING_LEFT = 10;
     private static final int DIALOG_TITLE_PADDING_TOP = 20;
@@ -51,13 +62,14 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
     // control field
     private TextView mTvBack;
     private TextView mTvTitle;
+    private MCircleImageView mCivUserIcon;
     private LinearLayout mLlUserHead;
     private LinearLayout mLlAutograph;
     private LinearLayout mLlUserNickName;
     private LinearLayout mLlUserSex;
     private LinearLayout mLlUserAddress;
     private LinearLayout mLlUserPhone;
-    private LinearLayout mLlUserHoppy;
+    private LinearLayout mLlUserHobby;
     private LinearLayout mLlUserProfile;
     private LinearLayout mLlUserMore;
     private LinearLayout mLlUserAccount;
@@ -69,8 +81,14 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
     private TextView mTvPhoneInfo;
     private TextView mTvHobbyInfo;
     private TextView mTvProfileInfo;
+    // function related filed
+    private RequestOptions mGlideOptions = new RequestOptions()
+            .placeholder(R.mipmap.loading_static)   // 图片加载出来前，显示的图片
+            .fallback(R.mipmap.icon_user)          // url为空的时候,显示的图片
+            .error(R.mipmap.icon_user);
     // viewmodel related field
     private UserActivityViewModel mViewModel;
+    private UserIconStatusObserver mUserIconStatusObserver;
 
 
     @Override
@@ -82,13 +100,14 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         mTvBack = findViewById(R.id.tv_head_back);
         mTvTitle = findViewById(R.id.tv_head_title);
 
+        mCivUserIcon=findViewById(R.id.miv_user_icon);
         mLlUserHead = findViewById(R.id.ll_user_header);
         mLlAutograph = findViewById(R.id.ll_user_autograph);
         mLlUserNickName = findViewById(R.id.ll_user_nickname);
         mLlUserSex = findViewById(R.id.ll_user_sex);
         mLlUserAddress = findViewById(R.id.ll_user_address);
         mLlUserPhone = findViewById(R.id.ll_user_phone);
-        mLlUserHoppy = findViewById(R.id.ll_user_hobby);
+        mLlUserHobby = findViewById(R.id.ll_user_hobby);
         mLlUserProfile = findViewById(R.id.ll_user_profile);
         mLlUserMore = findViewById(R.id.ll_user_more);
         mLlUserAccount = findViewById(R.id.ll_user_account);
@@ -104,6 +123,8 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
 
         mViewModel = ViewModelProviders.of(this).get(UserActivityViewModel.class);
         mViewModel.initialized();
+        mUserIconStatusObserver = new UserIconStatusObserver();
+        mViewModel.getUserIconUpdateStatus().observe(this, mUserIconStatusObserver);
         initView();
     }
 
@@ -125,7 +146,7 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         mLlUserSex = null;
         mLlUserAddress = null;
         mLlUserPhone = null;
-        mLlUserHoppy = null;
+        mLlUserHobby = null;
         mLlUserProfile = null;
         mLlUserMore = null;
         mLlUserAccount = null;
@@ -137,8 +158,28 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         mTvPhoneInfo = null;
         mTvHobbyInfo = null;
         mTvProfileInfo = null;
+        mUserIconStatusObserver = null;
         mViewModel = null;
+        mGlideOptions = null;
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        LogUtils.d(TAG, "onActivityResult: requestCode = " + requestCode
+                + ", resultCode = " + resultCode
+                + ", data = " + data);
+        if (requestCode == REQUEST_IMAGE_CODE && resultCode == Activity.RESULT_OK) {
+            if (null != data) {
+                Uri dataUri = data.getData();
+                String imageUrl = RealPathFromUriUtils.getRealPathFromUri(this, dataUri);
+                LogUtils.d(TAG, "onActivityResult: imageUrl = " + imageUrl);
+                if (!TextUtils.isEmpty(imageUrl) && null != mViewModel) {
+                    mViewModel.setUserIconImage(imageUrl);
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -168,6 +209,9 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.tv_head_back:
                 this.finish();
+                break;
+            case R.id.miv_user_icon:
+                selectIconImage();
                 break;
             case R.id.ll_user_header:
                 if (Common.getInstance().hasUser()) {
@@ -207,17 +251,33 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
         }
     }
 
+
+    /************************************** observer function ****************************************************/
+    private class UserIconStatusObserver implements Observer<Boolean> {
+
+        @Override
+        public void onChanged(@Nullable Boolean isSuccess) {
+            LogUtils.d(TAG, "onChanged: isSuccess = " + isSuccess);
+            if (isSuccess) {
+                updateView();
+            } else {
+                CommonUtils.getInstance().showToastView(R.string.toast_setting_local_set_failed);
+            }
+        }
+    }
+
     /************************************** private function ****************************************************/
     private void initView() {
         LogUtils.d(TAG, "initView: ");
         mTvBack.setOnClickListener(this);
+        mCivUserIcon.setOnClickListener(this);
         mLlUserHead.setOnClickListener(this);
         mLlAutograph.setOnClickListener(this);
         mLlUserNickName.setOnClickListener(this);
         mLlUserSex.setOnClickListener(this);
         mLlUserAddress.setOnClickListener(this);
         mLlUserPhone.setOnClickListener(this);
-        mLlUserHoppy.setOnClickListener(this);
+        mLlUserHobby.setOnClickListener(this);
         mLlUserProfile.setOnClickListener(this);
         mLlUserMore.setOnClickListener(this);
         mLlUserAccount.setOnClickListener(this);
@@ -245,6 +305,8 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
             mTvProfileInfo.setText(mViewModel.getPreferenceString(UserActivityViewModel.UserInfo.USER_PROFILE));
             mTvSexInfo.setText(mViewModel.getSexPreferenceString(UserActivityViewModel.UserInfo.USER_SEX));
             mTvHobbyInfo.setText(mViewModel.getHobbyPreferenceString(UserActivityViewModel.UserInfo.USER_HOBBY));
+            String userIconImageUrl = mViewModel.getPreferenceString(UserActivityViewModel.UserInfo.USER_ICON);
+            Glide.with(mCivUserIcon).load(userIconImageUrl).apply(mGlideOptions).into(mCivUserIcon);
         }
     }
 
@@ -524,6 +586,12 @@ public class UserActivity extends MActivityBase implements View.OnClickListener 
 
     private void jumpLoginActivity() {
         JumpUtils.jumpActivity(UserActivity.this, LoginActivity.class);
+    }
+
+    private void selectIconImage(){
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, REQUEST_IMAGE_CODE);
     }
 
     /***************************** inner class *************************************/
